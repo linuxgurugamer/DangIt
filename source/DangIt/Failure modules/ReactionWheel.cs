@@ -40,7 +40,10 @@ namespace ippo
 
         protected override bool DI_FailBegin()
         {
-            return true;
+            return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams2>().AllowReactionWheelFailures;
+            // Can always fail
+            // return true;
+
         }
 
 

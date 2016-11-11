@@ -169,6 +169,10 @@ namespace ippo
 
         protected override bool DI_FailBegin()
         {
+
+            if (!HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams2>().AllowTankFailures)
+                return false;
+
             // Something has gone very wrong somewhere
             if (leakables == null)
                 throw new Exception("The list of leakables is null!");

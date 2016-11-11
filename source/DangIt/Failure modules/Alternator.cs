@@ -40,8 +40,9 @@ namespace ippo
 
         protected override bool DI_FailBegin()
         {
+            return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams2>().AllowAlternatorFailures;
             // Can always fail
-            return true;
+//            return true;
         }
 
 

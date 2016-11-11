@@ -1,0 +1,38 @@
+@PART[*]:HAS[@MODULE[ModuleAnimateGeneric],!MODULE[NoFailureModules]]:FOR[Entropy]
+{
+    MODULE
+    {
+        name = ModuleAnimationReliability
+
+		// Two years
+        MTBF = 175200
+
+		// Engines must decay *VERY* quickly compared to other parts
+        LifeTime = 47600
+
+		// Amount of spare parts needed to repair the part
+        RepairCost = 3
+		// Fraction of the age that is discounted when repairing (from 0 to 1)
+		RepairBonus = 0.8
+
+		// Amount of spare parts needed for preemptive maintenance
+		MaintenanceCost = 1
+
+		// Fraction of the age that is discounted when doing maintenance (from 0 to 1)
+		MaintenanceBonus = 0.3
+
+		// Duration of the inspection bonus, in seconds
+        InspectionBonus = 86400
+
+		// Set to true to suppress all notifications about this module
+		Silent = false
+
+	Priority = MEDIUM
+        
+        DANGIT_PERKS
+        {
+            perk = Mechanic:Skilled
+            perk = Electrician:Normal
+        }
+    }
+}

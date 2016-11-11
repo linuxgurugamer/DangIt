@@ -38,9 +38,16 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AssemblyFileVersion.tt</DependentUpon>
     </Compile>
+    <Compile Include="Failure modules\DeployableAntenna.cs" />
+    <Compile Include="Failure modules\Entropy\Animate.cs" />
+    <Compile Include="Failure modules\Entropy\Generator.cs" />
+    <Compile Include="Failure modules\Entropy\Parachutes.cs" />
+    <Compile Include="Failure modules\Entropy\SmallPartExploder.cs" />
+    <Compile Include="Failure modules\Entropy\Solar.cs" />
+    <Compile Include="Failure modules\Entropy\SRB.cs" />
+    <Compile Include="Failure modules\Entropy\SRB_engineFX.cs" />
     <Compile Include="Utilities\Logging.cs" />
     <None Include="buildRelease.bat" />
-    <None Include="Data\DangIt.version" />
     <Compile Include="API\API.cs" />
     <Compile Include="API\DangItHook.cs" />
     <Compile Include="Runtime\AlarmManager.cs" />
@@ -69,30 +76,10 @@
     <None Include="deploy.bat" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Data\ModuleManager\Information.cfg" />
-    <None Include="Data\ModuleManager\Inspection.cfg" />
-    <None Include="Data\ModuleManager\Alternator.cfg" />
-    <None Include="Data\ModuleManager\Battery.cfg" />
-    <None Include="Data\ModuleManager\ControlSurface.cfg" />
-    <None Include="Data\ModuleManager\Engines.cfg" />
-    <None Include="Data\ModuleManager\Gimbal.cfg" />
-    <None Include="Data\ModuleManager\Engines_ion.cfg" />
-    <None Include="Data\ModuleManager\Lights.cfg" />
-    <None Include="Data\ModuleManager\RCS.cfg" />
-    <None Include="Data\ModuleManager\ReactionWheel.cfg" />
-    <None Include="Data\ModuleManager\SpareParts.cfg" />
-    <None Include="Data\ModuleManager\Tanks.cfg" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Data\PluginData\DangIt\BlackList.cfg" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="AssemblyFileVersion.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>AssemblyFileVersion.cs</LastGenOutput>
     </Content>
-    <Content Include="Data\PluginData\DangIt\Training.xml" />
-    <Content Include="Data\Textures\appBtn.png" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
@@ -113,6 +100,9 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Failure modules\Entropy\RealChutes\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -1,0 +1,7 @@
+@PART[*LES*]:BEFORE[Entropy]
+{
+    MODULE
+    {
+        name = NoFailureModules
+    }
+}

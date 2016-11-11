@@ -28,46 +28,46 @@ namespace ippo
 			public bool DebugStats = false;			// show debug stats of the part in the right-click menu
 #endif
             public bool EnabledForSave
-            { get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams>().EnabledForSave; } }
+            { get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams1>().EnabledForSave; } }
             public bool ManualFailures
             {
-                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams>().ManualFailures; }
+                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams1>().ManualFailures; }
             }
             public float MaxDistance
             {
-                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams>().MaxDistance; }
+                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams1>().MaxDistance; }
             }
             public bool Messages
             {
-                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams>().Messages; }
+                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams1>().Messages; }
             }
             public bool Glow
             {
-                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams>().Glow; }
+                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams1>().Glow; }
             }
             public bool RequireExperience
             {
-                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams>().RequireExperience; }
+                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams1>().RequireExperience; }
             }
             public int Pri_Low_SoundLoops
             {
-                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams>().Pri_Low_SoundLoops; }
+                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams1>().Pri_Low_SoundLoops; }
             }
             public int Pri_Medium_SoundLoops
             {
-                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams>().Pri_Medium_SoundLoops; }
+                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams1>().Pri_Medium_SoundLoops; }
             }
             public int Pri_High_SoundLoops
             {
-                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams>().Pri_High_SoundLoops; }
+                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams1>().Pri_High_SoundLoops; }
             }
             public int AlarmVolume
             {
-                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams>().AlarmVolume; }
+                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams1>().AlarmVolume; }
             }
             public bool DebugStats
             {
-                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams>().DebugStats; }
+                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams1>().DebugStats; }
             }
             
 

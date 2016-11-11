@@ -7,6 +7,11 @@
 ## Release 0.7.0
 	Added Snacks.cfg to take care of the Snacks! tanks
 
+## Release 0.7.1
+	Updated ModuleManager to 2.7.3
+	Updated WheelMotor.cfg & Wheeltire.cfg, changed ModuleWheel to ModuleWheelBase
+:
+
 
 ============== Coffeeman's work below =========================
 ## ALPHA 6

@@ -1,0 +1,14 @@
+@PART[KWsrbUllageLarge]:BEFORE[Entropy]
+{
+    MODULE
+    {
+        name = NoFailureModules
+    }
+}
+@PART[KWsrbUllage]:BEFORE[Entropy]
+{
+    MODULE
+    {
+        name = NoFailureModules
+    }
+}

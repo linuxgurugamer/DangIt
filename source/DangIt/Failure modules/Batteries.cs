@@ -50,8 +50,10 @@ namespace ippo
 
         protected override bool DI_FailBegin()
         {
+            return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams2>().AllowBatteryFailures;
             // Can always fail
-            return true;
+            //            return true;
+
         }
 
         protected override void DI_Disable()

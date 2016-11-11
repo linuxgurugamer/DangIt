@@ -1,0 +1,14 @@
+@PART[sepMotor1]:BEFORE[Entropy]
+{
+    MODULE
+    {
+        name = NoFailureModules
+    }
+}
+@PART[LaunchEscapeSystem]:BEFORE[Entropy]
+{
+    MODULE
+    {
+        name = NoFailureModules
+    }
+}
