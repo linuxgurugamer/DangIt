@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using KSP.UI.Screens;
+
 
 namespace ippo
 {
@@ -16,7 +18,9 @@ namespace ippo
         {
             // Sync settings with the runtime
             if (HighLogic.LoadedSceneIsFlight)
+            {
                 this.StartCoroutine("RuntimeFetch");
+            }
         }
 
 
@@ -24,7 +28,10 @@ namespace ippo
         IEnumerator RuntimeFetch()
         {
             while (DangIt.Instance == null || !DangIt.Instance.IsReady)
+            {
+               
                 yield return null;
+            }
 
             this.Events["Inspect"].unfocusedRange = DangIt.Instance.CurrentSettings.MaxDistance;
         }

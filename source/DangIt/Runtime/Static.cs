@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using KSP.IO;
+using KSP.UI.Screens;
 
 namespace ippo
 {
@@ -17,7 +18,7 @@ namespace ippo
 		/// <param name="modeString">Priority string</param>
 		public static int PriorityIntFromString(string modeString)
 		{
-			print ("[DangIt] [Static] Translating '" + modeString + "' to int...");
+			Logger.Info("[DangIt] [Static] Translating '" + modeString + "' to int...");
 			var keys = new List<string> ();
 			keys.Add ("LOW");
 			keys.Add ("MEDIUM");
@@ -50,21 +51,7 @@ namespace ippo
         /// </summary>
         public static void FlightLog(string msg)
         {
-            string fmt = "00";
-            StringBuilder sb = new StringBuilder();
-
-            sb.Append("[");
-
-            if (FlightLogger.met_years > 0) sb.Append(FlightLogger.met_years.ToString(fmt) + ":");
-            if (FlightLogger.met_days > 0) sb.Append(FlightLogger.met_days.ToString(fmt) + ":");
-
-            sb.Append(FlightLogger.met_hours.ToString(fmt) + ":" +
-                      FlightLogger.met_mins.ToString(fmt) + ":" +
-                      FlightLogger.met_secs.ToString(fmt));
-
-			sb.Append("]: ");
-
-            FlightLogger.eventLog.Add(sb.ToString() + msg);
+            FlightLogger.eventLog.Add("[" + KSPUtil.PrintTimeStamp(FlightLogger.met) + "]: " + msg);
         }
 
 
@@ -142,7 +129,7 @@ namespace ippo
         /// <param name="v"></param>
         public static void ResetShipGlow(Vessel v)
         {
-            Debug.Log("DangIt: Resetting the ship's glow");
+            Logger.Info("DangIt: Resetting the ship's glow");
             ResetPartGlow(v.rootPart);
         }
 

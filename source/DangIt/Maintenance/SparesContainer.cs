@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
-
+using KSP.UI.Screens;
 namespace ippo
 {
     /// <summary>
@@ -175,7 +175,7 @@ namespace ippo
             sb.Append("[" + this.GetInstanceID() + "]");
             sb.Append(": " + msg);
 
-            Debug.Log(sb.ToString());
+            Logger.Info(sb.ToString());
         }
 
 

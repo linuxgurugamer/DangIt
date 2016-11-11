@@ -27,7 +27,15 @@ namespace ippo
         {
             if (HighLogic.LoadedSceneIsFlight)
             {
-                int idx = part.Resources.list.FindIndex(r => r.resourceName == "ElectricCharge");
+                int idx = -1;
+                foreach (PartResource pr in part.Resources)
+                {
+                    if (pr.resourceName == "ElectricCharge")
+                    {
+                        idx++;
+                        break;
+                    }
+                }
                 if (idx < 0)
                 {
                     throw new Exception("No ElectricCharge was found in the part!");

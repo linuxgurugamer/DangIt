@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using Experience;
+using KSP.UI.Screens;
 
 namespace ippo
 {
@@ -87,7 +88,16 @@ namespace ippo
 		public virtual bool DI_ShowInfoInEditor() { return true; }
 
         #endregion
-
+        #region IPartCostModifier
+        public float GetModuleCost(float defaultCost, ModifierStagingSituation sit)
+        {
+            return defaultCost;
+        }
+        public ModifierChangeWhen GetModuleCostChangeWhen()
+        {
+            return ModifierChangeWhen.FIXED;
+        }
+        #endregion
 
         #region Fields from the cfg file
 
@@ -156,6 +166,15 @@ namespace ippo
         #endregion
 
 
+#if DEBUG
+        bool printChances = false;
+        [KSPEvent(active = true, guiActive = true)]
+        public void PrintChances()
+        {
+            printChances = !printChances;
+        }
+#endif
+
         #region Lambda
 
 
@@ -164,10 +183,15 @@ namespace ippo
         /// </summary>
         public float Lambda()
         {
-            return LambdaFromMTBF(this.CurrentMTBF)
+            float f = LambdaFromMTBF(this.CurrentMTBF)
                     * (1 + TemperatureMultiplier())     // the temperature increases the chance of failure
                     * LambdaMultiplier()                // optional multiplier from the child class
                     * InspectionLambdaMultiplier();           // temporary inspection bonus
+#if DEBUG
+            if (printChances)
+                Logger.Info("Lambda: " + f.ToString());
+#endif      
+            return f;
         }
 
 
@@ -176,15 +200,21 @@ namespace ippo
         /// </summary>
         private float LambdaFromMTBF(float MTBF)
         {
+            float f = 0f;
             try
             {
-                return (1f / MTBF) / 3600f * TimeWarp.fixedDeltaTime;
+                f = (1f / MTBF) / 3600f * TimeWarp.fixedDeltaTime;
             }
             catch (Exception e)
             {
                 OnError(e);
-                return 0f;
+                //return 0f;
             }
+#if DEBUG
+            if (printChances)
+                print("LambdaFromMTBF: " + f.ToString());
+#endif    
+            return f;
         }
 
 
@@ -195,7 +225,13 @@ namespace ippo
         {
             float elapsed = (DangIt.Now() - this.TimeOfLastInspection);
             // Constrain it between 0 and 1
-            return Math.Max(0f, Math.Min(elapsed / this.InspectionBonus, 1f));
+            float f = Math.Max(0f, Math.Min(elapsed / this.InspectionBonus, 1f));
+#if DEBUG
+            if (printChances)
+                print("InspectionLambdaMultiplier: " + f.ToString());
+#endif    
+            return f;
+
         }
 
 
@@ -212,7 +248,7 @@ namespace ippo
             // Wait for the server to be available
             while (DangIt.Instance == null || !DangIt.Instance.IsReady)
                 yield return null;
-            
+
             this.Events["Fail"].guiActive = DangIt.Instance.CurrentSettings.ManualFailures;
             this.Events["EvaRepair"].unfocusedRange = DangIt.Instance.CurrentSettings.MaxDistance;
             this.Events["Maintenance"].unfocusedRange = DangIt.Instance.CurrentSettings.MaxDistance;
@@ -294,6 +330,7 @@ namespace ippo
                 this.LifeTimeSecs = DangIt.Parse<float>(node.GetValue("LifeTimeSecs"), defaultTo: float.PositiveInfinity);
                 this.HasFailed = DangIt.Parse<bool>(node.GetValue("HasFailed"), defaultTo: false);
 
+                print("FailureModule.OnLoad");
                 // Run the subclass' custom onload
                 this.DI_OnLoad(node);
 
@@ -376,7 +413,7 @@ namespace ippo
 
                     DangIt.ResetShipGlow(this.part.vessel);
                 }
-
+                
 				if (DangIt.Instance.CurrentSettings.EnabledForSave){
 	                this.DI_Start(state);
 	                this.StartCoroutine("RuntimeFetch");
@@ -420,7 +457,14 @@ namespace ippo
                         // If the part has not already failed, toss the dice
                         if (!this.HasFailed)
                         {
-                            if (UnityEngine.Random.Range(0f, 1f) < this.Lambda())
+                            float f = this.Lambda();
+#if DEBUG
+                            if (printChances)
+                                print("this.Lambda: " + f.ToString());
+#endif
+
+
+                            if (UnityEngine.Random.Range(0f, 1f) < f)
                             {
                                 this.Fail();
                             }
@@ -449,7 +493,13 @@ namespace ippo
         /// </summary>
         private float TemperatureMultiplier()
         {
-            return 3 * (float)Math.Pow((Math.Max(part.temperature, 0) / part.maxTemp), 5);
+            float f = 3 * (float)Math.Pow((Math.Max(part.temperature, 0) / part.maxTemp), 5);
+#if DEBUG
+            if (printChances)
+                print("TemperatureMultiplier: " + f.ToString());
+#endif    
+            return f;
+
         }
 
 
@@ -738,7 +788,7 @@ namespace ippo
                 if (part.vessel != null) sb.Append("[Ship: " + part.vessel.vesselName + "]");
                 sb.Append(": " + msg);
 
-                Debug.Log(sb.ToString());
+                Logger.Info(sb.ToString());
             }
             catch (Exception e)
             {
@@ -775,14 +825,14 @@ namespace ippo
 
 		[KSPEvent(guiActive = false, active = false, guiName="Mute Alarm")]
 		public void MuteAlarms(){
-			print ("Muting alarms for... " + this.ToString ());
+			Logger.Info("Muting alarms for... " + this.ToString ());
 			if (FindObjectOfType<AlarmManager> () != null) {
 				FindObjectOfType<AlarmManager> ().RemoveAllAlarmsForModule (this);
 			}
 		}
 
 		public void AlarmsDoneCallback(){ //Called from AlarmManager when no alarms remain
-			print ("AlarmsDoneCallback called");
+			Logger.Info("AlarmsDoneCallback called");
 			Events ["MuteAlarms"].active = false;
 			Events ["MuteAlarms"].guiActive = false;
 		}

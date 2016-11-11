@@ -13,7 +13,9 @@ namespace ippo
         /// </summary>
         public class Settings
         {
-			public bool EnabledForSave = true;      // is enabled for this save file
+            public static Settings Instance;
+#if false
+            public bool EnabledForSave = true;      // is enabled for this save file
             public bool ManualFailures = false;     // initiate failures manually
             public float MaxDistance = 2f;          // maximum distance for EVA activities
             public bool Messages = true;            // enable messages and screen posts
@@ -24,8 +26,52 @@ namespace ippo
 			public int  Pri_High_SoundLoops = -1;   // number of times to beep
 			public int  AlarmVolume = 100;          // volume of the alarm (1-100)   
 			public bool DebugStats = false;			// show debug stats of the part in the right-click menu
+#endif
+            public bool EnabledForSave
+            { get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams>().EnabledForSave; } }
+            public bool ManualFailures
+            {
+                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams>().ManualFailures; }
+            }
+            public float MaxDistance
+            {
+                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams>().MaxDistance; }
+            }
+            public bool Messages
+            {
+                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams>().Messages; }
+            }
+            public bool Glow
+            {
+                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams>().Glow; }
+            }
+            public bool RequireExperience
+            {
+                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams>().RequireExperience; }
+            }
+            public int Pri_Low_SoundLoops
+            {
+                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams>().Pri_Low_SoundLoops; }
+            }
+            public int Pri_Medium_SoundLoops
+            {
+                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams>().Pri_Medium_SoundLoops; }
+            }
+            public int Pri_High_SoundLoops
+            {
+                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams>().Pri_High_SoundLoops; }
+            }
+            public int AlarmVolume
+            {
+                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams>().AlarmVolume; }
+            }
+            public bool DebugStats
+            {
+                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams>().DebugStats; }
+            }
+            
 
-            public Settings() { }
+            public Settings() { Instance = this; }
 
 			public int GetSoundLoopsForPriority(string priority)
 			{
@@ -47,7 +93,8 @@ namespace ippo
 			{
 				return ((float)this.AlarmVolume / 100f);
 			}
-				
+
+#if false   
             public Settings(ConfigNode node)
             {
                 if (node != null && node.name == "SETTINGS")
@@ -67,7 +114,6 @@ namespace ippo
                 else
                     throw new Exception("Invalid node!");
             }
-            
 
             public ConfigNode ToNode()
             {
@@ -91,7 +137,7 @@ namespace ippo
 
                 return result;
             }
-
+#endif
 
             /// <summary>
             /// Returns a shallow copy of the object (field-wise).

@@ -1,3 +1,14 @@
+## Beta-1
+	Initial update for 1.2.1
+
+## Beta-2
+	Bug fixes, changed settings storage from local file to new KSP settings 
+
+## Release 0.7.0
+	Added Snacks.cfg to take care of the Snacks! tanks
+
+
+============== Coffeeman's work below =========================
 ## ALPHA 6
 
 ### ALPHA 6.3

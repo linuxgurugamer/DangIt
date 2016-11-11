@@ -17,17 +17,21 @@ namespace ippo
         public override string FailGuiName { get { return "Puncture tank"; } }
         public override string EvaRepairGuiName { get { return "Apply duct tape"; } }
         public override string MaintenanceString { get { return "Repair the insulation"; } }
-		public override string ExtraEditorInfo 
-		{
-				get
-				{
-					var temp = "This part can leak one of the following resources if it fails: ";
-					foreach (PartResource pr in part.Resources.list.FindAll(r => !DangIt.LeakBlackList.Contains(r.resourceName))) {
-					temp += pr.resourceName + ", ";
-					};
-				return temp.TrimEnd(' ').TrimEnd(',');
-				} 
-		}
+        public override string ExtraEditorInfo
+        {
+            get
+            {
+                var temp = "This part can leak one of the following resources if it fails: ";
+
+                foreach (PartResource pr in part.Resources)
+                {
+                    if (!DangIt.LeakBlackList.Contains(pr.resourceName))
+                        temp += pr.resourceName + ", ";
+                };
+                print(temp);
+                return temp.TrimEnd(' ').TrimEnd(',');
+            }
+        }
 
 
         // The leak is modeled as an exponential function
@@ -37,7 +41,7 @@ namespace ippo
         [KSPField(isPersistant = true, guiActive = false)]
         protected float pole = 0.01f;
 
-        
+
         // Maximum and minimum values of the time constant
         // The time constant is generated randomly between these two limits
         // and pole = 1 / TC
@@ -49,7 +53,7 @@ namespace ippo
 
         // Name of the leaking resource
         [KSPField(isPersistant = true, guiActive = false)]
-        public string leakName = null;
+        public string leakName = "none";
 
 
         // List of resources that the module will choose from when starting a new leak.
@@ -63,15 +67,22 @@ namespace ippo
         // this method.
         protected override void DI_RuntimeFetch()
         {
+            leakables = new List<PartResource>();
+
             // At this point DangIt.Instance is not null: fetch the blacklist
-            this.leakables = part.Resources.list.FindAll(r => !DangIt.LeakBlackList.Contains(r.resourceName));
+            foreach (PartResource pr in part.Resources)
+            {
+                if (!DangIt.LeakBlackList.Contains(pr.resourceName))
+                    this.leakables.Add(pr);
+            }
+
 
             // If no leakables are found, just disable the module
             if (leakables.Count == 0)
             {
-                this.Log("The part " + this.part.name + " does not contain any leakable resource.");
+                Logger.Info("The part " + this.part.name + " does not contain any leakable resource.");
                 this.Events["Fail"].active = false;
-                this.leakName = null;
+                this.leakName = "none"; // null;
                 this.enabled = false; // disable the monobehaviour: this won't be updated
             }
         }
@@ -84,7 +95,7 @@ namespace ippo
                 // check if the resource is still in the tank
                 if (this.HasFailed)
                 {
-                    if (string.IsNullOrEmpty(leakName) || !part.Resources.Contains(leakName))
+                    if (string.IsNullOrEmpty(leakName) || leakName == "none" || !part.Resources.Contains(leakName))
                     {
                         this.Log("ERROR: the part was started as failed but the leakName isn't valid!"); ;
                         this.SetFailureState(false);
@@ -98,20 +109,26 @@ namespace ippo
 
         protected override void DI_OnLoad(ConfigNode node)
         {
+            print("DI_OnLoad");
             this.pole = DangIt.Parse<float>("pole", 0.01f);
-            
+
             this.leakName = node.GetValue("leakName");
             if (string.IsNullOrEmpty(leakName))
-                leakName = null;
+                leakName = "none"; // null;
 
-            this.Log("OnLoad: loaded leakName " + ((leakName == null) ? "null" : leakName));
+            this.Log("OnLoad: loaded leakName " + ((leakName == null) ? "none" : leakName));
         }
 
 
 
         protected override void DI_OnSave(ConfigNode node)
         {
-            node.SetValue("leakName", (leakName == null) ? string.Empty : leakName);
+            if (leakName == null)
+                leakName = "none"; //  print("Adding leak: (empty)");
+            else
+                print("Adding leak: [" + leakName + "]");
+
+            node.SetValue("leakName", (leakName == null) ? "none" : leakName);
             node.SetValue("pole", this.pole.ToString());
         }
 
@@ -121,8 +138,8 @@ namespace ippo
         {
             try
             {
-                if (this.HasFailed && 
-                   (!string.IsNullOrEmpty(leakName) &&      
+                if (this.HasFailed &&
+                   (!(string.IsNullOrEmpty(leakName)  || leakName == "none") &&
                    (part.Resources[leakName].amount > 0)))  // ignore empty tanks
                 {
                     double amount = pole * part.Resources[leakName].amount * TimeWarp.fixedDeltaTime;
@@ -133,7 +150,7 @@ namespace ippo
 
                     if (part.Resources[leakName].flowState)
                         part.RequestResource(leakName, amount);
-                    else 
+                    else
                     {
                         part.Resources[leakName].amount -= amount;
                         part.Resources[leakName].amount = Math.Max(part.Resources[leakName].amount, 0);
@@ -170,13 +187,13 @@ namespace ippo
 
                 // Pick a random index to leak.
                 // Random.Range excludes the upper bound,
-				// BUT because list.Count returns the length, not the max index, we DONT need a +1
-				// e.g. [1].Count == 1 but MyListWithOneItem[1] == IndexError
+                // BUT because list.Count returns the length, not the max index, we DONT need a +1
+                // e.g. [1].Count == 1 but MyListWithOneItem[1] == IndexError
 
                 int idx = UnityEngine.Random.Range(0, leakables.Count);
-				print ("Selected IDX: " + idx.ToString ());
-				print ("Length of leakables: " + this.leakables.Count.ToString ());
-				print ("Leakables: " + this.leakables.ToString ());
+                print("Selected IDX: " + idx.ToString());
+                print("Length of leakables: " + this.leakables.Count.ToString());
+                print("Leakables: " + this.leakables.ToString());
 
                 this.leakName = leakables[idx].resourceName;
 
@@ -185,7 +202,7 @@ namespace ippo
             }
             else
             {
-                leakName = null;
+                leakName = "none"; // null;
                 this.Log("Zero leakable resources found on part " + this.part.partName + ", aborting FailBegin()");
 
                 // Disallow failing
@@ -202,10 +219,10 @@ namespace ippo
         }
 
 
-        
+
         protected override void DI_EvaRepair()
         {
-            this.leakName = null;
+            this.leakName = "none";
         }
 
 
@@ -221,7 +238,7 @@ namespace ippo
 
         }
 
-        [KSPEvent(active = true, guiActive=true)]
+        [KSPEvent(active = true, guiActive = true)]
         public void PrintBlackList()
         {
             this.Log("Printing blacklist");
@@ -232,8 +249,15 @@ namespace ippo
             this.Log("Done");
         }
 #endif
-		public override bool DI_ShowInfoInEditor(){
-			return part.Resources.list.FindAll(r => !DangIt.LeakBlackList.Contains(r.resourceName)).Count>0; //Only show if has leakable rescoures
-		}
+        public override bool DI_ShowInfoInEditor()
+        {
+            foreach (PartResource pr in part.Resources)
+            {
+                if (!DangIt.LeakBlackList.Contains(pr.resourceName))
+                    return true;
+            }
+            return false;
+            //return part.Resources.GetAll().FindAll(r => !DangIt.LeakBlackList.Contains(r.resourceName)).Count>0; //Only show if has leakable rescoures
+        }
     }
 }

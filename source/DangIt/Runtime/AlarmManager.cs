@@ -5,61 +5,73 @@ using System.Collections.Generic;
 
 namespace ippo
 {
-	[RequireComponent(typeof(AudioSource))]
+//	[RequireComponent(typeof(AudioSource))]
 	[KSPAddon(KSPAddon.Startup.Flight, false)]
 	public class AlarmManager : MonoBehaviour
 	{
 		public Dictionary<FailureModule, int> loops;
+        //AudioSource audio;
+        static FXGroup audioSource = null;
+        
 
-		public void Start()
+        public void Start()
 		{
 			print("[DangIt] [AlarmManager] Starting...");
 			print("[DangIt] [AlarmManager] Setting Volume...");
-			this.audio.panLevel = 0f; //This disable the game scaling volume with distance from source
-			this.audio.volume = 1f;
+            audioSource = new FXGroup("DangItAlarm");
+            audioSource.audio = Camera.main.gameObject.AddComponent<AudioSource>();
+            // audio = new AudioSource();
+            audioSource.audio.spatialBlend = 0f; //This disable the game scaling volume with distance from source
+            audioSource.audio.volume = 0f; 
 
-			print ("[DangIt] [AlarmManager] Creating Clip");
-			this.audio.clip=GameDatabase.Instance.GetAudioClip("DangIt/Sounds/alarm"); //Load alarm sound
+			Logger.Info("[DangIt] [AlarmManager] Creating Clip");
+            audioSource.audio.clip=GameDatabase.Instance.GetAudioClip("DangIt/Sounds/alarm"); //Load alarm sound
 
-			print ("[DangIt] [AlarmManager] Creating Dictionary");
+			Logger.Info("[DangIt] [AlarmManager] Creating Dictionary");
 			this.loops=new Dictionary<FailureModule, int>(); //Reset counter, so on logic pass we play it
 		}
 
 		public void UpdateSettings(){
-			float scaledVolume = DangIt.Instance.CurrentSettings.AlarmVolume / 100f;
-			print ("[DangIt] [AlarmManager] Rescaling Volume (at UpdateSettings queue)..., now at " + scaledVolume);
-			this.audio.volume = scaledVolume;
+            print("[DangIt] [AlarmManager] UpdateSettings");
+           // float scaledVolume = DangIt.Instance.CurrentSettings.AlarmVolume / 100f;
+			//Logger.Info("[DangIt] [AlarmManager] Rescaling Volume (at UpdateSettings queue)..., now at " + scaledVolume);
+           // if (audioSource != null)
+           //     audioSource.audio.volume = 0; // scaledVolume;
 		}
 
 		public void AddAlarm(FailureModule fm, int number)
 		{
-			this.audio.volume = DangIt.Instance.CurrentSettings.GetMappedVolume(); //This seems like an OK place for this, because if I put it in the constructor...
+            audioSource.audio.volume = DangIt.Instance.CurrentSettings.GetMappedVolume(); //This seems like an OK place for this, because if I put it in the constructor...
 			                                                                       // ...you would have to reboot to change it, but I don't want to add lag by adding it to each frame in Update()
 			if (number != 0) {
-				print ("[DangIt] [AlarmManager] Adding '" + number.ToString () + "' alarms from '" + fm.ToString () + "'");
+				Logger.Info("[DangIt] [AlarmManager] Adding '" + number.ToString () + "' alarms from '" + fm.ToString () + "'");
 				loops.Add (fm, number);
 			} else {
-				print ("[DangIt] [AlarmManager] No alarms added: Would have added 0 alarms");
+				Logger.Info("[DangIt] [AlarmManager] No alarms added: Would have added 0 alarms");
 			}
 		}
 
 		public void Update()
 		{
-			if (this.audio != null) {
-				if (!this.audio.isPlaying){
+			if (audioSource.audio != null) {
+				if (!audioSource.audio.isPlaying){
 					if (loops.Count > 0) {
 						var element = loops.ElementAt (0);
 						loops.Remove (element.Key);
-						print ("[DangIt] [AlarmManager] Playing Clip");
-						audio.Play ();
+						Logger.Info("[DangIt] [AlarmManager] Playing Clip");
+                        float scaledVolume = DangIt.Instance.CurrentSettings.GetMappedVolume();
+                        audioSource.audio.volume = scaledVolume;
+                        audioSource.audio.Play ();
 						if (element.Value != 0 && element.Value != 1) {
 							if (element.Key.vessel == FlightGlobals.ActiveVessel) {
 								loops.Add (element.Key, element.Value - 1); //Only re-add if still has alarms
 							} else {
-								element.Key.AlarmsDoneCallback ();
+                                audioSource.audio.volume = 0;
+                                element.Key.AlarmsDoneCallback ();
 							}
 						} else {
-							element.Key.AlarmsDoneCallback ();
+                            audioSource.audio.volume = 0;
+                            element.Key.AlarmsDoneCallback ();
 						}
 					}
 				}
@@ -68,9 +80,11 @@ namespace ippo
 
 		public void RemoveAllAlarmsForModule(FailureModule fm)
 		{
-			print ("[DangIt] [AlarmManager] Removing alarms...");
+            audioSource.audio.volume = 0;
+            Logger.Info("[DangIt] [AlarmManager] Removing alarms...");
 			if (this.loops.Keys.Contains (fm))
 			{
+                
 				fm.AlarmsDoneCallback ();
 				loops.Remove (fm);
 			}

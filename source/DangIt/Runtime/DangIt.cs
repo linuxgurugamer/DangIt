@@ -2,11 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.Collections;
-using System.Xml.Serialization;
+//using System.Xml.Serialization;
 using System.Linq;
 using System.Text;
 using UnityEngine;
 using IO = System.IO;
+using KSP.UI.Screens;
 
 namespace ippo
 {
@@ -39,7 +40,7 @@ namespace ippo
                         _leakBlackList.Add("SolidFuel");
                         _leakBlackList.Add("SpareParts");
 
-                        Debug.Log("[DangIt]: An exception occurred while loading the resource blacklist and a default one has been created. " + e.Message);
+                        Logger.Info("[DangIt]: An exception occurred while loading the resource blacklist and a default one has been created. " + e.Message);
                     } 
                 }
 
@@ -53,31 +54,40 @@ namespace ippo
         internal static List<string> _leakBlackList = null;
 
 
-        private DangIt.Settings currentSettings;
+       // private DangIt.Settings currentSettings;
 		public  AlarmManager    alarmManager;
+
+        // public DangItCustomParams CurrentSettings
+        //{
+        //   get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams>(); }
+        //}
         /// <summary>
         /// General settings about notifications and gameplay elements.
         /// </summary>
-        public Settings CurrentSettings 
+
+        
+#if false
         {
-            get { return currentSettings; }
+           get { return value; }
+
             set
             {
-                this.Log("Applying new settings:\n" + value.ToNode().ToString());
+                //this.Log("Applying new settings:\n" + value.ToNode().ToString());
                 currentSettings = value;
 				DangIt.Instance.StartPartInfoCacheReload ();
 				if (FindObjectOfType<AlarmManager> () != null) {
 					FindObjectOfType<AlarmManager> ().UpdateSettings ();
 				}
             }
+
         }
-        
+#endif
 
         /// <summary>
         /// Return the current running instance.
         /// </summary>
         public static DangIt Instance { get; private set; }
-
+        public Settings CurrentSettings = new Settings();
 
         /// <summary>
         /// Returns true if the instance is initialized and ready to work.
@@ -86,23 +96,51 @@ namespace ippo
 
         public DangIt()
         {
-            Debug.Log("[DangIt]: Instantiating runtime.");
+            Logger.Info("[DangIt]: Instantiating runtime.");
 
             // Now the instance is built and can be exposed, but it is not yet ready until after OnLoad
             Instance = this;
             this.IsReady = false;
 
             // Add the button to the stock toolbar
-            this.StartCoroutine("AddAppButton");
+            // this.StartCoroutine("AddAppButton");
+
         }
 
+        void Start()
+        {
+            GameEvents.OnGameSettingsApplied.Add(ReloadSettings);
+            Logger.Info("[DangIt]: Start.");
+            
+            ReloadSettings();
+        }
+
+        /// <summary>
+        /// Reload settings if necessary.
+        /// </summary>
+
+        void ReloadSettings()
+        {
+            this.IsReady = false;
+            DangIt.Instance.StartPartInfoCacheReload();
+            if (FindObjectOfType<AlarmManager>() != null)
+            {
+                FindObjectOfType<AlarmManager>().UpdateSettings();
+            }
+
+                this.IsReady = true;
+        }
+
+#if false
         /// <summary>
         /// Load the saved settings
         /// </summary>
         public override void OnLoad(ConfigNode node)
         {
+            print("DangIt.OnLoad");
+
             if (node.HasNode("SETTINGS"))
-                this.CurrentSettings = new Settings(node.GetNode("SETTINGS"));
+                this.currentSettings = new Settings(node.GetNode("SETTINGS"));
             else
             {
                 this.CurrentSettings = new Settings();
@@ -127,30 +165,36 @@ namespace ippo
             }
         }
 
-
+#endif
 
         public void OnDestroy()
         {
             this.Log("Destroying instance.");
-
+#if false
             // Remove the button from the toolbar
             if (appBtn != null)
                 ApplicationLauncher.Instance.RemoveModApplication(this.appBtn);
+#endif
+            GameEvents.OnGameSettingsApplied.Remove(ReloadSettings);
         }
 
 
         private void Log(string msg)
         {
-            Debug.Log("[DangIt][Runtime]: " + msg);
+            Logger.Info(msg);
         }
 
 		public void StartPartInfoCacheReload(){
 			Log ("Starting refresh of Part Info cache");
+            
 			StartCoroutine(RefreshPartInfo());
 		}
 
 		private IEnumerator RefreshPartInfo()
 		{
+            if (CurrentSettings == null || PartLoader.LoadedPartsList == null)
+                yield break;
+
 			yield return null;
 			try{
 				foreach (var ap in PartLoader.LoadedPartsList.Where(ap => ap.partPrefab.Modules != null))
@@ -162,11 +206,11 @@ namespace ippo
 						}
 					}
 
-					if (target != null & !this.currentSettings.EnabledForSave) {
+					if (target != null & !this.CurrentSettings.EnabledForSave) {
 						ap.moduleInfos.Remove (target);
 					}
 
-					if (target == null & this.currentSettings.EnabledForSave) {
+					if (target == null & this.CurrentSettings.EnabledForSave) {
 						IEnumerable<ModuleReliabilityInfo> reliabilityModules = ap.partPrefab.Modules.OfType<ModuleReliabilityInfo>();
 						if (reliabilityModules.Count()!=0){
 							AvailablePart.ModuleInfo newModuleInfo = new AvailablePart.ModuleInfo ();

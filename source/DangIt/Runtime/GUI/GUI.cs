@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using KSP.UI.Screens;
+
 
 namespace ippo
 {
     public partial class DangIt
     {        
+#if false 
         ApplicationLauncherButton appBtn;
-        SettingsWindow settingsWindow = new SettingsWindow();
+        //SettingsWindow settingsWindow = new SettingsWindow();
 
         void OnGUI()
         {
@@ -67,6 +70,6 @@ namespace ippo
         {
             this.settingsWindow.Enabled = false;
         }
-
+#endif
     }
 }
