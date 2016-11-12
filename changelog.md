@@ -26,7 +26,8 @@
 		Added Generators
 		Added Solar Panels
 		Added SRBs
-
+## Release 0.7.2
+	Fixed settings for new games
 
 
 ============== Coffeeman's work below =========================

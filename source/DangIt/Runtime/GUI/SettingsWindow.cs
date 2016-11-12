@@ -212,8 +212,8 @@ namespace ippo
 
         public override bool Interactible(MemberInfo member, GameParameters parameters)
         {
-            if (HighLogic.LoadedScene != GameScenes.SPACECENTER)
-                return false;
+            //if (HighLogic.LoadedScene != GameScenes.SPACECENTER)
+            //    return false;
             if (oldEnabled != EnabledForSave)
             {
                
@@ -344,8 +344,8 @@ namespace ippo
 
         public override bool Interactible(MemberInfo member, GameParameters parameters)
         {
-            if (HighLogic.LoadedScene != GameScenes.SPACECENTER)
-                return false;
+            //if (HighLogic.LoadedScene != GameScenes.SPACECENTER)
+            //    return false;
             
             return true;
             //            return true; //otherwise return true
@@ -460,8 +460,8 @@ namespace ippo
 
         public override bool Interactible(MemberInfo member, GameParameters parameters)
         {
-            if (HighLogic.LoadedScene != GameScenes.SPACECENTER)
-                return false;
+            //if (HighLogic.LoadedScene != GameScenes.SPACECENTER)
+            //    return false;
             if (member.Name == "AllowParachuteFailures")
             {
                 if (!AllowParachuteFailures)
