@@ -29,6 +29,9 @@
 ## Release 0.7.2
 	Fixed settings for new games
 
+## Release 0.7.3
+	Fixed typo in SpareParts.cfg, line 153, "ModuleCargoBay" instead of "ModuleCargeBay"
+	Fixed SpareParts.cfg Cargo section, so it now works properly and doesn't add to all parts
 
 ============== Coffeeman's work below =========================
 ## ALPHA 6
