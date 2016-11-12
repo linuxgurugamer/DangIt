@@ -10,7 +10,23 @@
 ## Release 0.7.1
 	Updated ModuleManager to 2.7.3
 	Updated WheelMotor.cfg & Wheeltire.cfg, changed ModuleWheel to ModuleWheelBase
-:
+	Added WheelMotor
+	Added WheelTire
+	Fixed glow to work even when going EVA
+	Added ability to enable or disable failure mode for each type of module
+	Fixed bug where switching to vessel in flight wouldn't properly initialize the popup buttons
+	Updated the Radial bay to only allow access if it is opens
+	Added spare parts to cargo bays
+	Added code so that any cargo bay with parts will have to be open before accessing the parts
+	Added DeployableAntenna
+	Removed requirement for the Community Resource Pack, but is still compatible with it
+	Following are from Entropy, originally by coffeeman
+		Added Parachutes
+		Added Motors (Animations)
+		Added Generators
+		Added Solar Panels
+		Added SRBs
+
 
 
 ============== Coffeeman's work below =========================

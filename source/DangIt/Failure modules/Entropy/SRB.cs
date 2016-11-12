@@ -42,12 +42,21 @@ namespace ippo
 			srb = this.part.Modules.OfType<ModuleEngines>().Single();
 		}
 
-		protected override bool DI_FailBegin()
-		{
-			return PartIsActive();
-		}
+        protected override bool DI_AllowedToFail()
+        {
+            return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams3>().AllowSRBFailures;
+        }
 
-		protected override void DI_Disable()
+        protected override bool DI_FailBegin()
+		{
+            Logger.Info("ModuleSRBReliability.DI_FailBegin: AllowSRBFailures: " + HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams3>().AllowSRBFailures.ToString() +
+                "   PartIsActive: " + PartIsActive().ToString());
+		    return DI_AllowedToFail() & PartIsActive();
+            //return PartIsActive();
+
+        }
+
+        protected override void DI_Disable()
 		{
 			srb.heatProduction += (float)srb.part.maxTemp/4F; //Increase the heat so it explodes
 			overloading = true;
@@ -56,8 +65,9 @@ namespace ippo
 		protected override void DI_EvaRepair(){}
 
 		protected override void DI_Update(){
-			if (overloading){           
-				srb.rigidbody.AddRelativeForce(Vector3.forward * overloadbonus); //Increase thrust thru hack
+			if (overloading){   
+                part.Rigidbody.AddRelativeForce(Vector3.forward * overloadbonus); //Increase thrust thru hack)
+                //srb.rigidbody.AddRelativeForce(Vector3.forward * overloadbonus); //Increase thrust thru hack
 				overloadbonus += srb.maxThrust / 60; //This is a considerable amount
 				if (!PartIsActive ()) {
 					overloading = false; //Stop if the part is disabled

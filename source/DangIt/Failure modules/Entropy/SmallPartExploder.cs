@@ -23,9 +23,15 @@ namespace ippo
 			return part.GetResourceMass()>0.1;
 		}
 
-		protected override bool DI_FailBegin()
+        protected override bool DI_AllowedToFail()
+        {
+            return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams3>().AllowSmallTankFailures;
+        }
+
+        protected override bool DI_FailBegin()
 		{
-			return true;
+            return DI_AllowedToFail();
+            //return true;
 		}
 
 		protected override void DI_Disable()

@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Collections;
 //using System.Xml.Serialization;
 using System.Linq;
-using System.Text;
+using System.Reflection;
 using UnityEngine;
-using IO = System.IO;
+using System.IO;
 using KSP.UI.Screens;
 
 namespace ippo
@@ -27,7 +27,13 @@ namespace ippo
                 if (_leakBlackList == null) // Load the file on the first call
                 {
                     _leakBlackList = new List<string>();
-                    ConfigNode blacklistFile = ConfigNode.Load(DangIt.GetConfigFilePath("BlackList.cfg"));
+
+                    Assembly execAssembly = Assembly.GetExecutingAssembly();                   
+                    string _pluginDirectory = Path.GetDirectoryName(execAssembly.Location);
+                    //dll's path + filename for the config file
+                    string blacklistFilePath = Path.Combine(_pluginDirectory, "../PluginData/BlackList.cfg");
+
+                    ConfigNode blacklistFile = ConfigNode.Load(blacklistFilePath);
                     try
                     {
                         ConfigNode blackListNode = blacklistFile.GetNode("BLACKLIST");
@@ -37,7 +43,7 @@ namespace ippo
                     catch (Exception e)
                     {
                         _leakBlackList.Add("ElectricCharge");
-                        _leakBlackList.Add("SolidFuel");
+                       // _leakBlackList.Add("SolidFuel");
                         _leakBlackList.Add("SpareParts");
 
                         Logger.Info("[DangIt]: An exception occurred while loading the resource blacklist and a default one has been created. " + e.Message);
@@ -100,7 +106,7 @@ namespace ippo
 
             // Now the instance is built and can be exposed, but it is not yet ready until after OnLoad
             Instance = this;
-            this.IsReady = false;
+            //this.IsReady = false;
 
             // Add the button to the stock toolbar
             // this.StartCoroutine("AddAppButton");
@@ -121,14 +127,14 @@ namespace ippo
 
         void ReloadSettings()
         {
-            this.IsReady = false;
+          //  this.IsReady = false;
             DangIt.Instance.StartPartInfoCacheReload();
             if (FindObjectOfType<AlarmManager>() != null)
             {
                 FindObjectOfType<AlarmManager>().UpdateSettings();
             }
 
-                this.IsReady = true;
+          //  this.IsReady = true;
         }
 
 #if false
@@ -194,8 +200,8 @@ namespace ippo
 		{
             if (CurrentSettings == null || PartLoader.LoadedPartsList == null)
                 yield break;
-
-			yield return null;
+            this.IsReady = false;
+            yield return null;
 			try{
 				foreach (var ap in PartLoader.LoadedPartsList.Where(ap => ap.partPrefab.Modules != null))
 				{
@@ -221,7 +227,9 @@ namespace ippo
 					}
 				}
 				Log("Refresh Finished");
-			}catch (Exception e){
+                this.IsReady = true;
+            }
+            catch (Exception e){
 				this.Log("ERROR ["+e.GetType().ToString()+"]: " + e.Message + "\n" + e.StackTrace);
 			}
 		}

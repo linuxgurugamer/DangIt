@@ -30,25 +30,32 @@ namespace ippo
             }
         }
 
+        protected override bool DI_AllowedToFail()
+        {
+            return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams2>().AllowDeployableAntennaFailures;
+        }
 
         protected override bool DI_FailBegin()
         {
-            return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams2>().AllowDeployableAntennaFailures; ;
+            return DI_AllowedToFail();
             // Can always fail
             // return true;
 
         }
 
-
+        ModuleDeployablePart.DeployState lastDeployState; 
         protected override void DI_Disable()
         {
             this.antennaModule.enabled = false;
+            lastDeployState = this.antennaModule.deployState;
+            this.antennaModule.deployState = ModuleDeployablePart.DeployState.BROKEN;
         }
 
 
         protected override void DI_EvaRepair()
         {
             this.antennaModule.enabled = true;
+            this.antennaModule.deployState = lastDeployState;
         }
 
     }

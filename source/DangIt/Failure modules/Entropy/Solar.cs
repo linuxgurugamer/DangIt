@@ -35,18 +35,25 @@ namespace ippo
 			}
 		}
 
-		protected override bool DI_FailBegin()
-		{
-			return true;
-		}
+        protected override bool DI_AllowedToFail()
+        {
+            return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams3>().AllowSolarPanelFailures;
+        }
 
-		protected override void DI_Disable()
+        protected override bool DI_FailBegin()
+		{
+            return DI_AllowedToFail() & PartIsActive();
+            //return true;
+		}       
+
+        protected override void DI_Disable()
 		{
 			panel.isTracking = false;
-		}
+        }
 
-		protected override void DI_EvaRepair(){
-			panel.isTracking = true;
+		protected override void DI_EvaRepair()
+        {
+            panel.isTracking = true;
 		}
 
 		public override bool DI_ShowInfoInEditor(){

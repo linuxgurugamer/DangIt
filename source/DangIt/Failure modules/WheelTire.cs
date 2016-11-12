@@ -8,7 +8,8 @@ namespace ippo
 {
 	public class ModuleWheelTireReliability : FailureModule
 	{
-		ModuleWheel wheel;
+		ModuleWheelBase wheelBase;
+        ModuleWheels.ModuleWheelDamage wheelDamage;
 
 		public override string DebugName { get { return "DangItWheel_Tire"; } }
 		public override string ScreenName { get { return "Tire"; } }
@@ -30,23 +31,31 @@ namespace ippo
 		{
 			if (HighLogic.LoadedSceneIsFlight)
 			{
-				this.wheel = this.part.Modules.OfType<ModuleWheel>().Single();
-			}
-			if (!this.wheel.damageable) {
-				this.enabled = false;
-			}
+				this.wheelBase = this.part.Modules.OfType<ModuleWheelBase>().Single();
+                wheelDamage = part.Modules.OfType<ModuleWheels.ModuleWheelDamage>().Single();
+
+            }
+            
+			//if (!this.wheel.damageable) {
+			//	this.enabled = false;
+			//}
 		}
 
+        protected override bool DI_AllowedToFail()
+        {
+            return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams2>().AllowWheelTireFailures;
+        }
 
-		protected override bool DI_FailBegin()
+        protected override bool DI_FailBegin()
 		{
-			return true;
+			return DI_AllowedToFail();
 		}
 
 		protected override void DI_Disable()
 		{
+            wheelDamage.SetDamaged(true);
 			//this.wheel.isDamaged = true; //Do we need this?
-			this.wheel.wheels [0].damageWheel ();
+			//this.wheel.wheels [0].damageWheel ();
 
 			Events ["Maintenance"].active = false; //We should repair with the ModuleWheel UI option
 			Events ["EvaRepair"].active = false;
@@ -54,17 +63,21 @@ namespace ippo
 		}
 
 		protected override void DI_Update(){
-			if (this.HasFailed) {
-				if (!this.wheel.isDamaged) {
+#if false
+            if (this.HasFailed) {
+				if (!wheelDamage.isDamaged()) {
 					this.EvaRepair ();
 				}
 			}
+#endif
 		}
 
 		protected override void DI_EvaRepair()
 		{
-			this.wheel.wheels[0].repairWheel ();
-		}
+            if (wheelDamage.isRepairable)
+                wheelDamage.SetDamaged(false);
+            //this.wheel.wheels[0].repairWheel ();
+        }
 
 	}
 }

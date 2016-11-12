@@ -1,9 +1,8 @@
 ﻿using System;
-using System.IO;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Collections.Generic;
+using KSP;
+using System.Collections;
 using UnityEngine;
 
 namespace ippo
@@ -21,7 +20,7 @@ namespace ippo
         {
             get
             {
-                var temp = "This part can leak one of the following resources if it fails: ";
+                var temp = "This part: " + part.partInfo.title + " can leak one of the following resources if it fails: ";
 
                 foreach (PartResource pr in part.Resources)
                 {
@@ -67,6 +66,7 @@ namespace ippo
         // this method.
         protected override void DI_RuntimeFetch()
         {
+            Logger.Info("ModuleTankReliability.DI_RuntimeFetch, part: " + part.partInfo.title);
             leakables = new List<PartResource>();
 
             // At this point DangIt.Instance is not null: fetch the blacklist
@@ -89,6 +89,7 @@ namespace ippo
 
         protected override void DI_Start(StartState state)
         {
+            Logger.Info("ModuleTankReliability.DI_Start, part: " + part.partInfo.title);
             if (HighLogic.LoadedSceneIsFlight)
             {
                 // The part was already failed when loaded:
@@ -97,7 +98,7 @@ namespace ippo
                 {
                     if (string.IsNullOrEmpty(leakName) || leakName == "none" || !part.Resources.Contains(leakName))
                     {
-                        this.Log("ERROR: the part was started as failed but the leakName isn't valid!"); ;
+                        this.FailureLog("ERROR: the part was started as failed but the leakName isn't valid!"); ;
                         this.SetFailureState(false);
                     }
                 }
@@ -109,14 +110,18 @@ namespace ippo
 
         protected override void DI_OnLoad(ConfigNode node)
         {
-            print("DI_OnLoad");
+            if (part != null && part.partInfo != null)
+                Logger.Info("ModuleTankReliability.DI_OnLoad, part: " + part.partInfo.title);
+            else
+                Logger.Info("ModuleTankReliability.DI_OnLoad, no part");
             this.pole = DangIt.Parse<float>("pole", 0.01f);
 
             this.leakName = node.GetValue("leakName");
-            if (string.IsNullOrEmpty(leakName))
-                leakName = "none"; // null;
 
-            this.Log("OnLoad: loaded leakName " + ((leakName == null) ? "none" : leakName));
+            if (string.IsNullOrEmpty(leakName))
+                leakName = "none"; // null;;
+
+            this.FailureLog("OnLoad: loaded leakName " + ((leakName == null) ? "none" : leakName));
         }
 
 
@@ -166,11 +171,15 @@ namespace ippo
         }
 
 
+        protected override bool DI_AllowedToFail()
+        {
+            return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams2>().AllowTankFailures;
+        }
 
         protected override bool DI_FailBegin()
         {
-
-            if (!HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams2>().AllowTankFailures)
+            Logger.Info("ModuleTankReliability.DI_FailBegin, part: " + part.partInfo.title);
+            if (!DI_AllowedToFail())
                 return false;
 
             // Something has gone very wrong somewhere
@@ -187,7 +196,7 @@ namespace ippo
                 float TC = UnityEngine.Random.Range(MinTC, MaxTC);
                 this.pole = 1 / TC;
 
-                this.Log(string.Format("Chosen TC = {0} (min = {1}, max = {2})", TC, MinTC, MaxTC));
+                this.FailureLog(string.Format("Chosen TC = {0} (min = {1}, max = {2})", TC, MinTC, MaxTC));
 
                 // Pick a random index to leak.
                 // Random.Range excludes the upper bound,
@@ -207,7 +216,7 @@ namespace ippo
             else
             {
                 leakName = "none"; // null;
-                this.Log("Zero leakable resources found on part " + this.part.partName + ", aborting FailBegin()");
+                this.FailureLog("Zero leakable resources found on part " + this.part.partName + ", aborting FailBegin()");
 
                 // Disallow failing
                 return false;
@@ -218,6 +227,7 @@ namespace ippo
 
         protected override void DI_Disable()
         {
+            Logger.Info("ModuleTankReliability.DI_Disable, part: " + part.partInfo.title);
             // nothing to do for tanks
             return;
         }
@@ -234,10 +244,10 @@ namespace ippo
         [KSPEvent(active = true, guiActive = true)]
         public void PrintStatus()
         {
-            this.Log("Printing flow modes");
+            this.FailureLog("Printing flow modes");
             foreach (PartResource res in this.part.Resources)
             {
-                this.Log(res.resourceName + ": " + res.flowMode + ", " + res.flowState);
+                this.FailureLog(res.resourceName + ": " + res.flowMode + ", " + res.flowState);
             }
 
         }
@@ -245,12 +255,12 @@ namespace ippo
         [KSPEvent(active = true, guiActive = true)]
         public void PrintBlackList()
         {
-            this.Log("Printing blacklist");
+            this.FailureLog("Printing blacklist");
             foreach (string item in DangIt.LeakBlackList)
             {
-                this.Log("Blacklisted: " + item);
+                this.FailureLog("Blacklisted: " + item);
             }
-            this.Log("Done");
+            this.FailureLog("Done");
         }
 #endif
         public override bool DI_ShowInfoInEditor()

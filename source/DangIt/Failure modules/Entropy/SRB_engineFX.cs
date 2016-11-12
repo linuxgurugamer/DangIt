@@ -42,9 +42,16 @@ namespace ippo
 			srb = this.part.Modules.OfType<ModuleEnginesFX>().Single();
 		}
 
-		protected override bool DI_FailBegin()
+        protected override bool DI_AllowedToFail()
+        {
+            return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams3>().AllowSRBFailures;
+        }
+
+        protected override bool DI_FailBegin()
 		{
-			return PartIsActive();
+            return DI_AllowedToFail() & PartIsActive();
+
+            //return PartIsActive();
 		}
 
 		protected override void DI_Disable()
@@ -57,7 +64,8 @@ namespace ippo
 
 		protected override void DI_Update(){
 			if (overloading){
-				srb.rigidbody.AddRelativeForce(Vector3.forward * overloadbonus); //Increase thrust thru hack
+                part.Rigidbody.AddRelativeForce(Vector3.forward * overloadbonus); //Increase thrust thru hack
+                //srb.rigidbody.AddRelativeForce(Vector3.forward * overloadbonus); //Increase thrust thru hack
 				overloadbonus += srb.maxThrust / 60; //This is a considerable amount
 				if (!PartIsActive ()) {
 					overloading = false; //Stop if the part is disabled

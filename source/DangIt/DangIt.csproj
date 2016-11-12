@@ -38,6 +38,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AssemblyFileVersion.tt</DependentUpon>
     </Compile>
+    <Compile Include="Failure modules\CoolantCore.cs" />
     <Compile Include="Failure modules\DeployableAntenna.cs" />
     <Compile Include="Failure modules\Entropy\Animate.cs" />
     <Compile Include="Failure modules\Entropy\Generator.cs" />
@@ -46,6 +47,8 @@
     <Compile Include="Failure modules\Entropy\Solar.cs" />
     <Compile Include="Failure modules\Entropy\SRB.cs" />
     <Compile Include="Failure modules\Entropy\SRB_engineFX.cs" />
+    <Compile Include="Failure modules\WheelMotor.cs" />
+    <Compile Include="Failure modules\WheelTire.cs" />
     <Compile Include="Utilities\Logging.cs" />
     <None Include="buildRelease.bat" />
     <Compile Include="API\API.cs" />

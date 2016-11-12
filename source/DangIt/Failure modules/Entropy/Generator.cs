@@ -11,6 +11,7 @@ namespace ippo
 	public class ModuleGeneratorReliability : FailureModule
 	{
 		ModuleGenerator generator;
+        float initialEfficiency = 0f;
 
 		public override string DebugName { get { return "ModuleGenerator"; } }
 		public override string ScreenName { get { return "Generator"; } }
@@ -30,23 +31,34 @@ namespace ippo
 		protected override void DI_Start(StartState state)
 		{
 			generator = this.part.Modules.OfType<ModuleGenerator>().Single();
+            initialEfficiency = generator.efficiency;
 		}
 
-		protected override bool DI_FailBegin()
+        protected override bool DI_AllowedToFail()
+        {
+            return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams3>().AllowGeneratorFailures;
+        }
+
+        protected override bool DI_FailBegin()
 		{
-			return true;
+            return DI_AllowedToFail();
+            //return true;
 		}
 
 		protected override void DI_Disable()
 		{
-			generator.outputList.ForEach (r => r.rate /= 2);
-		}
+            generator.efficiency /= 2;
+            //generator.outputList.ForEach (r => r.rate /= 2);
+        }
 
 
 		protected override void DI_EvaRepair()
 		{
-			generator.outputList.ForEach (r => r.rate *= 2);
-		}
+            generator.efficiency *= 2;
+            if (generator.efficiency > initialEfficiency)
+                generator.efficiency = initialEfficiency;
+            //generator.outputList.ForEach (r => r.rate *= 2);
+        }
 
 		protected override void DI_Update(){
 			if (this.HasFailed) {

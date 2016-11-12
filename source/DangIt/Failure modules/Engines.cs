@@ -52,10 +52,14 @@ namespace ippo
             }
         }
 
+        protected override bool DI_AllowedToFail()
+        {
+            return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams2>().AllowEngineFailures;
+        }
 
         protected override bool DI_FailBegin()
         {
-            return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams2>().AllowEngineFailures; ;
+            return DI_AllowedToFail();
             // Can always fail
             // return true;
 

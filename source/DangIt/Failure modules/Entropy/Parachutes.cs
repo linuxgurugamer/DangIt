@@ -32,20 +32,36 @@ namespace ippo
 		{
 			chute = this.part.Modules.OfType<ModuleParachute>().Single();
 
-			foreach ( Part part_each in this.part.vessel.Parts){ //Make sure that there is at least one other chute on the craft!
-				if (part_each != this.part) {
-					foreach (PartModule module_each in part_each.Modules) {
-						if (module_each is ModuleParachute) {
-							this.canFail = true;
-						}
-					}
-				}
-			}
-		}
+            if (HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams3>().Allow1ParachuteFailures == false)
+            {
 
-		protected override bool DI_FailBegin()
+                foreach (Part part_each in this.part.vessel.Parts)
+                { //Make sure that there is at least one other chute on the craft!
+                    if (part_each != this.part)
+                    {
+                        foreach (PartModule module_each in part_each.Modules)
+                        {
+                            if (module_each is ModuleParachute)
+                            {
+                                this.canFail = true;
+                            }
+                        }
+                    }
+                }
+            }
+            else
+                this.canFail = true;
+        }
+
+        protected override bool DI_AllowedToFail()
+        {
+            return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams3>().AllowParachuteFailures;
+        }
+
+        protected override bool DI_FailBegin()
 		{
-			return canFail;
+            return DI_AllowedToFail() & canFail;
+            //return canFail;
 		}
 
 		protected override void DI_Disable()

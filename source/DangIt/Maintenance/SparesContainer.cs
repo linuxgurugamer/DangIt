@@ -13,6 +13,11 @@ namespace ippo
     public class ModuleSparesContainer : PartModule
     {
         private bool eventAdded = false;
+        IScalarModule deployModule;
+
+        ModuleCargoBay cargoModule;
+
+
 
         public override void OnStart(PartModule.StartState state)
         {
@@ -22,13 +27,54 @@ namespace ippo
             this.Events["TakeParts"].active = true;
         }
 
-		public void FixedUpdate(){
-			if (HighLogic.LoadedSceneIsEditor) {
-				if (this.part.Resources.Contains ("SpareParts")) {
-					this.part.Resources ["SpareParts"].amount = Math.Round (this.part.Resources ["SpareParts"].amount);
-				}
-			}
-		}
+        IScalarModule findModule(int index)
+        {
+            if (part.Modules[index] is IScalarModule)
+            {
+                return base.part.Modules[index] as IScalarModule;
+            }
+            Logger.Error("Module " + part.Modules[index].moduleName + " is not an IScalarModule");
+            return null;
+        }
+
+        public void FixedUpdate()
+        {
+            if (HighLogic.LoadedSceneIsEditor)
+            {
+                if (this.part.Resources.Contains("SpareParts"))
+                {
+                    this.part.Resources["SpareParts"].amount = Math.Round(this.part.Resources["SpareParts"].amount);
+                }
+            }
+            else
+            {
+                if (this.cargoModule == null)
+                {
+                    cargoModule = base.part.FindModuleImplementing<ModuleCargoBay>();
+                    if (cargoModule != null)
+                        deployModule = this.findModule(cargoModule.DeployModuleIndex);
+                }
+                if (cargoModule != null)
+                {
+                    Logger.Info("Cargo bay found");
+                    if (cargoModule.ClosedAndLocked() || this.deployModule.IsMoving())
+                    {
+                      
+                        Events["DepositParts"].active = false;
+                        Events["TakeParts"].active = false;
+                    }
+                    else
+                    {
+                        if (!this.deployModule.IsMoving())
+                        {
+                            Events["DepositParts"].active = true;
+                            Events["TakeParts"].active = true;
+                        }
+                    }
+                }
+
+            }
+        }
 
 
         // Coroutine that waits for the runtime to be ready and the syncs with the settings
@@ -42,12 +88,11 @@ namespace ippo
             this.Events["DepositParts"].unfocusedRange = DangIt.Instance.CurrentSettings.MaxDistance;
         }
 
-
-       
-        [KSPEvent(active=true, guiActiveUnfocused=true, externalToEVAOnly=true, guiName="Take spares", unfocusedRange = 2f)]
+        [KSPEvent(active = true, guiActiveUnfocused = true, externalToEVAOnly = true, guiName = "Take spares", unfocusedRange = 2f)]
         public void TakeParts()
         {
             Part evaPart = DangIt.FindEVAPart();
+
 
             if (evaPart == null)
                 throw new Exception("ERROR: couldn't find an active EVA!");
@@ -117,7 +162,7 @@ namespace ippo
             // Check if the EVA part contains the spare parts resource: if not, add a new config node
             if (!evaPart.Resources.Contains(Spares.Name))
             {
-                this.Log("The eva part doesn't contain spares, adding the config node"); 
+                this.Log("The eva part doesn't contain spares, adding the config node");
 
                 ConfigNode node = new ConfigNode("RESOURCE");
                 node.AddValue("name", Spares.Name);
@@ -129,7 +174,7 @@ namespace ippo
             // Override maxAmount set by other mods (such as MC2) causing taking of parts to fail -TrypChangeling
             if (evaPart.Resources[Spares.Name].maxAmount < Spares.MaxEvaAmount)
             {
-            	evaPart.Resources[Spares.Name].maxAmount = Spares.MaxEvaAmount;
+                evaPart.Resources[Spares.Name].maxAmount = Spares.MaxEvaAmount;
             }
 
 

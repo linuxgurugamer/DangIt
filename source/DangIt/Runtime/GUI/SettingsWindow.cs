@@ -89,7 +89,7 @@ namespace ippo
        //     instance = this;
        // }
 
-        public override string Title { get { return ""; } }
+        public override string Title { get { return "General Settings"; } }
         public override GameParameters.GameMode GameMode { get { return GameParameters.GameMode.ANY; } }
         public override string Section { get { return "Dang It!"; } }
         public override int SectionOrder { get { return 1; } }
@@ -101,7 +101,7 @@ namespace ippo
         [GameParameters.CustomParameterUI("Manual failures")]
         public bool ManualFailures = false;     // initiate failures manually
 
-#if DEBUG
+#if false
         [GameParameters.CustomParameterUI("Show Debug Stats")]
 #endif
         public bool DebugStats = false;         // show debug stats of the part in the right-click menu
@@ -257,7 +257,7 @@ namespace ippo
         //     instance = this;
         // }
 
-        public override string Title { get { return ""; } }
+        public override string Title { get { return "Allow Failures on:"; } }
         public override GameParameters.GameMode GameMode { get { return GameParameters.GameMode.ANY; } }
         public override string Section { get { return "Dang It!"; } }
         public override int SectionOrder { get { return 2; } }
@@ -293,6 +293,15 @@ namespace ippo
 
         [GameParameters.CustomParameterUI("Tanks")]
         public bool AllowTankFailures = true;
+
+        [GameParameters.CustomParameterUI("Coolant")]
+        public bool AllowCoolantFailures = true;
+
+        [GameParameters.CustomParameterUI("Wheel Motor")]
+        public bool AllowWheelMotorFailures = true;
+
+        [GameParameters.CustomParameterUI("Wheel Tire")]
+        public bool AllowWheelTireFailures = true;
 
 
 
@@ -357,7 +366,7 @@ namespace ippo
         //     instance = this;
         // }
 
-        public override string Title { get { return "Allow Failures on:"; } }
+        public override string Title { get { return "Additional Allow Failures on:"; } }
         public override GameParameters.GameMode GameMode { get { return GameParameters.GameMode.ANY; } }
         public override string Section { get { return "Dang It!"; } }
         public override int SectionOrder { get { return 3; } }
@@ -372,6 +381,9 @@ namespace ippo
 
         [GameParameters.CustomParameterUI("Parachute")]
         public bool AllowParachuteFailures = false;
+
+        [GameParameters.CustomParameterUI("Parachute (1 on vessel)")]
+        public bool Allow1ParachuteFailures = false;
 
         [GameParameters.CustomParameterUI("Small Tanks")]
         public bool AllowSmallTankFailures = false;
@@ -393,6 +405,7 @@ namespace ippo
                     AllowAnimateFailures = false;
                     AllowGeneratorFailures = false;
                     AllowParachuteFailures = false;
+                    Allow1ParachuteFailures = false;
                     AllowSmallTankFailures = false;
                     AllowSolarPanelFailures = false;
                     AllowSRBFailures = false;
@@ -404,6 +417,8 @@ namespace ippo
                     AllowAnimateFailures = false;
                     AllowGeneratorFailures = false;
                     AllowParachuteFailures = true;
+                    Allow1ParachuteFailures = false;
+
                     AllowSmallTankFailures = true;
                     AllowSolarPanelFailures = true;
                     AllowSRBFailures = false;
@@ -415,6 +430,8 @@ namespace ippo
                     AllowAnimateFailures = true;
                     AllowGeneratorFailures = true;
                     AllowParachuteFailures = true;
+                    Allow1ParachuteFailures = false;
+
                     AllowSmallTankFailures = true;
                     AllowSolarPanelFailures = true;
                     AllowSRBFailures = false;
@@ -426,6 +443,8 @@ namespace ippo
                     AllowAnimateFailures = true;
                     AllowGeneratorFailures = true;
                     AllowParachuteFailures = true;
+                    Allow1ParachuteFailures = true;
+
                     AllowSmallTankFailures = true;
                     AllowSolarPanelFailures = true;
                     AllowSRBFailures = true;
@@ -435,7 +454,7 @@ namespace ippo
         }
 
         public override bool Enabled(MemberInfo member, GameParameters parameters)
-        {
+        {            
             return true;
         }
 
@@ -443,7 +462,11 @@ namespace ippo
         {
             if (HighLogic.LoadedScene != GameScenes.SPACECENTER)
                 return false;
-
+            if (member.Name == "AllowParachuteFailures")
+            {
+                if (!AllowParachuteFailures)
+                    Allow1ParachuteFailures = false;
+            }
             return true;
             //            return true; //otherwise return true
         }

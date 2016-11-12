@@ -8,7 +8,7 @@ using KSP;
 
 namespace ippo
 {
-	public class ModuleCoolantReliabilityCore : ippo.FailureModule //Renamed so that it dosen't conflict if user has an old version of Entropy
+	public class ModuleCoolantReliabilityCore : FailureModule //Renamed so that it dosen't conflict if user has an old version of Entropy
 	{
 		EngineManager engines;
 
@@ -35,10 +35,16 @@ namespace ippo
 			}
 		}
 
-		protected override bool DI_FailBegin()
+        protected override bool DI_AllowedToFail()
+        {
+            return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams2>().AllowCoolantFailures;
+        }
+
+        protected override bool DI_FailBegin()
 		{
-			return true;
-		}
+            return DI_AllowedToFail();
+
+        }
 
 		protected override void DI_Disable()
 		{

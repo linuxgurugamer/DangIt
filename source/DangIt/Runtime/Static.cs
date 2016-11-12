@@ -39,9 +39,9 @@ namespace ippo
         /// Returns the full path to a given file in the configuration folder.
         /// Likely, GameData/DangIt/PluginData/DangIt/ + filename
         /// </summary>
-        internal static string GetConfigFilePath(string fileName)
+        internal static string aGetConfigFilePath(string fileName)
         {
-            return IOUtils.GetFilePathFor(typeof(DangIt), fileName);
+            return "GameData/PluginData/" +  fileName;
         }
      
 
@@ -128,8 +128,7 @@ namespace ippo
         /// </summary>
         /// <param name="v"></param>
         public static void ResetShipGlow(Vessel v)
-        {
-            Logger.Info("DangIt: Resetting the ship's glow");
+        {            
             ResetPartGlow(v.rootPart);
         }
 

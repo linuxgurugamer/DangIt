@@ -79,6 +79,7 @@ namespace ippo
         protected virtual void DI_Start(StartState state) { }
         protected virtual void DI_RuntimeFetch() { }
         protected virtual void DI_Update() { }
+        protected abstract bool DI_AllowedToFail();
         protected abstract bool DI_FailBegin();
         protected abstract void DI_Disable();
         protected abstract void DI_EvaRepair();
@@ -168,7 +169,7 @@ namespace ippo
 
 #if DEBUG
         bool printChances = false;
-        [KSPEvent(active = true, guiActive = true)]
+//        [KSPEvent(active = true, guiActive = true)]
         public void PrintChances()
         {
             printChances = !printChances;
@@ -249,7 +250,10 @@ namespace ippo
             while (DangIt.Instance == null || !DangIt.Instance.IsReady)
                 yield return null;
 
-            this.Events["Fail"].guiActive = DangIt.Instance.CurrentSettings.ManualFailures;
+            if (DI_AllowedToFail())
+                this.Events["Fail"].guiActive = DangIt.Instance.CurrentSettings.ManualFailures;
+            else
+                this.Events["Fail"].guiActive = false;
             this.Events["EvaRepair"].unfocusedRange = DangIt.Instance.CurrentSettings.MaxDistance;
             this.Events["Maintenance"].unfocusedRange = DangIt.Instance.CurrentSettings.MaxDistance;
 
@@ -269,7 +273,7 @@ namespace ippo
         {
             try
             {
-                this.Log("Resetting");
+                this.FailureLog("Resetting");
 
                 float now = DangIt.Now();
 
@@ -388,11 +392,12 @@ namespace ippo
         /// </summary>
         public override void OnStart(PartModule.StartState state)
         {
+            Logger.Info("OnStart");
             try
             {
                 if (HighLogic.LoadedSceneIsFlight) // nothing to do in editor
                 {
-                    this.Log("Starting in flight: last reset " + TimeOfLastReset + ", now " + DangIt.Now());
+                    this.FailureLog("Starting in flight: last reset " + TimeOfLastReset + ", now " + DangIt.Now());
 
 					if (!DangIt.Instance.CurrentSettings.EnabledForSave){ //Disable if we've disabled DangIt
 						foreach (var e in this.Events) {
@@ -402,7 +407,7 @@ namespace ippo
 
                     // Reset the internal state at the beginning of the flight
                     // this condition also catches a revert to launch (+1 second for safety)
-                    if (DangIt.Now() < (this.TimeOfLastReset + 1))
+                    // if (DangIt.Now() < (this.TimeOfLastReset + 1))
                         this.Reset();
 
                     // If the part was saved when it was failed,
@@ -412,9 +417,10 @@ namespace ippo
                         this.DI_Disable();
 
                     DangIt.ResetShipGlow(this.part.vessel);
+
                 }
-                
-				if (DangIt.Instance.CurrentSettings.EnabledForSave){
+
+                if (DangIt.Instance.CurrentSettings.EnabledForSave){
 	                this.DI_Start(state);
 	                this.StartCoroutine("RuntimeFetch");
 				}
@@ -438,6 +444,8 @@ namespace ippo
                 // Only update the module during flight and after the re-initialization has run
                 if (HighLogic.LoadedSceneIsFlight && this.HasInitted)
                 {
+                    DangIt.ResetShipGlow(this.part.vessel);
+
                     float now = DangIt.Now();
 
                     float dt = now - LastFixedUpdate;
@@ -511,7 +519,7 @@ namespace ippo
         [KSPEvent(active = true, guiActive = false, guiActiveUnfocused = true, unfocusedRange = 2f, externalToEVAOnly = true)]
         public void Maintenance()
         {
-            this.Log("Initiating EVA maitenance");
+            this.FailureLog("Initiating EVA maitenance");
 
             Part evaPart = DangIt.FindEVAPart();
             if (evaPart == null)
@@ -535,7 +543,7 @@ namespace ippo
             // Check if he is carrying enough spares
             if (evaPart.Resources.Contains(Spares.Name) && evaPart.Resources[Spares.Name].amount >= this.MaintenanceCost)
             {
-                this.Log("Spare parts check: OK! Maintenance allowed allowed");
+                this.FailureLog("Spare parts check: OK! Maintenance allowed allowed");
 
                 // Consume the spare parts
                 // MC2 Breaks RequestResource, since amount is checked, simply decrement! Just like in SparesContainer! Whee! -TrypChangeling
@@ -553,7 +561,7 @@ namespace ippo
             }
             else
             {
-                this.Log("Spare parts check: failed! Maintenance NOT allowed");
+                this.FailureLog("Spare parts check: failed! Maintenance NOT allowed");
                 DangIt.Broadcast("You need " + this.MaintenanceCost + " spares to maintain this.");
             }
 
@@ -569,18 +577,18 @@ namespace ippo
         {
             try
             {
-				this.Log("Initiating Fail()");
+				this.FailureLog("Initiating Fail()");
 
                 // First, run the custom failure logic
                 // The child class can refuse to fail in FailBegin()
                 if (!this.DI_FailBegin())
                 {
-                    this.Log(this.DebugName + " has not agreed to fail, failure aborted!");
+                    this.FailureLog(this.DebugName + " has not agreed to fail, failure aborted!");
                     return;
                 }
                 else
                 {
-                    this.Log(this.DebugName + " has agreed to fail, failure allowed.");
+                    this.FailureLog(this.DebugName + " has agreed to fail, failure allowed.");
                 }
 
                 // If control reaches this point, the child class has agreed to fail
@@ -650,7 +658,7 @@ namespace ippo
         {
             try
             {
-                this.Log("Initiating EVA repair");
+                this.FailureLog("Initiating EVA repair");
 
                 // Get the EVA part (parts can hold resources)
                 Part evaPart = DangIt.FindEVAPart();
@@ -673,7 +681,7 @@ namespace ippo
                     float discountedCost = (float)Math.Round( RepairCost * (1 - UnityEngine.Random.Range(0f, intelligence)) );
                     float discount = RepairCost - discountedCost;
 
-                    this.Log("Kerbal's intelligence: " + intelligence + ", discount: " + discount);
+                    this.FailureLog("Kerbal's intelligence: " + intelligence + ", discount: " + discount);
 
                     // One more MC2 hack - TrypChangeling
                     // evaPart.RequestResource(Spares.Name, discountedCost);
@@ -740,9 +748,9 @@ namespace ippo
 
 
             if (allow)
-                this.Log("Repair allowed!");
+                this.FailureLog("Repair allowed!");
             else
-                this.Log("Repair NOT allowed. Reason: " + reason);
+                this.FailureLog("Repair NOT allowed. Reason: " + reason);
 
             return allow;
         }
@@ -754,11 +762,11 @@ namespace ippo
         bool CheckOutExperience(ProtoCrewMember kerbal)
         {
             // Haskell made me fond of unreadable one-line functional expressions.
-			this.Log ("Checking Experience");
-			this.Log ("this.PerksRequirementName       = " + this.PerksRequirementName);
-			this.Log ("this.PerksRequirementValue      = " + this.PerksRequirementValue);
-			this.Log ("kerbal.experienceTrait.TypeName = " + kerbal.experienceTrait.TypeName);
-			this.Log ("kerbal.experienceLevel          = " + kerbal.experienceLevel);
+			this.FailureLog ("Checking Experience");
+			this.FailureLog ("this.PerksRequirementName       = " + this.PerksRequirementName);
+			this.FailureLog ("this.PerksRequirementValue      = " + this.PerksRequirementValue);
+			this.FailureLog ("kerbal.experienceTrait.TypeName = " + kerbal.experienceTrait.TypeName);
+			this.FailureLog ("kerbal.experienceLevel          = " + kerbal.experienceLevel);
 			return !DangIt.Instance.CurrentSettings.RequireExperience || string.IsNullOrEmpty(this.PerksRequirementName)                  // empty string means no restrictions
 				|| ((kerbal.experienceTrait.TypeName == this.PerksRequirementName) && (kerbal.experienceLevel >= this.PerksRequirementValue));
         }
@@ -776,16 +784,19 @@ namespace ippo
 
         #region Logging utilities
 
-        public void Log(string msg)
+        public void FailureLog(string msg)
         {
             try
             {
                 StringBuilder sb = new StringBuilder();
-
-                sb.Append("[DangIt]: ");
+               
                 sb.Append(this.DebugName);
-                sb.Append("[" + this.GetInstanceID() + "]");
-                if (part.vessel != null) sb.Append("[Ship: " + part.vessel.vesselName + "]");
+                if (part != null)
+                {
+                    if (part.vessel != null) sb.Append("[Ship: " + part.vessel.vesselName + "]");
+                    if (part.partInfo != null)
+                        sb.Append("[" + part.partInfo.title + "]");
+                }
                 sb.Append(": " + msg);
 
                 Logger.Info(sb.ToString());
@@ -809,7 +820,7 @@ namespace ippo
 
         public void LogException(Exception e)
         {
-			this.Log("ERROR ["+e.GetType().ToString()+"]: " + e.Message + "\n" + e.StackTrace);
+			Logger.Error("ERROR ["+e.GetType().ToString()+"]: " + e.Message + "\n" + e.StackTrace);
         }
 
         #endregion

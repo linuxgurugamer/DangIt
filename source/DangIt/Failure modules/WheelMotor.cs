@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
+
 namespace ippo
 {
 	public class ModuleWheelMotorReliability : FailureModule
 	{
-		ModuleWheel wheel;
+		ModuleWheels.ModuleWheelMotor wheelMotor;
 
 		public override string DebugName { get { return "DangItWheel_Motor"; } }
 		public override string ScreenName { get { return "Motor"; } }
@@ -30,23 +31,26 @@ namespace ippo
 		{
 			if (HighLogic.LoadedSceneIsFlight)
 			{
-				this.wheel = this.part.Modules.OfType<ModuleWheel>().Single();
-			}
-			if (!this.wheel.hasMotor) {
-				this.enabled = false;
+				this.wheelMotor = this.part.Modules.OfType<ModuleWheels.ModuleWheelMotor>().Single();
 			}
 		}
 
+        protected override bool DI_AllowedToFail()
+        {
+            return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams2>().AllowWheelMotorFailures;
+        }
 
-		protected override bool DI_FailBegin()
+        protected override bool DI_FailBegin()
 		{
-			return true;
+			return DI_AllowedToFail();
 		}
 
 		protected override void DI_Disable(){
-			this.wheel.motorEnabled = false;
-			foreach (BaseEvent e in this.wheel.Events) {
-				this.Log ("[WheelMotor] e.guiName = "+e.guiName);
+			this.wheelMotor.motorEnabled = false;
+            this.wheelMotor.state = ModuleWheels.ModuleWheelMotor.MotorState.Inoperable;
+
+			foreach (BaseEvent e in this.wheelMotor.Events) {
+				this.FailureLog ("[WheelMotor] e.guiName = "+e.guiName);
 				if (e.guiName.EndsWith ("Motor")) {
 					e.active = false;
 				}
@@ -54,8 +58,9 @@ namespace ippo
 		}
 
 		protected override void DI_EvaRepair(){
-			this.wheel.motorEnabled = true;
-			foreach (BaseEvent e in this.wheel.Events) {
+			this.wheelMotor.motorEnabled = true;
+            this.wheelMotor.state = ModuleWheels.ModuleWheelMotor.MotorState.Idle;
+            foreach (BaseEvent e in this.wheelMotor.Events) {
 
 				if (e.guiName == "Disable Motor") {
 					e.active = true;

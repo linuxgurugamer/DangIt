@@ -32,9 +32,16 @@ namespace ippo
 			bay = this.part.Modules.OfType<ModuleAnimateGeneric>().Single();
 		}
 
-		protected override bool DI_FailBegin()
+        protected override bool DI_AllowedToFail()
+        {
+            return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams3>().AllowAnimateFailures;
+        }
+
+        protected override bool DI_FailBegin()
 		{
-			return true;
+            return DI_AllowedToFail();
+
+            //return true;
 		}
 
 		protected override void DI_Disable()
