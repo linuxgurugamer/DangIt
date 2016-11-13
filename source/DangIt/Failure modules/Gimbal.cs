@@ -33,7 +33,7 @@ namespace ippo
         {
             if (HighLogic.LoadedSceneIsFlight)
             {
-                this.gimbalModule = this.part.Modules.OfType<ModuleGimbal>().Single();
+                this.gimbalModule = this.part.Modules.OfType<ModuleGimbal>().First();
                 this.engineManager = new EngineManager(this.part);
             }
         }

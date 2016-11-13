@@ -31,7 +31,7 @@ namespace ippo
 		{
 			if (HighLogic.LoadedSceneIsFlight)
 			{
-				this.wheelMotor = this.part.Modules.OfType<ModuleWheels.ModuleWheelMotor>().Single();
+				this.wheelMotor = this.part.Modules.OfType<ModuleWheels.ModuleWheelMotor>().First();
 			}
 		}
 

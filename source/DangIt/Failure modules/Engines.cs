@@ -47,7 +47,7 @@ namespace ippo
                 this.engines = new EngineManager(this.part);
 				// Catch if the part has a ModuleSurfaceFX
 				if (this.part.Modules.OfType<ModuleSurfaceFX> ().Any ()) {
-					surfaceFX = this.part.Modules.OfType<ModuleSurfaceFX>().Single();
+					surfaceFX = this.part.Modules.OfType<ModuleSurfaceFX>().First();
 				}
             }
         }

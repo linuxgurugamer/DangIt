@@ -70,7 +70,7 @@ namespace ippo
         {
             if (HighLogic.LoadedSceneIsFlight)
             {
-                this.controlSurface = this.part.Modules.OfType<ModuleControlSurface>().Single();
+                this.controlSurface = this.part.Modules.OfType<ModuleControlSurface>().First();
             }
         }
 

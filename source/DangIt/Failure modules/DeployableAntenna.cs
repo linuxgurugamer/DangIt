@@ -26,7 +26,7 @@ namespace ippo
         {
             if (HighLogic.LoadedSceneIsFlight)
             {
-                this.antennaModule = this.part.Modules.OfType<ModuleDeployableAntenna>().Single();
+                this.antennaModule = this.part.Modules.OfType<ModuleDeployableAntenna>().First();
             }
         }
 

@@ -29,7 +29,7 @@ namespace ippo
 
 		protected override void DI_Start(StartState state)
 		{
-			bay = this.part.Modules.OfType<ModuleAnimateGeneric>().Single();
+			bay = this.part.Modules.OfType<ModuleAnimateGeneric>().First();
 		}
 
         protected override bool DI_AllowedToFail()

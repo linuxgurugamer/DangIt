@@ -32,7 +32,7 @@ namespace ippo
         {
             if (HighLogic.LoadedSceneIsFlight)
             {
-                this.alternatorModule = this.part.Modules.OfType<ModuleAlternator>().Single();
+                this.alternatorModule = this.part.Modules.OfType<ModuleAlternator>().First();
                 this.engineManager = new EngineManager(this.part);
             }
         }

@@ -31,8 +31,8 @@ namespace ippo
 		{
 			if (HighLogic.LoadedSceneIsFlight)
 			{
-				this.wheelBase = this.part.Modules.OfType<ModuleWheelBase>().Single();
-                wheelDamage = part.Modules.OfType<ModuleWheels.ModuleWheelDamage>().Single();
+				this.wheelBase = this.part.Modules.OfType<ModuleWheelBase>().First();
+                wheelDamage = part.Modules.OfType<ModuleWheels.ModuleWheelDamage>().First();
 
             }
             

@@ -33,7 +33,7 @@ namespace ippo
         {
             if (HighLogic.LoadedSceneIsFlight)
             {
-                this.torqueModule = this.part.Modules.OfType<ModuleReactionWheel>().Single();            
+                this.torqueModule = this.part.Modules.OfType<ModuleReactionWheel>().First();            
             }
         }
 

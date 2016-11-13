@@ -30,7 +30,7 @@ namespace ippo
 
 		protected override void DI_Start(StartState state)
 		{
-			chute = this.part.Modules.OfType<ModuleParachute>().Single();
+			chute = this.part.Modules.OfType<ModuleParachute>().First();
 
             if (HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams3>().Allow1ParachuteFailures == false)
             {

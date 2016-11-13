@@ -30,7 +30,7 @@ namespace ippo
         {
             if (HighLogic.LoadedSceneIsFlight)
             {
-                this.lightModule = this.part.Modules.OfType<ModuleLight>().Single();
+                this.lightModule = this.part.Modules.OfType<ModuleLight>().First();
             }
         }
 

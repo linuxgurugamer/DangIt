@@ -30,7 +30,7 @@ namespace ippo
 
 		protected override void DI_Start(StartState state)
 		{
-			generator = this.part.Modules.OfType<ModuleGenerator>().Single();
+			generator = this.part.Modules.OfType<ModuleGenerator>().First();
             initialEfficiency = generator.efficiency;
 		}
 

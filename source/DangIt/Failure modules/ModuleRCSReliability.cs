@@ -30,7 +30,7 @@ namespace ippo
         {
             if (HighLogic.LoadedSceneIsFlight)
             {
-                rcsModule = this.part.Modules.OfType<ModuleRCS>().Single();         
+                rcsModule = this.part.Modules.OfType<ModuleRCS>().First();         
             }
         }
 

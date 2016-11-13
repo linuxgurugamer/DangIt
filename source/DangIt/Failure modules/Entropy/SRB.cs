@@ -39,7 +39,7 @@ namespace ippo
 
 		protected override void DI_Start(StartState state)
 		{
-			srb = this.part.Modules.OfType<ModuleEngines>().Single();
+			srb = this.part.Modules.OfType<ModuleEngines>().First();
 		}
 
         protected override bool DI_AllowedToFail()

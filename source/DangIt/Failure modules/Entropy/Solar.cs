@@ -29,7 +29,7 @@ namespace ippo
 
 		protected override void DI_Start(StartState state)
 		{
-			panel = this.part.Modules.OfType<ModuleDeployableSolarPanel>().Single();
+			panel = this.part.Modules.OfType<ModuleDeployableSolarPanel>().First();
 			if (!panel.isTracking) {
 				this.enabled = false; //Disable this if it's not tracking
 			}
@@ -56,8 +56,8 @@ namespace ippo
             panel.isTracking = true;
 		}
 
-		public override bool DI_ShowInfoInEditor(){
-			return this.part.Modules.OfType<ModuleDeployableSolarPanel>().Single().isTracking; //Don't show for non-tracking panels
+		public override bool DI_ShowInfoInEditor(){          
+            return this.part.Modules.OfType<ModuleDeployableSolarPanel>().First().isTracking; //Don't show for non-tracking panels
 		}
 	}
 }
