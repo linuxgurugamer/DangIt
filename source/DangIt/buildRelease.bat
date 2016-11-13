@@ -39,4 +39,4 @@ cd ..\..
 set FILE="%RELEASEDIR%\DangIt-%VERSION%.zip"
 IF EXIST %FILE% del /F %FILE%
 %ZIP% a -tzip %FILE% GameData
-pause
+

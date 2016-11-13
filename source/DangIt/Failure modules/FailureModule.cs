@@ -91,8 +91,9 @@ namespace ippo
         #endregion
         #region IPartCostModifier
         public float GetModuleCost(float defaultCost, ModifierStagingSituation sit)
-        {
-            return defaultCost;
+        {            
+            return 0;
+            //return defaultCost;
         }
         public ModifierChangeWhen GetModuleCostChangeWhen()
         {
