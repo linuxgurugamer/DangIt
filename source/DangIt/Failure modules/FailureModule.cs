@@ -286,8 +286,8 @@ namespace ippo
 
                 this.TimeOfLastInspection = float.NegativeInfinity;
 
-                this.CurrentMTBF = this.MTBF;
-                this.LifeTimeSecs = this.LifeTime * 3600f;
+                this.CurrentMTBF = this.MTBF * HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams1>().MTBF_Multiplier;
+                this.LifeTimeSecs = this.LifeTime * HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams1>().Lifetime_Multiplier * 3600f;
                 this.HasFailed = false;
                 #endregion
 
@@ -461,7 +461,7 @@ namespace ippo
                     {
                         this.Age += dt;
 
-                        this.CurrentMTBF = this.MTBF * this.ExponentialDecay();
+                        this.CurrentMTBF = this.MTBF * HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams1>().MTBF_Multiplier * this.ExponentialDecay();
 
                         // If the part has not already failed, toss the dice
                         if (!this.HasFailed)

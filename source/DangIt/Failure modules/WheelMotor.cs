@@ -37,7 +37,7 @@ namespace ippo
 
         protected override bool DI_AllowedToFail()
         {
-            return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams2>().AllowWheelMotorFailures;
+            return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams3>().AllowWheelMotorFailures;
         }
 
         protected override bool DI_FailBegin()

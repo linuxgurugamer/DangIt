@@ -24,21 +24,36 @@ namespace ippo
 					fails.Add (fm);
 				}
 			}
-
+            
+            Logger.Info("ModuleReliabilityInfo.GetInfo");
 			if (fails.Count == 0)   // no failure module, return a placeholder message
                 return "This part has been built to last";
             else
             {
                 StringBuilder sb = new StringBuilder();
 
+                Logger.Info("ModuleReliabilityInfo, part: " + part.partInfo.title);
+                
                 foreach (FailureModule fm in fails)
                 {
+                    Logger.Info("failureModule: " + fm.name);
+                    Logger.Info("Lifetime: " + fm.LifeTime.ToString());
+                    Logger.Info("MTBF: " + fm.MTBF.ToString());
 
-					double EOL = Math.Round (Math.Max (-fm.LifeTime * Math.Log (1 / fm.MTBF), 0));
+                    float mtbfMultipler = 1.0f;
+                    float lifetimeMultiplier = 1f;
+                    if (HighLogic.CurrentGame != null && HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams1>() != null)
+                    {
+                        mtbfMultipler = HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams1>().MTBF_Multiplier;
+                        lifetimeMultiplier = HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams1>().Lifetime_Multiplier;
+                    }
 
+                    double EOL = Math.Round (Math.Max (-fm.LifeTime * lifetimeMultiplier * Math.Log (1 / fm.MTBF * mtbfMultipler ), 0));
+
+                    Logger.Info("EOL: " + EOL.ToString());
 					sb.AppendLine (fm.ScreenName);
-					sb.AppendLine (" - MTBF: " + fm.MTBF + " hours");
-					sb.AppendLine (" - Lifetime: " + fm.LifeTime + " hours");
+					sb.AppendLine (" - MTBF: " + fm.MTBF * mtbfMultipler  + " hours");
+					sb.AppendLine (" - Lifetime: " + fm.LifeTime * lifetimeMultiplier + " hours");
 					sb.AppendLine (" - EOL : " + EOL + " hours");
 					sb.AppendLine (" - Repair cost: " + fm.RepairCost);
 					sb.AppendLine (" - Priority: " + fm.Priority);

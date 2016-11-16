@@ -36,6 +36,15 @@
 ## Release 0.7.4
 	Fixed problem with each additional module added to the parts was increasing the cost of the part by the part cost.
 
+## Release 0.7.5
+	Fixed problem where more than one Module of what was being looked for caused InvalidOperationExceptions, due to 
+	the fact that the Linux Single() function throws that error if there is more than one
+
+## Release 0.7.*
+	Added MTBF multiplier
+	Added Lifetime multipler
+	Moved some items around in the settings window
+
 ============== Coffeeman's work below =========================
 ## ALPHA 6
 

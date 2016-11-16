@@ -8,7 +8,7 @@ namespace ippo
 {
 	public class ModuleWheelTireReliability : FailureModule
 	{
-		ModuleWheelBase wheelBase;
+		//ModuleWheelBase wheelBase;
         ModuleWheels.ModuleWheelDamage wheelDamage;
 
 		public override string DebugName { get { return "DangItWheel_Tire"; } }
@@ -31,7 +31,7 @@ namespace ippo
 		{
 			if (HighLogic.LoadedSceneIsFlight)
 			{
-				this.wheelBase = this.part.Modules.OfType<ModuleWheelBase>().First();
+				//this.wheelBase = this.part.Modules.OfType<ModuleWheelBase>().First();
                 wheelDamage = part.Modules.OfType<ModuleWheels.ModuleWheelDamage>().First();
 
             }
@@ -43,7 +43,7 @@ namespace ippo
 
         protected override bool DI_AllowedToFail()
         {
-            return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams2>().AllowWheelTireFailures;
+            return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams3>().AllowWheelTireFailures;
         }
 
         protected override bool DI_FailBegin()

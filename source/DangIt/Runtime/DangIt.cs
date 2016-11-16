@@ -28,7 +28,7 @@ namespace ippo
                 {
                     _leakBlackList = new List<string>();
 
-                    Assembly execAssembly = Assembly.GetExecutingAssembly();                   
+                    Assembly execAssembly = Assembly.GetExecutingAssembly();
                     string _pluginDirectory = Path.GetDirectoryName(execAssembly.Location);
                     //dll's path + filename for the config file
                     string blacklistFilePath = Path.Combine(_pluginDirectory, "../PluginData/BlackList.cfg");
@@ -43,11 +43,11 @@ namespace ippo
                     catch (Exception e)
                     {
                         _leakBlackList.Add("ElectricCharge");
-                       // _leakBlackList.Add("SolidFuel");
+                        // _leakBlackList.Add("SolidFuel");
                         _leakBlackList.Add("SpareParts");
 
                         Logger.Info("[DangIt]: An exception occurred while loading the resource blacklist and a default one has been created. " + e.Message);
-                    } 
+                    }
                 }
 
                 return _leakBlackList;
@@ -60,8 +60,8 @@ namespace ippo
         internal static List<string> _leakBlackList = null;
 
 
-       // private DangIt.Settings currentSettings;
-		public  AlarmManager    alarmManager;
+        // private DangIt.Settings currentSettings;
+        public AlarmManager alarmManager;
 
         // public DangItCustomParams CurrentSettings
         //{
@@ -71,7 +71,7 @@ namespace ippo
         /// General settings about notifications and gameplay elements.
         /// </summary>
 
-        
+
 #if false
         {
            get { return value; }
@@ -98,7 +98,7 @@ namespace ippo
         /// <summary>
         /// Returns true if the instance is initialized and ready to work.
         /// </summary>
-        public bool IsReady { get; private set; }        
+        public bool IsReady { get; private set; }
 
         public DangIt()
         {
@@ -116,25 +116,30 @@ namespace ippo
         void Start()
         {
             GameEvents.OnGameSettingsApplied.Add(ReloadSettings);
+            GameEvents.onGameStatePostLoad.Add(ReloadSettings);
             Logger.Info("[DangIt]: Start.");
-            
+
             ReloadSettings();
         }
 
         /// <summary>
         /// Reload settings if necessary.
         /// </summary>
-
+        void ReloadSettings(ConfigNode node)
+        {
+            ReloadSettings();
+        }
         void ReloadSettings()
         {
-          //  this.IsReady = false;
+            //  this.IsReady = false;
             DangIt.Instance.StartPartInfoCacheReload();
             if (FindObjectOfType<AlarmManager>() != null)
             {
                 FindObjectOfType<AlarmManager>().UpdateSettings();
             }
+            DangIt.Instance.StartPartInfoCacheReload();
 
-          //  this.IsReady = true;
+            //  this.IsReady = true;
         }
 
 #if false
@@ -182,6 +187,7 @@ namespace ippo
                 ApplicationLauncher.Instance.RemoveModApplication(this.appBtn);
 #endif
             GameEvents.OnGameSettingsApplied.Remove(ReloadSettings);
+            GameEvents.onGameStatePostLoad.Remove(ReloadSettings);
         }
 
 
@@ -190,48 +196,82 @@ namespace ippo
             Logger.Info(msg);
         }
 
-		public void StartPartInfoCacheReload(){
-			Log ("Starting refresh of Part Info cache");
-            
-			StartCoroutine(RefreshPartInfo());
-		}
+        public void StartPartInfoCacheReload()
+        {
+            Log("Starting refresh of Part Info cache");
 
-		private IEnumerator RefreshPartInfo()
-		{
+            StartCoroutine(RefreshPartInfo());
+        }
+
+        private IEnumerator RefreshPartInfo()
+        {
             if (CurrentSettings == null || PartLoader.LoadedPartsList == null)
                 yield break;
+            ScreenMessages.PostScreenMessage("Database Part Info reloading started", 1, ScreenMessageStyle.UPPER_CENTER);
             this.IsReady = false;
             yield return null;
-			try{
-				foreach (var ap in PartLoader.LoadedPartsList.Where(ap => ap.partPrefab.Modules != null))
-				{
-					AvailablePart.ModuleInfo target = null;
-					foreach (var mi in ap.moduleInfos) {
-						if (mi.moduleName == "Reliability Info") {
-							target = mi;
-						}
-					}
+            float lastTime = Time.realtimeSinceStartup;
 
-					if (target != null & !this.CurrentSettings.EnabledForSave) {
-						ap.moduleInfos.Remove (target);
-					}
+            var apList = PartLoader.LoadedPartsList.Where(ap => ap.partPrefab.Modules != null);
+            int totcnt = 1;
+            if (apList == null)
+            {
+                Logger.Info("apList is null");
+            }
+            else
+            {
+                totcnt = apList.Count();
+            }
+            int cnt = 0;
+            try
+            {
+                foreach (var ap in PartLoader.LoadedPartsList.Where(ap => ap.partPrefab.Modules != null))
+                {
+                    cnt++;
+                    if (Time.realtimeSinceStartup - lastTime > 2)
+                    {
+                        lastTime = Time.realtimeSinceStartup;
+                        int intPercent = Mathf.CeilToInt(((float)cnt / (float)totcnt * 100f));
+                        ScreenMessages.PostScreenMessage("Database reloading " + intPercent + "%", 1, ScreenMessageStyle.UPPER_CENTER);
+                    }
 
-					if (target == null & this.CurrentSettings.EnabledForSave) {
-						IEnumerable<ModuleReliabilityInfo> reliabilityModules = ap.partPrefab.Modules.OfType<ModuleReliabilityInfo>();
-						if (reliabilityModules.Count()!=0){
-							AvailablePart.ModuleInfo newModuleInfo = new AvailablePart.ModuleInfo ();
-							newModuleInfo.moduleName = "Reliability Info";
-							newModuleInfo.info = reliabilityModules.First().GetInfo();
-							ap.moduleInfos.Add (newModuleInfo);
-						}
-					}
-				}
-				Log("Refresh Finished");
+                    AvailablePart.ModuleInfo target = null;
+                    foreach (var mi in ap.moduleInfos)
+                    {
+                        if (mi.moduleName == "Reliability Info")
+                        {
+                            target = mi;
+                        }
+                    }
+
+                    if (target != null & !this.CurrentSettings.EnabledForSave)
+                    {
+                        ap.moduleInfos.Remove(target);
+                    }
+
+                    if (this.CurrentSettings.EnabledForSave)
+                    {
+                        if (target != null)
+                            ap.moduleInfos.Remove(target);
+
+                        IEnumerable<ModuleReliabilityInfo> reliabilityModules = ap.partPrefab.Modules.OfType<ModuleReliabilityInfo>();
+                        if (reliabilityModules.Count() != 0)
+                        {
+                            AvailablePart.ModuleInfo newModuleInfo = new AvailablePart.ModuleInfo();
+                            newModuleInfo.moduleName = "Reliability Info";
+                            newModuleInfo.info = reliabilityModules.First().GetInfo();
+                            ap.moduleInfos.Add(newModuleInfo);
+                        }
+                    }
+                }
+                Log("Refresh Finished");
                 this.IsReady = true;
             }
-            catch (Exception e){
-				this.Log("ERROR ["+e.GetType().ToString()+"]: " + e.Message + "\n" + e.StackTrace);
-			}
-		}
+            catch (Exception e)
+            {
+                this.Log("ERROR [" + e.GetType().ToString() + "]: " + e.Message + "\n" + e.StackTrace);
+            }
+            ScreenMessages.PostScreenMessage("Database Part Info reloading finished", 2, ScreenMessageStyle.UPPER_CENTER);
+        }
     }
 }

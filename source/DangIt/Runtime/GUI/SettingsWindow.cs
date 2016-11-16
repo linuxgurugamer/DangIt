@@ -7,6 +7,8 @@ using System.Reflection;
 using System.Text;
 using UnityEngine;
 
+
+
 namespace ippo
 {
 
@@ -55,6 +57,7 @@ namespace ippo
 
         void SettingsWindowFcn(int windowID)
         {
+
             GUILayout.BeginVertical();
             GUILayout.Label("WARNING! Changing the state of DangIt! while ships are in flight is not supported.");
             GUILayout.Label("There is no gaurentee that ships will remain in a stable state after toggle, ESPECIALLY if they currently have failed parts.");
@@ -75,7 +78,6 @@ namespace ippo
             // This call allows the user to drag the window around the screen
             GUI.DragWindow();
         }
-
     }
 
     // http://forum.kerbalspaceprogram.com/index.php?/topic/147576-modders-notes-for-ksp-12/#comment-2754813
@@ -115,7 +117,8 @@ namespace ippo
         [GameParameters.CustomParameterUI("Messages")]
         public bool Messages = true;            // enable messages and screen posts
 
-        [GameParameters.CustomFloatParameterUI("Max EVA distance", minValue = 1.0f, maxValue = 15.0f, asPercentage = false)]
+        [GameParameters.CustomFloatParameterUI("Max EVA distance", minValue = 1.0f, maxValue = 15.0f, asPercentage = false,
+            toolTip = "Repairs can be when when this close to the part")]
         public float MaxDistance = 2f;          // maximum distance for EVA activities
 
         [GameParameters.CustomIntParameterUI("Alarm Volume", minValue = 1, maxValue = 100)]
@@ -130,14 +133,23 @@ namespace ippo
         [GameParameters.CustomIntParameterUI("Beep # for High Priorities (-1=>Inf)", minValue = -1, maxValue = 5)]
         public int Pri_High_SoundLoops = -1;   // number of times to beep
 
+        [GameParameters.CustomFloatParameterUI("MTBF Multiplier", minValue = 0.25f, maxValue = 4.0f, logBase = 2, stepCount = 100, displayFormat = "0.00", asPercentage = false,
+            toolTip ="Adjusts the MTBF.  Decrease this to make it harder, increase to lessen the difficulty")]
+        public float MTBF_Multiplier = 1f;          // maximum distance for EVA activities
+
+        [GameParameters.CustomFloatParameterUI("Lifetime Multiplier", minValue = 0.25f, maxValue = 4.0f, logBase = 2, stepCount = 100, displayFormat = "0.00", asPercentage = false,
+            toolTip ="Adjusts the Lifetime.  Decrease this to make it harder, increase to lessen the difficulty")]
+        public float Lifetime_Multiplier = 1f;          // maximum distance for EVA activities
+            
+
         bool oldEnabled = true;
+
 
         public override void SetDifficultyPreset(GameParameters.Preset preset)
         {
             switch (preset)
             {
                 case GameParameters.Preset.Easy:
-
                     EnabledForSave = true;      // is enabled for this save file
                     ManualFailures = false;     // initiate failures manually
                     MaxDistance = 5f;          // maximum distance for EVA activities
@@ -150,6 +162,8 @@ namespace ippo
                     AlarmVolume = 100;          // volume of the alarm (1-100)   
                     DebugStats = false;			// show debug stats of the part in the right-click menu
 
+                    MTBF_Multiplier = 2f;
+                    Lifetime_Multiplier = 2f;
                     break;
 
                 case GameParameters.Preset.Normal:
@@ -164,7 +178,10 @@ namespace ippo
                     Pri_Medium_SoundLoops = 2;  // number of times to beep
                     Pri_High_SoundLoops = -1;   // number of times to beep
                     AlarmVolume = 100;          // volume of the alarm (1-100)   
-                    DebugStats = false;			// show debug stats of the part in the right-click menu
+                    DebugStats = false;         // show debug stats of the part in the right-click menu
+
+                    MTBF_Multiplier = 1f;
+                    Lifetime_Multiplier = 1f;
 
                     break;
 
@@ -180,7 +197,10 @@ namespace ippo
                     Pri_Medium_SoundLoops = 2;  // number of times to beep
                     Pri_High_SoundLoops = -1;   // number of times to beep
                     AlarmVolume = 100;          // volume of the alarm (1-100)   
-                    DebugStats = false;			// show debug stats of the part in the right-click menu
+                    DebugStats = false;         // show debug stats of the part in the right-click menu
+
+                    MTBF_Multiplier = 0.75f;
+                    Lifetime_Multiplier = 1f;
 
                     break;
 
@@ -196,7 +216,10 @@ namespace ippo
                     Pri_Medium_SoundLoops = 2;  // number of times to beep
                     Pri_High_SoundLoops = -1;   // number of times to beep
                     AlarmVolume = 100;          // volume of the alarm (1-100)   
-                    DebugStats = false;			// show debug stats of the part in the right-click menu
+                    DebugStats = false;         // show debug stats of the part in the right-click menu
+
+                    MTBF_Multiplier = 0.5f;
+                    Lifetime_Multiplier = 0.75f;
 
                     break;
             }
@@ -251,11 +274,6 @@ namespace ippo
 
     public class DangItCustomParams2 : GameParameters.CustomParameterNode
     {
-        // public static DangItCustomParams instance;
-        // public DangItCustomParams()
-        //{
-        //     instance = this;
-        // }
 
         public override string Title { get { return "Allow Failures on:"; } }
         public override GameParameters.GameMode GameMode { get { return GameParameters.GameMode.ANY; } }
@@ -297,19 +315,13 @@ namespace ippo
         [GameParameters.CustomParameterUI("Coolant")]
         public bool AllowCoolantFailures = true;
 
-        [GameParameters.CustomParameterUI("Wheel Motor")]
-        public bool AllowWheelMotorFailures = true;
-
-        [GameParameters.CustomParameterUI("Wheel Tire")]
-        public bool AllowWheelTireFailures = true;
-
-
 
         public override void SetDifficultyPreset(GameParameters.Preset preset)
         {
             switch (preset)
             {
                 case GameParameters.Preset.Easy:
+
                     AllowAlternatorFailures = true;
                     AllowBatteryFailures = true;
                     AllowControlSurfaceFailures = true;
@@ -320,18 +332,51 @@ namespace ippo
                     AllowRCSFailures = true;
                     AllowReactionWheelFailures = true;
                     AllowTankFailures = true;
+
                     break;
 
                 case GameParameters.Preset.Normal:
+
+                    AllowAlternatorFailures = true;
+                    AllowBatteryFailures = true;
+                    AllowControlSurfaceFailures = true;
+                    AllowDeployableAntennaFailures = true;
+                    AllowEngineFailures = true;
+                    AllowGimbalFailures = true;
+                    AllowLightFailures = true;
+                    AllowRCSFailures = true;
+                    AllowReactionWheelFailures = true;
+                    AllowTankFailures = true;
 
                     break;
 
                 case GameParameters.Preset.Moderate:
 
+                    AllowAlternatorFailures = true;
+                    AllowBatteryFailures = true;
+                    AllowControlSurfaceFailures = true;
+                    AllowDeployableAntennaFailures = true;
+                    AllowEngineFailures = true;
+                    AllowGimbalFailures = true;
+                    AllowLightFailures = true;
+                    AllowRCSFailures = true;
+                    AllowReactionWheelFailures = true;
+                    AllowTankFailures = true;
+
                     break;
 
                 case GameParameters.Preset.Hard:
 
+                    AllowAlternatorFailures = true;
+                    AllowBatteryFailures = true;
+                    AllowControlSurfaceFailures = true;
+                    AllowDeployableAntennaFailures = true;
+                    AllowEngineFailures = true;
+                    AllowGimbalFailures = true;
+                    AllowLightFailures = true;
+                    AllowRCSFailures = true;
+                    AllowReactionWheelFailures = true;
+                    AllowTankFailures = true;
 
                     break;
             }
@@ -372,6 +417,11 @@ namespace ippo
         public override int SectionOrder { get { return 3; } }
         public override bool HasPresets { get { return true; } }
 
+        [GameParameters.CustomParameterUI("Wheel Motor")]
+        public bool AllowWheelMotorFailures = true;
+
+        [GameParameters.CustomParameterUI("Wheel Tire")]
+        public bool AllowWheelTireFailures = true;
 
         [GameParameters.CustomParameterUI("Motor")]
         public bool AllowAnimateFailures = false;
@@ -402,6 +452,9 @@ namespace ippo
             {
                 case GameParameters.Preset.Easy:
 
+                    AllowWheelMotorFailures = true;
+                    AllowWheelTireFailures = true;
+
                     AllowAnimateFailures = false;
                     AllowGeneratorFailures = false;
                     AllowParachuteFailures = false;
@@ -413,6 +466,9 @@ namespace ippo
                     break;
 
                 case GameParameters.Preset.Normal:
+
+                    AllowWheelMotorFailures = true;
+                    AllowWheelTireFailures = true;
 
                     AllowAnimateFailures = false;
                     AllowGeneratorFailures = false;
@@ -427,6 +483,9 @@ namespace ippo
 
                 case GameParameters.Preset.Moderate:
 
+                    AllowWheelMotorFailures = true;
+                    AllowWheelTireFailures = true;
+
                     AllowAnimateFailures = true;
                     AllowGeneratorFailures = true;
                     AllowParachuteFailures = true;
@@ -439,6 +498,9 @@ namespace ippo
                     break;
 
                 case GameParameters.Preset.Hard:
+
+                    AllowWheelMotorFailures = true;
+                    AllowWheelTireFailures = true;
 
                     AllowAnimateFailures = true;
                     AllowGeneratorFailures = true;
