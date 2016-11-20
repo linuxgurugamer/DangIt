@@ -28,7 +28,7 @@ namespace ippo
             audioSource.audio.clip=GameDatabase.Instance.GetAudioClip("DangIt/Sounds/alarm"); //Load alarm sound
 
 			Logger.Info("[DangIt] [AlarmManager] Creating Dictionary");
-			this.loops=new Dictionary<FailureModule, int>(); //Reset counter, so on logic pass we play it
+			loops=new Dictionary<FailureModule, int>(); //Reset counter, so on logic pass we play it
 		}
 
 		public void UpdateSettings(){
@@ -84,7 +84,6 @@ namespace ippo
             Logger.Info("[DangIt] [AlarmManager] Removing alarms...");
 			if (this.loops.Keys.Contains (fm))
 			{
-                
 				fm.AlarmsDoneCallback ();
 				loops.Remove (fm);
 			}

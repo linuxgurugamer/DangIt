@@ -121,7 +121,7 @@ namespace ippo
             toolTip = "Repairs can be when when this close to the part")]
         public float MaxDistance = 2f;          // maximum distance for EVA activities
 
-        [GameParameters.CustomIntParameterUI("Alarm Volume", minValue = 1, maxValue = 100)]
+        [GameParameters.CustomIntParameterUI("Alarm Volume", minValue = 0, maxValue = 100)]
         public int AlarmVolume = 100;          // volume of the alarm (1-100) 
 
         [GameParameters.CustomIntParameterUI("Beep # for Low Priorities (-1=>Inf)", minValue = -1, maxValue = 5)]

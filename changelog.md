@@ -40,7 +40,7 @@
 	Fixed problem where more than one Module of what was being looked for caused InvalidOperationExceptions, due to 
 	the fact that the Linux Single() function throws that error if there is more than one
 
-## Release 0.7.*
+## Release 0.7.6
 	Added MTBF multiplier
 	Added Lifetime multipler
 	Moved some items around in the settings window
