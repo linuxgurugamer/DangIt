@@ -33,7 +33,8 @@ namespace ippo
 		public abstract string MaintenanceString { get; }            // gui name for maintinence event
 		public virtual  string ExtraEditorInfo { get {return "";} }  // extra descriptive info for the
 
- 
+        float lastTimeReset = 0f;
+
         /// <summary>
         /// Returns the string that is displayed during an inspection.
         /// </summary>
@@ -417,7 +418,7 @@ namespace ippo
                     if (this.HasFailed)
                         this.DI_Disable();
 
-                    DangIt.ResetShipGlow(this.part.vessel);
+                    lastTimeReset =  DangIt.ResetShipGlow(this.part.vessel);
 
                 }
 
@@ -445,7 +446,7 @@ namespace ippo
                 // Only update the module during flight and after the re-initialization has run
                 if (HighLogic.LoadedSceneIsFlight && this.HasInitted)
                 {
-                    DangIt.ResetShipGlow(this.part.vessel);
+                    lastTimeReset = DangIt.ResetShipGlow(this.part.vessel, lastTimeReset);
 
                     float now = DangIt.Now();
 
@@ -635,7 +636,7 @@ namespace ippo
             try
             {
                 this.HasFailed = state;
-                DangIt.ResetShipGlow(this.part.vessel);
+                lastTimeReset = DangIt.ResetShipGlow(this.part.vessel);
 
                 Events["Fail"].active = !state;
                 Events["EvaRepair"].active = state;
@@ -700,7 +701,7 @@ namespace ippo
 					FindObjectOfType<AlarmManager>().RemoveAllAlarmsForModule(this); //Remove alarms from this module
                 }
 
-                DangIt.ResetShipGlow(this.part.vessel);
+                lastTimeReset = DangIt.ResetShipGlow(this.part.vessel);
 
             }
             catch (Exception e)

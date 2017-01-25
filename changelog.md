@@ -45,6 +45,12 @@
 	Added Lifetime multipler
 	Moved some items around in the settings window
 
+## Release 0.7.7
+	Changed minimum value for alarm from 1 to 0 Recompiled to fix issue of sound restarting when coming back from map view
+
+## Release 0.7.8
+	Added code to prevent the ResetShipGlow from being executed every fixed update
+
 ============== Coffeeman's work below =========================
 ## ALPHA 6
 
