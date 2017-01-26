@@ -128,13 +128,10 @@ namespace ippo
         /// Parts that have failed will glow red unless they are set to fail silently.
         /// </summary>
         /// <param name="v"></param>
-        public static float ResetShipGlow(Vessel v, float lastTimeReset = -1f)
+        public static float ResetShipGlow(Vessel v)
         {
-            if (DangIt.Now() - lastTimeReset > 1.0f)
-            {
-                
-                ResetPartGlow(v.rootPart);
-            }
+            ResetPartGlow(v.rootPart);
+            
             return DangIt.Now();
         }
 

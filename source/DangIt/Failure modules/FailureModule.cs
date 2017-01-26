@@ -33,8 +33,7 @@ namespace ippo
         public abstract string MaintenanceString { get; }            // gui name for maintinence event
         public virtual string ExtraEditorInfo { get { return ""; } }  // extra descriptive info for the
 
-        float lastTimeReset = 0f;
-
+      
         /// <summary>
         /// Returns the string that is displayed during an inspection.
         /// </summary>
@@ -423,7 +422,7 @@ namespace ippo
                     if (this.HasFailed)
                         this.DI_Disable();
 
-                    lastTimeReset = DangIt.ResetShipGlow(this.part.vessel);
+                    DangIt.ResetShipGlow(this.part.vessel);
 
                 }
 
@@ -452,9 +451,6 @@ namespace ippo
                 // Only update the module during flight and after the re-initialization has run
                 if (HighLogic.LoadedSceneIsFlight && this.HasInitted)
                 {
-                    // There is no need in next line anymore
-                    // lastTimeReset = DangIt.ResetShipGlow(this.part.vessel, lastTimeReset);
-
                     // Highlighting the part, which contains this updating FailureModule if it is in a 'failed' state,
                     // it is not in 'silent' state and 'glow' is globally enabled
                     // Actually, there is no any place in a code of a hole mod where that 'silent' state is turning on
@@ -666,7 +662,7 @@ namespace ippo
             try
             {
                 this.HasFailed = state;
-                lastTimeReset = DangIt.ResetShipGlow(this.part.vessel);
+                DangIt.ResetShipGlow(this.part.vessel);
 
                 Events["Fail"].active = !state;
                 Events["EvaRepair"].active = state;
@@ -731,7 +727,7 @@ namespace ippo
                     FindObjectOfType<AlarmManager>().RemoveAllAlarmsForModule(this); //Remove alarms from this module
                 }
 
-                lastTimeReset = DangIt.ResetShipGlow(this.part.vessel);
+                DangIt.ResetShipGlow(this.part.vessel);
 
             }
             catch (Exception e)
