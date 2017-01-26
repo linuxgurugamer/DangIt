@@ -51,6 +51,10 @@
 ## Release 0.7.8
 	Added code to prevent the ResetShipGlow from being executed every fixed update
 
+## Release 0.7.9
+	Replaced the quick fix for the ResetShipGlow in previous patch with code sent by @EugeneButrik, a much better solution
+	Fixed bug (again found and fixed by @eugeneButrik) where changing vessels would have failed parts not highlighted anymore
+
 ============== Coffeeman's work below =========================
 ## ALPHA 6
 

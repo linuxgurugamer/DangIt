@@ -24,14 +24,14 @@ namespace ippo
         // These strings customize the failure module, both in the log
         // and in the messages that are shown to the user.
 
-		public abstract string ScreenName { get; }                   // name shown to the user during inspections or in the editors (e.g, "Alternator")
-		public abstract string DebugName { get; }                    // name used to identify the module in the debug logs
-		public abstract string RepairMessage { get; }                // message posted to the screen upon successful repair
-		public abstract string FailureMessage { get; }               // message posted to the screen upon failure
-		public abstract string FailGuiName { get; }                  // gui name for the failure event (when visible)
-		public abstract string EvaRepairGuiName { get; }             // gui name for the EVA repair event
-		public abstract string MaintenanceString { get; }            // gui name for maintinence event
-		public virtual  string ExtraEditorInfo { get {return "";} }  // extra descriptive info for the
+        public abstract string ScreenName { get; }                   // name shown to the user during inspections or in the editors (e.g, "Alternator")
+        public abstract string DebugName { get; }                    // name used to identify the module in the debug logs
+        public abstract string RepairMessage { get; }                // message posted to the screen upon successful repair
+        public abstract string FailureMessage { get; }               // message posted to the screen upon failure
+        public abstract string FailGuiName { get; }                  // gui name for the failure event (when visible)
+        public abstract string EvaRepairGuiName { get; }             // gui name for the EVA repair event
+        public abstract string MaintenanceString { get; }            // gui name for maintinence event
+        public virtual string ExtraEditorInfo { get { return ""; } }  // extra descriptive info for the
 
         float lastTimeReset = 0f;
 
@@ -50,7 +50,7 @@ namespace ippo
                 if (!CheckOutExperience(evaPart.protoModuleCrew[0]))
                     return evaPart.protoModuleCrew[0].name + " isn't quite sure about this...";
             }
-            
+
             // Perks check out, return a message based on the age
             float ratio = this.Age / this.LifeTimeSecs;
 
@@ -87,12 +87,12 @@ namespace ippo
         protected virtual void DI_OnSave(ConfigNode node) { }
         public virtual bool PartIsActive() { return true; }
         protected virtual float LambdaMultiplier() { return 1f; }
-		public virtual bool DI_ShowInfoInEditor() { return true; }
+        public virtual bool DI_ShowInfoInEditor() { return true; }
 
         #endregion
         #region IPartCostModifier
         public float GetModuleCost(float defaultCost, ModifierStagingSituation sit)
-        {            
+        {
             return 0;
             //return defaultCost;
         }
@@ -128,14 +128,14 @@ namespace ippo
         [KSPField(isPersistant = true, guiActive = false)]
         public bool Silent = false;                                 // If this flag is true, no message is displayed when failing
 
-		[KSPField(isPersistant = true, guiActive = false)]
-		public string Priority = "MEDIUM";							// Priority of the failure as string. Used for beeping
+        [KSPField(isPersistant = true, guiActive = false)]
+        public string Priority = "MEDIUM";                          // Priority of the failure as string. Used for beeping
 
-		[KSPField(isPersistant = true, guiActive = false)]
-		public string PerksRequirementName = "";					// Trait name required to fix this part. "" = Any
+        [KSPField(isPersistant = true, guiActive = false)]
+        public string PerksRequirementName = "";                    // Trait name required to fix this part. "" = Any
 
-		[KSPField(isPersistant = true, guiActive = false)]
-		public int PerksRequirementValue = 0;						// Skill level required to fix this part.
+        [KSPField(isPersistant = true, guiActive = false)]
+        public int PerksRequirementValue = 0;						// Skill level required to fix this part.
 
         #endregion
 
@@ -259,10 +259,10 @@ namespace ippo
             this.Events["EvaRepair"].unfocusedRange = DangIt.Instance.CurrentSettings.MaxDistance;
             this.Events["Maintenance"].unfocusedRange = DangIt.Instance.CurrentSettings.MaxDistance;
 
-			this.Fields["Age"].guiName = DebugName + " Age";
-			this.Fields["Age"].guiActive = DangIt.Instance.CurrentSettings.DebugStats;
+            this.Fields["Age"].guiName = DebugName + " Age";
+            this.Fields["Age"].guiActive = DangIt.Instance.CurrentSettings.DebugStats;
 
-			DI_RuntimeFetch();
+            DI_RuntimeFetch();
         }
 
 
@@ -273,6 +273,8 @@ namespace ippo
         /// </summary>
         protected void Reset()
         {
+            if (this.HasInitted)
+                return;
             try
             {
                 this.FailureLog("Resetting");
@@ -300,7 +302,7 @@ namespace ippo
                 this.Events["EvaRepair"].active = false;
 
                 this.Events["Maintenance"].guiName = this.MaintenanceString;
-              
+
                 #endregion
 
                 // Run the custom reset of the subclasses
@@ -314,6 +316,7 @@ namespace ippo
             {
                 OnError(e);
             }
+
         }
 
 
@@ -372,7 +375,7 @@ namespace ippo
                 node.SetValue("LastFixedUpdate", LastFixedUpdate.ToString());
                 node.SetValue("CurrentMTBF", CurrentMTBF.ToString());
                 node.SetValue("LifeTimeSecs", LifeTimeSecs.ToString());
-                node.SetValue("HasFailed", HasFailed.ToString());              
+                node.SetValue("HasFailed", HasFailed.ToString());
 
                 // Run the subclass' custom onsave
                 this.DI_OnSave(node);
@@ -401,16 +404,18 @@ namespace ippo
                 {
                     this.FailureLog("Starting in flight: last reset " + TimeOfLastReset + ", now " + DangIt.Now());
 
-					if (!DangIt.Instance.CurrentSettings.EnabledForSave){ //Disable if we've disabled DangIt
-						foreach (var e in this.Events) {
-							e.guiActive=false;
-						}
-					}
+                    if (!DangIt.Instance.CurrentSettings.EnabledForSave)
+                    { //Disable if we've disabled DangIt
+                        foreach (var e in this.Events)
+                        {
+                            e.guiActive = false;
+                        }
+                    }
 
                     // Reset the internal state at the beginning of the flight
                     // this condition also catches a revert to launch (+1 second for safety)
                     // if (DangIt.Now() < (this.TimeOfLastReset + 1))
-                        this.Reset();
+                    this.Reset();
 
                     // If the part was saved when it was failed,
                     // re-run the failure logic to disable it
@@ -418,14 +423,15 @@ namespace ippo
                     if (this.HasFailed)
                         this.DI_Disable();
 
-                    lastTimeReset =  DangIt.ResetShipGlow(this.part.vessel);
+                    lastTimeReset = DangIt.ResetShipGlow(this.part.vessel);
 
                 }
 
-                if (DangIt.Instance.CurrentSettings.EnabledForSave){
-	                this.DI_Start(state);
-	                this.StartCoroutine("RuntimeFetch");
-				}
+                if (DangIt.Instance.CurrentSettings.EnabledForSave)
+                {
+                    this.DI_Start(state);
+                    this.StartCoroutine("RuntimeFetch");
+                }
             }
             catch (Exception e)
             {
@@ -446,7 +452,30 @@ namespace ippo
                 // Only update the module during flight and after the re-initialization has run
                 if (HighLogic.LoadedSceneIsFlight && this.HasInitted)
                 {
-                    lastTimeReset = DangIt.ResetShipGlow(this.part.vessel, lastTimeReset);
+                    // There is no need in next line anymore
+                    // lastTimeReset = DangIt.ResetShipGlow(this.part.vessel, lastTimeReset);
+
+                    // Highlighting the part, which contains this updating FailureModule if it is in a 'failed' state,
+                    // it is not in 'silent' state and 'glow' is globally enabled
+                    // Actually, there is no any place in a code of a hole mod where that 'silent' state is turning on
+                    // (maybe some FailureModules can be defined as 'silent' by editing files)
+                    if (this.HasFailed && !this.Silent && DangIt.Instance.CurrentSettings.Glow)
+                    {
+                        this.part.SetHighlightColor(Color.red);
+                        this.part.SetHighlightType(Part.HighlightType.AlwaysOn);
+                        this.part.SetHighlight(true, false);
+                    }
+
+                    // Turning off the highlighting of the part, which contains this updating FailureModule
+                    // if it is not in a 'failed' state, or it is in 'silent' state, or if 'glow' is globally disabled
+                    if (!this.HasFailed || this.Silent || !DangIt.Instance.CurrentSettings.Glow)
+                    {
+                        this.part.SetHighlightDefault();
+                    }
+
+
+
+
 
                     float now = DangIt.Now();
 
@@ -456,7 +485,7 @@ namespace ippo
                     // The temperature aging is independent from the use of the part
                     this.Age += (dt * this.TemperatureMultiplier());
 
-					if (!PartIsActive() || !DangIt.Instance.CurrentSettings.EnabledForSave)
+                    if (!PartIsActive() || !DangIt.Instance.CurrentSettings.EnabledForSave)
                         return;
                     else
                     {
@@ -478,7 +507,7 @@ namespace ippo
                             {
                                 this.Fail();
                             }
-						}
+                        }
 
                         // Run custom update logic
                         this.DI_Update();
@@ -535,11 +564,11 @@ namespace ippo
                 return;
             }
 
-			if (this.part.temperature > DangIt.Instance.CurrentSettings.GetMaxServicingTemp())
-			{
-				DangIt.Broadcast("This is too hot to service right now", true);
-				return;
-			} 
+            if (this.part.temperature > DangIt.Instance.CurrentSettings.GetMaxServicingTemp())
+            {
+                DangIt.Broadcast("This is too hot to service right now", true);
+                return;
+            }
 
 
             // Check if he is carrying enough spares
@@ -553,11 +582,11 @@ namespace ippo
                 evaPart.Resources[Spares.Name].amount -= this.MaintenanceCost;
 
                 // Distance between the kerbal's perks and the required perks, used to scale the maintenance bonus according to the kerbal's skills
-				int expDistance = evaPart.protoModuleCrew[0].experienceLevel - this.PerksRequirementValue;             
+                int expDistance = evaPart.protoModuleCrew[0].experienceLevel - this.PerksRequirementValue;
 
                 //// The higher the skill gap, the higher the maintenance bonus
                 //// The + 1 is there to makes it so that a maintenance bonus is always gained even when the perks match exactly
-                this.DiscountAge(this.MaintenanceBonus * ( (expDistance + 1) / 3));
+                this.DiscountAge(this.MaintenanceBonus * ((expDistance + 1) / 3));
 
                 DangIt.Broadcast("This should last a little longer now");
             }
@@ -579,7 +608,7 @@ namespace ippo
         {
             try
             {
-				this.FailureLog("Initiating Fail()");
+                this.FailureLog("Initiating Fail()");
 
                 // First, run the custom failure logic
                 // The child class can refuse to fail in FailBegin()
@@ -609,15 +638,16 @@ namespace ippo
                                        MessageSystemButton.MessageButtonColor.RED,
                                        MessageSystemButton.ButtonIcons.ALERT);
 
-					if (FindObjectOfType<AlarmManager>()!=null){
-						FindObjectOfType<AlarmManager>().AddAlarm(this,DangIt.Instance.CurrentSettings.GetSoundLoopsForPriority(Priority));
-						if (FindObjectOfType<AlarmManager>().HasAlarmsForModule(this))
-						{
-							Events ["MuteAlarms"].active = true;
-							Events ["MuteAlarms"].guiActive = true;
-						}
-					}
-				}
+                    if (FindObjectOfType<AlarmManager>() != null)
+                    {
+                        FindObjectOfType<AlarmManager>().AddAlarm(this, DangIt.Instance.CurrentSettings.GetSoundLoopsForPriority(Priority));
+                        if (FindObjectOfType<AlarmManager>().HasAlarmsForModule(this))
+                        {
+                            Events["MuteAlarms"].active = true;
+                            Events["MuteAlarms"].guiActive = true;
+                        }
+                    }
+                }
 
                 DangIt.FlightLog(this.FailureMessage);
             }
@@ -664,14 +694,14 @@ namespace ippo
 
                 // Get the EVA part (parts can hold resources)
                 Part evaPart = DangIt.FindEVAPart();
-                
+
                 if (evaPart == null)
                 {
                     throw new Exception("ERROR: couldn't find an active EVA!");
                 }
 
                 // Check if the kerbal is able to perform the repair
-                if ( CheckRepairConditions(evaPart) )
+                if (CheckRepairConditions(evaPart))
                 {
                     this.DI_EvaRepair();
                     this.SetFailureState(false);
@@ -680,7 +710,7 @@ namespace ippo
 
                     //TODO: experience repair boni
                     float intelligence = 1 - evaPart.protoModuleCrew[0].stupidity;
-                    float discountedCost = (float)Math.Round( RepairCost * (1 - UnityEngine.Random.Range(0f, intelligence)) );
+                    float discountedCost = (float)Math.Round(RepairCost * (1 - UnityEngine.Random.Range(0f, intelligence)));
                     float discount = RepairCost - discountedCost;
 
                     this.FailureLog("Kerbal's intelligence: " + intelligence + ", discount: " + discount);
@@ -696,9 +726,9 @@ namespace ippo
                     if (discount > 0)
                     {
                         DangIt.Broadcast(evaPart.protoModuleCrew[0].name + " was able to save " + discount + " spare parts");
-					}
+                    }
 
-					FindObjectOfType<AlarmManager>().RemoveAllAlarmsForModule(this); //Remove alarms from this module
+                    FindObjectOfType<AlarmManager>().RemoveAllAlarmsForModule(this); //Remove alarms from this module
                 }
 
                 lastTimeReset = DangIt.ResetShipGlow(this.part.vessel);
@@ -728,16 +758,16 @@ namespace ippo
                 allow = false;
                 reason = "not carrying enough spares";
                 DangIt.Broadcast("You need " + this.RepairCost + " spares to repair this.", true);
-            } 
+            }
             #endregion
 
             #region Part temperature
-			if (this.part.temperature > DangIt.Instance.CurrentSettings.GetMaxServicingTemp())
+            if (this.part.temperature > DangIt.Instance.CurrentSettings.GetMaxServicingTemp())
             {
                 allow = false;
                 reason = "part is too hot (" + part.temperature.ToString() + " degrees)";
                 DangIt.Broadcast("This is too hot to service right now", true);
-            } 
+            }
             #endregion
 
 
@@ -764,13 +794,13 @@ namespace ippo
         bool CheckOutExperience(ProtoCrewMember kerbal)
         {
             // Haskell made me fond of unreadable one-line functional expressions.
-			this.FailureLog ("Checking Experience");
-			this.FailureLog ("this.PerksRequirementName       = " + this.PerksRequirementName);
-			this.FailureLog ("this.PerksRequirementValue      = " + this.PerksRequirementValue);
-			this.FailureLog ("kerbal.experienceTrait.TypeName = " + kerbal.experienceTrait.TypeName);
-			this.FailureLog ("kerbal.experienceLevel          = " + kerbal.experienceLevel);
-			return !DangIt.Instance.CurrentSettings.RequireExperience || string.IsNullOrEmpty(this.PerksRequirementName)                  // empty string means no restrictions
-				|| ((kerbal.experienceTrait.TypeName == this.PerksRequirementName) && (kerbal.experienceLevel >= this.PerksRequirementValue));
+            this.FailureLog("Checking Experience");
+            this.FailureLog("this.PerksRequirementName       = " + this.PerksRequirementName);
+            this.FailureLog("this.PerksRequirementValue      = " + this.PerksRequirementValue);
+            this.FailureLog("kerbal.experienceTrait.TypeName = " + kerbal.experienceTrait.TypeName);
+            this.FailureLog("kerbal.experienceLevel          = " + kerbal.experienceLevel);
+            return !DangIt.Instance.CurrentSettings.RequireExperience || string.IsNullOrEmpty(this.PerksRequirementName)                  // empty string means no restrictions
+                || ((kerbal.experienceTrait.TypeName == this.PerksRequirementName) && (kerbal.experienceLevel >= this.PerksRequirementValue));
         }
 
 
@@ -791,7 +821,7 @@ namespace ippo
             try
             {
                 StringBuilder sb = new StringBuilder();
-               
+
                 sb.Append(this.DebugName);
                 if (part != null)
                 {
@@ -822,7 +852,7 @@ namespace ippo
 
         public void LogException(Exception e)
         {
-			Logger.Error("ERROR ["+e.GetType().ToString()+"]: " + e.Message + "\n" + e.StackTrace);
+            Logger.Error("ERROR [" + e.GetType().ToString() + "]: " + e.Message + "\n" + e.StackTrace);
         }
 
         #endregion
@@ -836,19 +866,22 @@ namespace ippo
             return (this.ExponentialDecay() - 1) * defaultCost;
         }
 
-		[KSPEvent(guiActive = false, active = false, guiName="Mute Alarm")]
-		public void MuteAlarms(){
-			Logger.Info("Muting alarms for... " + this.ToString ());
-			if (FindObjectOfType<AlarmManager> () != null) {
-				FindObjectOfType<AlarmManager> ().RemoveAllAlarmsForModule (this);
-			}
-		}
+        [KSPEvent(guiActive = false, active = false, guiName = "Mute Alarm")]
+        public void MuteAlarms()
+        {
+            Logger.Info("Muting alarms for... " + this.ToString());
+            if (FindObjectOfType<AlarmManager>() != null)
+            {
+                FindObjectOfType<AlarmManager>().RemoveAllAlarmsForModule(this);
+            }
+        }
 
-		public void AlarmsDoneCallback(){ //Called from AlarmManager when no alarms remain
-			Logger.Info("AlarmsDoneCallback called");
-			Events ["MuteAlarms"].active = false;
-			Events ["MuteAlarms"].guiActive = false;
-		}
+        public void AlarmsDoneCallback()
+        { //Called from AlarmManager when no alarms remain
+            Logger.Info("AlarmsDoneCallback called");
+            Events["MuteAlarms"].active = false;
+            Events["MuteAlarms"].guiActive = false;
+        }
     }
 
 }
