@@ -55,6 +55,10 @@
 	Replaced the quick fix for the ResetShipGlow in previous patch with code sent by @EugeneButrik, a much better solution
 	Fixed bug (again found and fixed by @eugeneButrik) where changing vessels would have failed parts not highlighted anymore
 
+## Release 0.7.10
+	Removed the lastTimeReset code, wasn't needed after 0.7.9
+	Changed print to Logger.debug, to reduce log spam
+
 ============== Coffeeman's work below =========================
 ## ALPHA 6
 

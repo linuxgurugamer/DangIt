@@ -128,6 +128,7 @@ namespace ippo
 
         protected override void DI_OnSave(ConfigNode node)
         {
+            Logger.Info("ModuleTankReliability.DI_OnSave, part: " + part.partInfo.title);
             if (leakName == null)
                 leakName = "none"; //  print("Adding leak: (empty)");
             else
@@ -141,6 +142,7 @@ namespace ippo
 
         protected override void DI_Update()
         {
+            Logger.Info("ModuleTankReliability.DI_Update, part: " + part.partInfo.title);
             try
             {
                 if (this.HasFailed &&

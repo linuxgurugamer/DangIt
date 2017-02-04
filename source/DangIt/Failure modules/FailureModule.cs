@@ -396,7 +396,7 @@ namespace ippo
         /// </summary>
         public override void OnStart(PartModule.StartState state)
         {
-            Logger.Info("OnStart");
+            Logger.Info("FailureModule.OnStart");
             try
             {
                 if (HighLogic.LoadedSceneIsFlight) // nothing to do in editor
@@ -495,7 +495,7 @@ namespace ippo
                             float f = this.Lambda();
 #if DEBUG
                             if (printChances)
-                                print("this.Lambda: " + f.ToString());
+                                Logger.Debug("this.Lambda: " + f.ToString());
 #endif
 
 
