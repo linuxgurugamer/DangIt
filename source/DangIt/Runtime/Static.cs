@@ -121,54 +121,5 @@ namespace ippo
             return ((idx < 0) ? null : FlightGlobals.Vessels[idx].rootPart);
         }
 
-
-       
-        /// <summary>
-        /// Resets the glow on all the vessel.
-        /// Parts that have failed will glow red unless they are set to fail silently.
-        /// </summary>
-        /// <param name="v"></param>
-        public static float ResetShipGlow(Vessel v)
-        {
-            ResetPartGlow(v.rootPart);
-            
-            return DangIt.Now();
-        }
-
-
-
-        /// <summary>
-        /// Resets the glow on a single part and then recursively on all its children.
-        /// </summary>
-        /// <param name="part"></param>
-        private static void ResetPartGlow(Part part)
-        {
-            // Set the highlight to default
-            part.SetHighlightDefault();
-
-
-            // If the glow is globally disabled, don't even bother looking for failures
-            if (DangIt.Instance.CurrentSettings.Glow)
-            {
-                // Scan all the failure modules, if any
-                List<FailureModule> failModules = part.Modules.OfType<FailureModule>().ToList();
-                for (int i = 0; i < failModules.Count; i++)
-                {
-                    if (failModules[i].HasFailed && !failModules[i].Silent)
-                    {
-                        // If any module has failed, glow red and stop searching (just one is sufficient)
-                        part.SetHighlightColor(Color.red);
-                        part.SetHighlightType(Part.HighlightType.AlwaysOn);
-                        part.SetHighlight(true, false);
-                        break;
-                    }
-                }
-            }
-
-
-            // Reset the glow for all the child parts
-            foreach (Part child in part.children)
-                DangIt.ResetPartGlow(child);
-        }
     }
 }

@@ -422,8 +422,6 @@ namespace ippo
                     if (this.HasFailed)
                         this.DI_Disable();
 
-                    DangIt.ResetShipGlow(this.part.vessel);
-
                 }
 
                 if (DangIt.Instance.CurrentSettings.EnabledForSave)
@@ -624,7 +622,7 @@ namespace ippo
                 this.DI_Disable();
 
                 TimeWarp.SetRate(0, true);      // stop instantly
-                this.SetFailureState(true);     // Sets the failure state, handles the events, handles the glow
+                this.SetFailureState(true);     // Sets the failure state, handles the events
 
                 if (!this.Silent)
                 {
@@ -655,14 +653,13 @@ namespace ippo
 
         /// <summary>
         /// Sets / resets the failure of the part.
-        /// Also resets the ship's glow and sets the event's visibility
+        /// Also sets the event's visibility
         /// </summary>
         protected void SetFailureState(bool state)
         {
             try
             {
                 this.HasFailed = state;
-                DangIt.ResetShipGlow(this.part.vessel);
 
                 Events["Fail"].active = !state;
                 Events["EvaRepair"].active = state;
@@ -726,8 +723,6 @@ namespace ippo
 
                     FindObjectOfType<AlarmManager>().RemoveAllAlarmsForModule(this); //Remove alarms from this module
                 }
-
-                DangIt.ResetShipGlow(this.part.vessel);
 
             }
             catch (Exception e)
