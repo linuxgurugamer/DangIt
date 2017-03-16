@@ -170,7 +170,7 @@ namespace ippo
 
 #if DEBUG
         bool printChances = false;
-//        [KSPEvent(active = true, guiActive = true)]
+        [KSPEvent(active = true, guiActive = true)]
         public void PrintChances()
         {
             printChances = !printChances;
@@ -272,8 +272,18 @@ namespace ippo
         /// </summary>
         protected void Reset()
         {
+            Debug.Log("Reset(), HasInitted: " + HasInitted.ToString());
+
+
+            #region Fail and repair events
+
+            this.Events["Fail"].guiName = this.FailGuiName;
+            this.Events["EvaRepair"].guiName = this.EvaRepairGuiName;
+            this.Events["EvaRepair"].active = false;
+            this.Events["Maintenance"].guiName = this.MaintenanceString;
             if (this.HasInitted)
                 return;
+            #endregion
             try
             {
                 this.FailureLog("Resetting");
@@ -293,16 +303,6 @@ namespace ippo
                 this.HasFailed = false;
                 #endregion
 
-                #region Fail and repair events
-
-                this.Events["Fail"].guiName = this.FailGuiName;
-
-                this.Events["EvaRepair"].guiName = this.EvaRepairGuiName;
-                this.Events["EvaRepair"].active = false;
-
-                this.Events["Maintenance"].guiName = this.MaintenanceString;
-
-                #endregion
 
                 // Run the custom reset of the subclasses
                 this.DI_Reset();
@@ -347,7 +347,7 @@ namespace ippo
                 if (HighLogic.LoadedSceneIsFlight)
                     this.DI_Start(StartState.Flying);
 
-                base.OnLoad(node);
+                base.OnLoad(node);                
 
             }
             catch (Exception e)
@@ -451,23 +451,28 @@ namespace ippo
                 {
                     // Highlighting the part, which contains this updating FailureModule if it is in a 'failed' state,
                     // it is not in 'silent' state and 'glow' is globally enabled
-                    // Actually, there is no any place in a code of a hole mod where that 'silent' state is turning on
+                    // Actually, there is not any place in a code of  the whole mod where that 'silent' state is turning on
                     // (maybe some FailureModules can be defined as 'silent' by editing files)
-                    if (this.HasFailed && !this.Silent && DangIt.Instance.CurrentSettings.Glow)
+
+                    if (this.HasFailed && !this.Silent && (DangIt.Instance.CurrentSettings.Glow && (AlarmManager.visibleUI || !DangIt.Instance.CurrentSettings.DisableGlowOnF2)))
                     {
-                        this.part.SetHighlightColor(Color.red);
-                        this.part.SetHighlightType(Part.HighlightType.AlwaysOn);
+
+                        this.part.SetHighlightDefault();
+
+                        this.part.SetHighlightColor(Color.red);                        
+                        this.part.SetHighlightType(Part.HighlightType.AlwaysOn);                                            
+                        this.part.highlighter.ConstantOn(Color.red);
+                        this.part.highlighter.SeeThroughOn();
                         this.part.SetHighlight(true, false);
-                    }
+                    } else
 
                     // Turning off the highlighting of the part, which contains this updating FailureModule
                     // if it is not in a 'failed' state, or it is in 'silent' state, or if 'glow' is globally disabled
-                    if (!this.HasFailed || this.Silent || !DangIt.Instance.CurrentSettings.Glow)
+              //      if (!this.HasFailed || this.Silent || !DangIt.Instance.CurrentSettings.Glow || (!visibleUI && DangIt.Instance.CurrentSettings.DisableGlowOnF2))
                     {
-                        this.part.SetHighlightDefault();
+                        if (!AlarmManager.partFailures.ContainsKey(this.part))
+                            this.part.SetHighlightDefault();
                     }
-
-
 
 
 
@@ -492,8 +497,8 @@ namespace ippo
                         {
                             float f = this.Lambda();
 #if DEBUG
-                            if (printChances)
-                                Logger.Debug("this.Lambda: " + f.ToString());
+                           // if (printChances)
+                           //     Logger.Debug("this.Lambda: " + f.ToString());
 #endif
 
 

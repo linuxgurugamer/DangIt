@@ -57,7 +57,14 @@
 
 ## Release 0.7.10
 	Removed the lastTimeReset code, wasn't needed after 0.7.9
-	Changed print to Logger.debug, to reduce log spam
+	Changed print to Logger.debug, to reduce log spamzt 
+
+## release 0.7.11
+	Thanks to EugeneButrik, removing unnecessary and old functions
+	Added option to disable failed part glowing when F2 is pressed
+	Fixed bug where if a part can have multiple parts, the highlighting woudln't consistently work.  This happens on SRBs (maybe others)
+	Fixed typo in SRBs_enginesFX.cfg and in SRBs.cfg
+	Fixed bug  when manual fails are allowed, the buttons weren't always set properly (they should just show Fail)
 
 ============== Coffeeman's work below =========================
 ## ALPHA 6

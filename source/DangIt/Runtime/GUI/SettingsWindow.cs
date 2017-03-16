@@ -111,6 +111,9 @@ namespace ippo
         [GameParameters.CustomParameterUI("Glow")]
         public bool Glow = true;                // enable the part's glow upon failure
 
+        [GameParameters.CustomParameterUI("Disable Glow on F2")]
+        public bool DisableGlowOnF2 = true;                // enable the part's glow upon failure
+
         [GameParameters.CustomParameterUI("Check Experience")]
         public bool RequireExperience = true;   // enable requiring experience levels
 

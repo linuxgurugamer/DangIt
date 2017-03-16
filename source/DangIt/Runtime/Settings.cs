@@ -14,19 +14,7 @@ namespace ippo
         public class Settings
         {
             public static Settings Instance;
-#if false
-            public bool EnabledForSave = true;      // is enabled for this save file
-            public bool ManualFailures = false;     // initiate failures manually
-            public float MaxDistance = 2f;          // maximum distance for EVA activities
-            public bool Messages = true;            // enable messages and screen posts
-			public bool Glow = true;                // enable the part's glow upon failure
-			public bool RequireExperience = true;   // enable requiring experience levels
-			public int  Pri_Low_SoundLoops = 0;     // number of times to beep
-			public int  Pri_Medium_SoundLoops = 2;  // number of times to beep
-			public int  Pri_High_SoundLoops = -1;   // number of times to beep
-			public int  AlarmVolume = 100;          // volume of the alarm (1-100)   
-			public bool DebugStats = false;			// show debug stats of the part in the right-click menu
-#endif
+
             public bool EnabledForSave
             { get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams1>().EnabledForSave; } }
             public bool ManualFailures
@@ -44,6 +32,10 @@ namespace ippo
             public bool Glow
             {
                 get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams1>().Glow; }
+            }
+            public bool DisableGlowOnF2
+            {
+                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams1>().DisableGlowOnF2; }
             }
             public bool RequireExperience
             {
@@ -93,51 +85,6 @@ namespace ippo
 			{
 				return ((float)this.AlarmVolume / 100f);
 			}
-
-#if false   
-            public Settings(ConfigNode node)
-            {
-                if (node != null && node.name == "SETTINGS")
-                {
-					EnabledForSave = DangIt.Parse<bool>(node.GetValue("EnabledForSave"), true);
-                    ManualFailures = DangIt.Parse<bool>(node.GetValue("ManualFailures"), false);
-                    MaxDistance = DangIt.Parse<float>(node.GetValue("MaxDistance"), 1f);
-                    Messages = DangIt.Parse<bool>(node.GetValue("Messages"), true);
-					Glow = DangIt.Parse<bool>(node.GetValue("Glow"), true);
-					Pri_Low_SoundLoops = DangIt.Parse<int>(node.GetValue("Pri_Low_Loops"), 0);
-					Pri_Medium_SoundLoops = DangIt.Parse<int>(node.GetValue("Pri_Medium_Loops"), 0);
-					Pri_High_SoundLoops = DangIt.Parse<int>(node.GetValue("Pri_High_Loops"), 0);
-					AlarmVolume = DangIt.Parse<int>(node.GetValue("AlarmVolume"), 100);
-					RequireExperience = DangIt.Parse<bool>(node.GetValue("RequireExperience"), true);
-					DebugStats = DangIt.Parse<bool>(node.GetValue("DebugStats"), false);
-                }
-                else
-                    throw new Exception("Invalid node!");
-            }
-
-            public ConfigNode ToNode()
-            {
-                ConfigNode result = new ConfigNode("SETTINGS");
-
-				result.AddValue("EnabledForSave", EnabledForSave.ToString ());
-                result.AddValue("ManualFailures", ManualFailures.ToString());
-                result.AddValue("MaxDistance", MaxDistance.ToString());
-
-				result.AddValue("Messages", Messages.ToString());
-				result.AddValue("Glow", Glow.ToString());
-
-				result.AddValue("Pri_Low_Loops", Pri_Low_SoundLoops.ToString());
-				result.AddValue("Pri_Medium_Loops", Pri_Medium_SoundLoops.ToString());
-				result.AddValue("Pri_High_Loops", Pri_High_SoundLoops.ToString());
-
-				result.AddValue("AlarmVolume", AlarmVolume.ToString());
-
-				result.AddValue ("RequireExperience", RequireExperience.ToString ());
-				result.AddValue ("DebugStats", DebugStats.ToString ());
-
-                return result;
-            }
-#endif
 
             /// <summary>
             /// Returns a shallow copy of the object (field-wise).
