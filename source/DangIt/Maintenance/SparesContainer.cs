@@ -54,12 +54,13 @@ namespace ippo
                     if (cargoModule != null)
                         deployModule = this.findModule(cargoModule.DeployModuleIndex);
                 }
-                if (cargoModule != null)
+
+                if (cargoModule != null && deployModule != null)
                 {
+
                     Logger.Info("Cargo bay found");
                     if (cargoModule.ClosedAndLocked() || this.deployModule.IsMoving())
                     {
-                      
                         Events["DepositParts"].active = false;
                         Events["TakeParts"].active = false;
                     }

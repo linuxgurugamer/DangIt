@@ -66,6 +66,9 @@
 	Fixed typo in SRBs_enginesFX.cfg and in SRBs.cfg
 	Fixed bug  when manual fails are allowed, the buttons weren't always set properly (they should just show Fail)
 
+## release 0.7.12
+	Fixed bug when cargo bay didn't have deplpyable module, was giving nullref
+
 ============== Coffeeman's work below =========================
 ## ALPHA 6
 
