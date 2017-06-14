@@ -5,7 +5,7 @@ using KSP;
 using System.Collections;
 using UnityEngine;
 
-namespace ippo
+namespace nsDangIt
 {
     public class ModuleTankReliability : FailureModule
     {

@@ -9,7 +9,7 @@ using UnityEngine;
 using System.IO;
 using KSP.UI.Screens;
 
-namespace ippo
+namespace nsDangIt
 {
     /// <summary>
     /// Mod's runtime controller and manager.

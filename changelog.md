@@ -1,3 +1,4 @@
+
 ## Beta-1
 	Initial update for 1.2.1
 
@@ -68,6 +69,13 @@
 
 ## release 0.7.12
 	Fixed bug when cargo bay didn't have deplpyable module, was giving nullref
+
+## release *****
+	Fixed nullref in WheelMotor on start
+	Restricted alarm to sounding only when part is failed on active vessel
+	Changed Update to LateUpdate in AlarmManager
+	Restricted failures to active vessel only (in FailureModule)
+	Updated for 1.3
 
 ============== Coffeeman's work below =========================
 ## ALPHA 6

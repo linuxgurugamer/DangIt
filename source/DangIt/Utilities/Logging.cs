@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 using System.Diagnostics;
 
-namespace ippo
+namespace nsDangIt
 {
     public static class Logger
     {

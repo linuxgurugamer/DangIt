@@ -6,7 +6,7 @@ using UnityEngine;
 
 // Added by Linuxgurugamer
 
-namespace ippo
+namespace nsDangIt
 {
     public class ModuleDeployableAntennaReliability : FailureModule
     {

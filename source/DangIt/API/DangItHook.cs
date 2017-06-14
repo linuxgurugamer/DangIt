@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Reflection;
 
-namespace ippo
+namespace nsDangIt
 {
     /// <summary>
     /// Reflection wrapper to interact with DangIt

@@ -5,7 +5,7 @@ using System.Text;
 using UnityEngine;
 
 
-namespace ippo
+namespace nsDangIt
 {
 	public class ModuleWheelMotorReliability : FailureModule
 	{
@@ -29,7 +29,7 @@ namespace ippo
 
 		protected override void DI_Start(StartState state)
 		{
-			if (HighLogic.LoadedSceneIsFlight)
+			if (HighLogic.LoadedSceneIsFlight && this.part != null && this.part.Modules != null)
 			{
 				this.wheelMotor = this.part.Modules.OfType<ModuleWheels.ModuleWheelMotor>().First();
 			}

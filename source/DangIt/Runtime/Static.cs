@@ -7,7 +7,7 @@ using UnityEngine;
 using KSP.IO;
 using KSP.UI.Screens;
 
-namespace ippo
+namespace nsDangIt
 {
     public partial class DangIt
     {

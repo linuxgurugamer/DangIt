@@ -5,7 +5,7 @@ using System.Text;
 using UnityEngine;
 using System.Reflection;
 
-namespace ippo
+namespace nsDangIt
 {
     /*
      * Check that the current game contains the runtime ScenarioModule

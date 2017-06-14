@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using KSP.UI.Screens;
-namespace ippo
+namespace nsDangIt
 {
     /// <summary>
     /// Module that handles the spare parts so that the kerbal can grab them while on EVA.

@@ -7,7 +7,7 @@ using UnityEngine;
 using Experience;
 using KSP.UI.Screens;
 
-namespace ippo
+namespace nsDangIt
 {
     /// <summary>
     /// Base failure module that abstracts all the common behaviour for discrete failures:
@@ -447,7 +447,7 @@ namespace ippo
             try
             {
                 // Only update the module during flight and after the re-initialization has run
-                if (HighLogic.LoadedSceneIsFlight && this.HasInitted)
+                if (HighLogic.LoadedSceneIsFlight && this.HasInitted && this.vessel == FlightGlobals.ActiveVessel)
                 {
                     // Highlighting the part, which contains this updating FailureModule if it is in a 'failed' state,
                     // it is not in 'silent' state and 'glow' is globally enabled

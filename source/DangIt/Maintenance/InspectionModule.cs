@@ -7,7 +7,7 @@ using UnityEngine;
 using KSP.UI.Screens;
 
 
-namespace ippo
+namespace nsDangIt
 {
     /// <summary>
     /// Module that allows the kerbals to inspect a part to get some information about its state.

@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Linq;
 using System.Collections.Generic;
 
-namespace ippo
+namespace nsDangIt
 {
     //	[RequireComponent(typeof(AudioSource))]
     [KSPAddon(KSPAddon.Startup.Flight, false)]
@@ -107,7 +107,7 @@ namespace ippo
             }
         }
 
-        public void Update()
+        public void LateUpdate()
         {
             if (audioSource.audio != null)
             {

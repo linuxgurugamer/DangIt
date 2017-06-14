@@ -2,10 +2,10 @@
 using System.Collections;
 using System.Linq;
 using System.Text;
-using ippo;
+using nsDangIt;
 using UnityEngine;
 
-namespace ippo
+namespace nsDangIt
 {
 	class ModuleSmallTankExploder : FailureModule
 	{

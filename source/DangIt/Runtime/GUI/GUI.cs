@@ -3,12 +3,13 @@ using System.Collections;
 using UnityEngine;
 using KSP.UI.Screens;
 
-
-namespace ippo
+// Disabled since the settings are now using the stock settings pages
+#if false
+namespace nsDangIt
 {
     public partial class DangIt
     {        
-#if false 
+ 
         ApplicationLauncherButton appBtn;
         //SettingsWindow settingsWindow = new SettingsWindow();
 
@@ -70,6 +71,6 @@ namespace ippo
         {
             this.settingsWindow.Enabled = false;
         }
-#endif
     }
 }
+#endif

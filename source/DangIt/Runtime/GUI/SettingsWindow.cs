@@ -9,7 +9,7 @@ using UnityEngine;
 
 
 
-namespace ippo
+namespace nsDangIt
 {
 
     [KSPAddon(KSPAddon.Startup.SpaceCentre, false)]
@@ -85,15 +85,10 @@ namespace ippo
 
     public class DangItCustomParams1 : GameParameters.CustomParameterNode
     {
-       // public static DangItCustomParams instance;
-       // public DangItCustomParams()
-        //{
-       //     instance = this;
-       // }
-
         public override string Title { get { return "General Settings"; } }
         public override GameParameters.GameMode GameMode { get { return GameParameters.GameMode.ANY; } }
         public override string Section { get { return "Dang It!"; } }
+        public override string DisplaySection { get { return "Dang It!"; } }
         public override int SectionOrder { get { return 1; } }
         public override bool HasPresets { get { return true; } }
 
@@ -281,6 +276,7 @@ namespace ippo
         public override string Title { get { return "Allow Failures on:"; } }
         public override GameParameters.GameMode GameMode { get { return GameParameters.GameMode.ANY; } }
         public override string Section { get { return "Dang It!"; } }
+       public override string DisplaySection { get { return "Dang It!"; } }
         public override int SectionOrder { get { return 2; } }
         public override bool HasPresets { get { return true; } }
 
@@ -408,15 +404,10 @@ namespace ippo
 
     public class DangItCustomParams3 : GameParameters.CustomParameterNode
     {
-        // public static DangItCustomParams instance;
-        // public DangItCustomParams()
-        //{
-        //     instance = this;
-        // }
-
         public override string Title { get { return "Additional Allow Failures on:"; } }
         public override GameParameters.GameMode GameMode { get { return GameParameters.GameMode.ANY; } }
         public override string Section { get { return "Dang It!"; } }
+        public override string DisplaySection { get { return "Dang It!"; } }
         public override int SectionOrder { get { return 3; } }
         public override bool HasPresets { get { return true; } }
 

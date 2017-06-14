@@ -2,11 +2,11 @@ using System;
 using System.Collections;
 using System.Linq;
 using System.Text;
-using ippo;
+using nsDangIt;
 using UnityEngine;
 using KSP;
 
-namespace ippo
+namespace nsDangIt
 {
 	public class ModuleCoolantReliabilityCore : FailureModule //Renamed so that it dosen't conflict if user has an old version of Entropy
 	{
