@@ -132,7 +132,7 @@ namespace nsDangIt
         void ReloadSettings()
         {
             //  this.IsReady = false;
-            DangIt.Instance.StartPartInfoCacheReload();
+            //DangIt.Instance.StartPartInfoCacheReload();
             if (FindObjectOfType<AlarmManager>() != null)
             {
                 FindObjectOfType<AlarmManager>().UpdateSettings();
