@@ -134,8 +134,12 @@ namespace nsDangIt
         public string PerksRequirementName = "";                    // Trait name required to fix this part. "" = Any
 
         [KSPField(isPersistant = true, guiActive = false)]
-        public int PerksRequirementValue = 0;						// Skill level required to fix this part.
+        public int PerksRequirementValue = 0;                       // Skill level required to fix this part.
 
+        // This is NOT persistant
+        internal static float streamMultiplier = 0;
+        internal static float decayPerMinute = 0;
+        internal static double lastDecayTime = 0;
         #endregion
 
 
@@ -188,7 +192,8 @@ namespace nsDangIt
             float f = LambdaFromMTBF(this.CurrentMTBF)
                     * (1 + TemperatureMultiplier())     // the temperature increases the chance of failure
                     * LambdaMultiplier()                // optional multiplier from the child class
-                    * InspectionLambdaMultiplier();           // temporary inspection bonus
+                    * InspectionLambdaMultiplier()           // temporary inspection bonus
+                    * StreamMultiplier(); // for streamers, temporarily increase the chance for failure
 #if DEBUG
             if (printChances)
                 Logger.Info("Lambda: " + f.ToString());
@@ -212,7 +217,7 @@ namespace nsDangIt
                 OnError(e);
                 //return 0f;
             }
-#if DEBUG
+#if false
             if (printChances)
                 print("LambdaFromMTBF: " + f.ToString());
 #endif    
@@ -444,6 +449,11 @@ namespace nsDangIt
         /// </summary>
         public void FixedUpdate()
         {
+            if (streamMultiplier > 0 && Planetarium.GetUniversalTime() - lastDecayTime > 1)
+            {
+                streamMultiplier = Math.Max(0, streamMultiplier -  decayPerMinute);
+                lastDecayTime = Planetarium.GetUniversalTime();
+            }
             try
             {
                 // Only update the module during flight and after the re-initialization has run
@@ -504,6 +514,7 @@ namespace nsDangIt
 
                             if (UnityEngine.Random.Range(0f, 1f) < f)
                             {
+                                streamMultiplier = 0;
                                 this.Fail();
                             }
                         }
@@ -525,6 +536,10 @@ namespace nsDangIt
             return (float)Math.Exp(-this.Age / this.LifeTimeSecs);
         }
 
+        private float StreamMultiplier()
+        {
+            return 1 + streamMultiplier;
+        }
 
         /// <summary>
         /// Increase the aging rate as the temperature increases.
@@ -532,7 +547,7 @@ namespace nsDangIt
         private float TemperatureMultiplier()
         {
             float f = 3 * (float)Math.Pow((Math.Max(part.temperature, 0) / part.maxTemp), 5);
-#if DEBUG
+#if false
             if (printChances)
                 print("TemperatureMultiplier: " + f.ToString());
 #endif    
@@ -602,7 +617,7 @@ namespace nsDangIt
         /// Initiates the part's failure.
         /// Put your custom failure code in DI_Fail()
         /// </summary>
-        [KSPEvent(guiActive = false)]
+        [KSPEvent(active=true, guiActive = false)]
         public void Fail()
         {
             try

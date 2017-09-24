@@ -4,7 +4,7 @@ using UnityEngine;
 using KSP.UI.Screens;
 
 // Disabled since the settings are now using the stock settings pages
-#if false
+#if true
 namespace nsDangIt
 {
     public partial class DangIt
@@ -17,7 +17,7 @@ namespace nsDangIt
         {
             GUI.skin = HighLogic.Skin;
 
-            if (settingsWindow.Enabled) settingsWindow.Draw();
+            //if (settingsWindow.Enabled) settingsWindow.Draw();
         }
 
 
@@ -32,7 +32,8 @@ namespace nsDangIt
 
             try
             {
-                if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
+                if (HighLogic.LoadedScene == GameScenes.SPACECENTER || HighLogic.LoadedScene == GameScenes.FLIGHT ||
+                    HighLogic.LoadedScene == GameScenes.TRACKSTATION)
                 {
                     // Load the icon for the button
                     Texture btnTex = GameDatabase.Instance.GetTexture("DangIt/Textures/appBtn", false);
@@ -40,8 +41,8 @@ namespace nsDangIt
                         throw new Exception("The button texture wasn't loaded!");
                     
                     appBtn = ApplicationLauncher.Instance.AddModApplication(
-                                onAppBtnToggleOn,
-                                onAppBtnToggleOff,
+                                onAppBtnToggle,
+                                onAppBtnToggle,
                                 dummyVoid,  // ignore callbacks for more elaborate events
                                 dummyVoid,
                                 dummyVoid,
@@ -61,15 +62,38 @@ namespace nsDangIt
         // The AppLauncher requires a callback for some events that are not used by this plugin
         void dummyVoid() { return; }
 
-
-        void onAppBtnToggleOn()
+        internal static ippo.Runtime.GUI.StreamMultiplier gui = null;
+        void onAppBtnToggle()
         {
-            this.settingsWindow.Enabled = true;
-        }
-
-        void onAppBtnToggleOff()
-        {
-            this.settingsWindow.Enabled = false;
+            Debug.Log("onAppBtnToggleOn");
+            if (gui != null)
+            {
+                Debug.Log("visible: " + gui.visible.ToString());
+                if (!gui.visible)
+                {
+                    gui.visible = true;
+                    gui.multiplier = "";
+                    gui.decay = FailureModule.decayPerMinute.ToString();
+                }
+                else
+                {
+                    UnityEngine.Object.Destroy(gui);
+                    gui = null;
+                }
+            }
+            else
+            {
+                Debug.Log("Adding new object");
+                // Use MapView.MapCamera to get a gameObject
+                gui = MapView.MapCamera.gameObject.GetComponent<ippo.Runtime.GUI.StreamMultiplier>();
+                if (gui == null)
+                {
+                    gui = MapView.MapCamera.gameObject.AddComponent<ippo.Runtime.GUI.StreamMultiplier>();
+                }
+                gui.visible = true;
+                gui.multiplier = "";
+                gui.decay = FailureModule.decayPerMinute.ToString();
+            }
         }
     }
 }

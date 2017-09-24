@@ -242,7 +242,7 @@ namespace nsDangIt
         }
 
 
-#if DEBUG
+#if false
         [KSPEvent(active = true, guiActive = true)]
         public void PrintStatus()
         {

@@ -109,7 +109,7 @@ namespace nsDangIt
             //this.IsReady = false;
 
             // Add the button to the stock toolbar
-            // this.StartCoroutine("AddAppButton");
+            this.StartCoroutine("AddAppButton");
 
         }
 

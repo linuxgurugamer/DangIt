@@ -70,12 +70,19 @@
 ## release 0.7.12
 	Fixed bug when cargo bay didn't have deplpyable module, was giving nullref
 
-## release *****
+## release 0.7.13-beta
 	Fixed nullref in WheelMotor on start
 	Restricted alarm to sounding only when part is failed on active vessel
 	Changed Update to LateUpdate in AlarmManager
 	Restricted failures to active vessel only (in FailureModule)
 	Updated for 1.3
+
+## release 0.7.13.1
+	Updated Snacks MM patch
+
+## release 0.7.14
+	Added button, calls modifier window, to add a modifier to the chances of the fialure with configurable decay of modifier
+
 
 ============== Coffeeman's work below =========================
 ## ALPHA 6
