@@ -59,6 +59,16 @@ namespace nsDangIt
             }
         }
 
+        private void OnGUIAppLauncherDestroyed()
+        {
+            if (appBtn != null)
+            {
+                ApplicationLauncher.Instance.RemoveModApplication(appBtn);
+
+                appBtn = null;
+            }
+        }
+
         // The AppLauncher requires a callback for some events that are not used by this plugin
         void dummyVoid() { return; }
 

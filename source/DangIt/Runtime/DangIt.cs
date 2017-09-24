@@ -181,11 +181,11 @@ namespace nsDangIt
         public void OnDestroy()
         {
             this.Log("Destroying instance.");
-#if false
+
             // Remove the button from the toolbar
             if (appBtn != null)
                 ApplicationLauncher.Instance.RemoveModApplication(this.appBtn);
-#endif
+
             GameEvents.OnGameSettingsApplied.Remove(ReloadSettings);
             GameEvents.onGameStatePostLoad.Remove(ReloadSettings);
         }

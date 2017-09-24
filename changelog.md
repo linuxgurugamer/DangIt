@@ -83,6 +83,8 @@
 ## release 0.7.14
 	Added button, calls modifier window, to add a modifier to the chances of the fialure with configurable decay of modifier
 
+## release 0.7.14.1
+	Fixed multiple toolbar buttons
 
 ============== Coffeeman's work below =========================
 ## ALPHA 6
