@@ -86,6 +86,9 @@
 ## release 0.7.14.1
 	Fixed multiple toolbar buttons
 
+## release 0.7.15
+	updated for KSP 1.3.1
+
 ============== Coffeeman's work below =========================
 ## ALPHA 6
 
