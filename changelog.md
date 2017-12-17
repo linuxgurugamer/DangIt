@@ -89,6 +89,9 @@
 ## release 0.7.15
 	updated for KSP 1.3.1
 
+## release 0.7.16
+	Fixed MM patches for new MM 3.0.1
+
 ============== Coffeeman's work below =========================
 ## ALPHA 6
 

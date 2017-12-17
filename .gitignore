@@ -185,7 +185,7 @@ FakesAssemblies/
 .LSOverride
 
 # Icon must ends with two \r.
-Icon
+Icon
 
 # Thumbnails
 ._*
@@ -193,6 +193,15 @@ Icon
 # Files that might appear on external disk
 .Spotlight-V100
 .Trashes
+
+# Directories potentially created on remote AFP share
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+
 
 # Windows
 # =========================
@@ -212,6 +221,9 @@ $RECYCLE.BIN/
 *.msi
 *.msm
 *.msp
+
+# Windows shortcuts
+*.lnk
 
 #
 # Vim files

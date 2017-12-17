@@ -108,12 +108,12 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>start /D D:\Users\jbb\github\DangIt\source\DangIt  /WAIT deploy.bat
+    <PostBuildEvent>
+start /D D:\Users\jbb\github\DangIt /WAIT deploy.bat  $(TargetDir) $(TargetFileName)
 
 if $(ConfigurationName) == Release (
-start /D D:\Users\jbb\github\DangIt\source\DangIt  /WAIT buildRelease.bat
-)
-</PostBuildEvent>
+     start /D D:\Users\jbb\github\DangIt  /WAIT buildRelease.bat $(TargetDir) $(TargetFileName)
+)</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>
