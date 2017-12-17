@@ -38,17 +38,17 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AssemblyVersion.tt</DependentUpon>
     </Compile>
-    <Compile Include="Failure modules\CoolantCore.cs" />
-    <Compile Include="Failure modules\DeployableAntenna.cs" />
-    <Compile Include="Failure modules\Entropy\Animate.cs" />
-    <Compile Include="Failure modules\Entropy\Generator.cs" />
-    <Compile Include="Failure modules\Entropy\Parachutes.cs" />
-    <Compile Include="Failure modules\Entropy\SmallPartExploder.cs" />
-    <Compile Include="Failure modules\Entropy\Solar.cs" />
-    <Compile Include="Failure modules\Entropy\SRB.cs" />
-    <Compile Include="Failure modules\Entropy\SRB_engineFX.cs" />
-    <Compile Include="Failure modules\WheelMotor.cs" />
-    <Compile Include="Failure modules\WheelTire.cs" />
+    <Compile Include="Failure_modules\CoolantCore.cs" />
+    <Compile Include="Failure_modules\DeployableAntenna.cs" />
+    <Compile Include="Failure_modules\Entropy\Animate.cs" />
+    <Compile Include="Failure_modules\Entropy\Generator.cs" />
+    <Compile Include="Failure_modules\Entropy\Parachutes.cs" />
+    <Compile Include="Failure_modules\Entropy\SmallPartExploder.cs" />
+    <Compile Include="Failure_modules\Entropy\Solar.cs" />
+    <Compile Include="Failure_modules\Entropy\SRB.cs" />
+    <Compile Include="Failure_modules\Entropy\SRB_engineFX.cs" />
+    <Compile Include="Failure_modules\WheelMotor.cs" />
+    <Compile Include="Failure_modules\WheelTire.cs" />
     <Compile Include="Runtime\GUI\StreamMultiplier.cs" />
     <Compile Include="Utilities\Logging.cs" />
     <Compile Include="API\API.cs" />
@@ -58,15 +58,15 @@
     <Compile Include="Runtime\ScenarioInjector.cs" />
     <Compile Include="Runtime\GUI\GUI.cs" />
     <Compile Include="Utilities\EnginesManager.cs" />
-    <Compile Include="Failure modules\Alternator.cs" />
-    <Compile Include="Failure modules\Batteries.cs" />
-    <Compile Include="Failure modules\ControlSurface.cs" />
+    <Compile Include="Failure_modules\Alternator.cs" />
+    <Compile Include="Failure_modules\Batteries.cs" />
+    <Compile Include="Failure_modules\ControlSurface.cs" />
     <Compile Include="Runtime\DangIt.cs" />
-    <Compile Include="Failure modules\Engines.cs" />
-    <Compile Include="Failure modules\Gimbal.cs" />
-    <Compile Include="Failure modules\Lights.cs" />
-    <Compile Include="Failure modules\FailureModule.cs" />
-    <Compile Include="Failure modules\ModuleRCSReliability.cs" />
+    <Compile Include="Failure_modules\Engines.cs" />
+    <Compile Include="Failure_modules\Gimbal.cs" />
+    <Compile Include="Failure_modules\Lights.cs" />
+    <Compile Include="Failure_modules\FailureModule.cs" />
+    <Compile Include="Failure_modules\ModuleRCSReliability.cs" />
     <Compile Include="Maintenance\InspectionModule.cs" />
     <Compile Include="Maintenance\ModuleReliabilityInfo.cs" />
     <Compile Include="Runtime\Settings.cs" />
@@ -74,8 +74,8 @@
     <Compile Include="Runtime\Static.cs" />
     <Compile Include="Maintenance\SparesContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Failure modules\ReactionWheel.cs" />
-    <Compile Include="Failure modules\Tanks.cs" />
+    <Compile Include="Failure_modules\ReactionWheel.cs" />
+    <Compile Include="Failure_modules\Tanks.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="AssemblyVersion.tt">
@@ -87,7 +87,7 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Failure modules\Entropy\RealChutes\" />
+    <Folder Include="Failure_modules\Entropy\RealChutes\" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Assembly-CSharp">
