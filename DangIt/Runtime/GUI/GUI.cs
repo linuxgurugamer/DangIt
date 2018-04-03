@@ -3,18 +3,25 @@ using System.Collections;
 using UnityEngine;
 using KSP.UI.Screens;
 
+using ToolbarControl_NS;
+
 // Disabled since the settings are now using the stock settings pages
 #if true
 namespace nsDangIt
 {
     public partial class DangIt
-    {        
- 
-        ApplicationLauncherButton appBtn;
+    {
+
+        //ApplicationLauncherButton appBtn;
+        ToolbarControl toolbarControl;
+
         //SettingsWindow settingsWindow = new SettingsWindow();
 
         void OnGUI()
         {
+            if (toolbarControl != null)
+                toolbarControl.UseBlizzy(HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams1>().useBlizzy);
+
             GUI.skin = HighLogic.Skin;
 
             //if (settingsWindow.Enabled) settingsWindow.Draw();
@@ -25,8 +32,9 @@ namespace nsDangIt
         /// Coroutine that creates the button in the toolbar. Will wait for the runtime AND the launcher to be ready
         /// before creating the button.
         /// </summary>
-        IEnumerator AddAppButton()
+        void AddAppButton()
         {
+#if false
             while (!ApplicationLauncher.Ready || !this.IsReady)
                 yield return null;
 
@@ -57,15 +65,34 @@ namespace nsDangIt
                 this.Log("Error! " + e.Message);
                 throw e;
             }
+#endif
+            toolbarControl = gameObject.AddComponent<ToolbarControl>();
+            toolbarControl.AddToAllToolbars(onAppBtnToggle, onAppBtnToggle,
+                ApplicationLauncher.AppScenes.ALWAYS,
+                "DangIt_NS",
+                "dangItButton",
+                "DangIt/Textures/appBtn_38",
+                "DangIt/Textures/appBtn_24",
+                "Dang It!"
+            );
+            toolbarControl.UseBlizzy(HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams1>().useBlizzy);
+
         }
 
         private void OnGUIAppLauncherDestroyed()
         {
+#if false
             if (appBtn != null)
             {
                 ApplicationLauncher.Instance.RemoveModApplication(appBtn);
 
                 appBtn = null;
+            }
+#endif
+            if (toolbarControl != null)
+            {
+                toolbarControl.OnDestroy();
+                Destroy(toolbarControl);
             }
         }
 

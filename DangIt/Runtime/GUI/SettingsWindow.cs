@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text;
 using UnityEngine;
 
-
+using ClickThroughFix;
 
 namespace nsDangIt
 {
@@ -47,7 +47,7 @@ namespace nsDangIt
         {
             // The settings are only available in the space center
             GUI.skin = HighLogic.Skin;
-            settingsRect = GUILayout.Window("DangItSettings".GetHashCode(),
+            settingsRect = ClickThruBlocker.GUILayoutWindow("DangItSettings".GetHashCode(),
                                             settingsRect,
                                             SettingsWindowFcn,
                                             "Dang It! Settings",
@@ -94,6 +94,9 @@ namespace nsDangIt
 
         [GameParameters.CustomParameterUI("Mod Enabled")]
         public bool EnabledForSave = true;      // is enabled for this save file
+
+        [GameParameters.CustomParameterUI("Use Blizzy toolbar if available")]
+        public bool useBlizzy = false;
 
         [GameParameters.CustomParameterUI("Manual failures")]
         public bool ManualFailures = false;     // initiate failures manually

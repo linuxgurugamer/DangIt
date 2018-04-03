@@ -94,8 +94,21 @@ namespace nsDangIt
                 return (DangIt.Settings)this.MemberwiseClone();
             }
 
-			// Get the max servicing temp from DANGIT_SETTINGS
-			public int GetMaxServicingTemp(){
+            // Get the Spares resource from DANGIT_SETTINGS
+            public string GetSparesResource()
+            {
+                UrlDir.UrlConfig[] node = GameDatabase.Instance.GetConfigs("DANGIT_SETTINGS");
+                foreach (UrlDir.UrlConfig curSet in node)
+                {
+                    string val = curSet.config.GetValue("SparesResource");
+                    DangIt.Instance.Log("Found a DANGIT_SETTINGS, its SparesResource is " + val.ToString());
+                    return val;
+                }
+                return "SpareParts";
+            }
+
+            // Get the max servicing temp from DANGIT_SETTINGS
+            public int GetMaxServicingTemp(){
 				UrlDir.UrlConfig[] node = GameDatabase.Instance.GetConfigs ("DANGIT_SETTINGS");
 				foreach (UrlDir.UrlConfig curSet in node)
 				{

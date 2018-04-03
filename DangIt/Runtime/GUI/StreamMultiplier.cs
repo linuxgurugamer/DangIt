@@ -7,6 +7,8 @@ using System.Reflection;
 using System.Text;
 using UnityEngine;
 
+using ClickThroughFix;
+
 namespace ippo.Runtime.GUI
 {
     
@@ -28,7 +30,7 @@ namespace ippo.Runtime.GUI
             if (!visible)
                 return;
             UnityEngine.GUI.skin = HighLogic.Skin;
-            settingsRect = GUILayout.Window("Multiplier Entry".GetHashCode(),                                            settingsRect,                                            SettingsWindowFcn,                                            "Multiplier Entry",                                            GUILayout.ExpandWidth(true),
+            settingsRect = ClickThruBlocker.GUILayoutWindow("Multiplier Entry".GetHashCode(),                                            settingsRect,                                            SettingsWindowFcn,                                            "Multiplier Entry",                                            GUILayout.ExpandWidth(true),
                                             GUILayout.ExpandHeight(true));
         }
 

@@ -41,9 +41,11 @@ namespace nsDangIt
         {
             if (HighLogic.LoadedSceneIsEditor)
             {
-                if (this.part.Resources.Contains("SpareParts"))
+//                if (this.part.Resources.Contains("SpareParts"))
+                if (this.part.Resources.Contains(Spares.Name))
                 {
-                    this.part.Resources["SpareParts"].amount = Math.Round(this.part.Resources["SpareParts"].amount);
+//                    this.part.Resources["SpareParts"].amount = Math.Round(this.part.Resources["SpareParts"].amount);
+                    this.part.Resources[Spares.Name].amount = Math.Round(this.part.Resources[Spares.Name].amount);
                 }
             }
             else

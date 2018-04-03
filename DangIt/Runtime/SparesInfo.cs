@@ -18,7 +18,10 @@ namespace nsDangIt
         /// <summary>
         /// Resource name as a string
         /// </summary>
-        public static readonly string Name = "SpareParts";
+        public static  string Name
+        {
+            get { if (DangIt.Instance != null) return DangIt.Instance.CurrentSettings.GetSparesResource();  return "SpareParts"; }
+        }
 
         public static readonly float MinIncrement = 1f;
     }

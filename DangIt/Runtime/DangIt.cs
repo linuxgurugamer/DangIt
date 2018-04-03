@@ -44,7 +44,8 @@ namespace nsDangIt
                     {
                         _leakBlackList.Add("ElectricCharge");
                         // _leakBlackList.Add("SolidFuel");
-                        _leakBlackList.Add("SpareParts");
+//                        _leakBlackList.Add("SpareParts");
+                        _leakBlackList.Add(DangIt.Instance.CurrentSettings.GetSparesResource());
 
                         Logger.Info("[DangIt]: An exception occurred while loading the resource blacklist and a default one has been created. " + e.Message);
                     }
@@ -109,7 +110,8 @@ namespace nsDangIt
             //this.IsReady = false;
 
             // Add the button to the stock toolbar
-            this.StartCoroutine("AddAppButton");
+            //this.StartCoroutine("AddAppButton");
+            AddAppButton();
 
         }
 
@@ -182,9 +184,16 @@ namespace nsDangIt
         {
             this.Log("Destroying instance.");
 
+#if false
             // Remove the button from the toolbar
             if (appBtn != null)
                 ApplicationLauncher.Instance.RemoveModApplication(this.appBtn);
+#endif
+            if (toolbarControl != null)
+            {
+                toolbarControl.OnDestroy();
+                Destroy(toolbarControl);
+            }
 
             GameEvents.OnGameSettingsApplied.Remove(ReloadSettings);
             GameEvents.onGameStatePostLoad.Remove(ReloadSettings);
