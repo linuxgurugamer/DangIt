@@ -278,17 +278,6 @@ namespace nsDangIt
         protected void Reset()
         {
             Debug.Log("Reset(), HasInitted: " + HasInitted.ToString());
-
-
-            #region Fail and repair events
-
-            this.Events["Fail"].guiName = this.FailGuiName;
-            this.Events["EvaRepair"].guiName = this.EvaRepairGuiName;
-            this.Events["EvaRepair"].active = false;
-            this.Events["Maintenance"].guiName = this.MaintenanceString;
-            if (this.HasInitted)
-                return;
-            #endregion
             try
             {
                 this.FailureLog("Resetting");
@@ -307,8 +296,7 @@ namespace nsDangIt
                 this.LifeTimeSecs = this.LifeTime * HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams1>().Lifetime_Multiplier * 3600f;
                 this.HasFailed = false;
                 #endregion
-
-
+              
                 // Run the custom reset of the subclasses
                 this.DI_Reset();
 
@@ -416,10 +404,18 @@ namespace nsDangIt
                         }
                     }
 
+    	            #region Fail and repair events
+
+            	    this.Events["Fail"].guiName = this.FailGuiName;
+    	            this.Events["EvaRepair"].guiName = this.EvaRepairGuiName;
+            	    this.Events["Maintenance"].guiName = this.MaintenanceString;
+    			
+                    #endregion
+
                     // Reset the internal state at the beginning of the flight
                     // this condition also catches a revert to launch (+1 second for safety)
-                    // if (DangIt.Now() < (this.TimeOfLastReset + 1))
-                    this.Reset();
+                    if (DangIt.Now() < (this.TimeOfLastReset + 1))
+                        this.Reset();
 
                     // If the part was saved when it was failed,
                     // re-run the failure logic to disable it
@@ -427,7 +423,12 @@ namespace nsDangIt
                     if (this.HasFailed)
                         this.DI_Disable();
 
+                    
+                    
+					this.SetFailureState(this.HasFailed);
                 }
+
+
 
                 if (DangIt.Instance.CurrentSettings.EnabledForSave)
                 {
