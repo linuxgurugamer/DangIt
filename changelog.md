@@ -92,12 +92,12 @@
 ## release 0.7.16
 	Fixed MM patches for new MM 3.0.1
 
-0.7.17
+## 0.7.17
 	Updated for 1.4.1+
 	Added support for ToolbarController
 	Added support for ClickthroughBlocker
 
-0.7.17.1
+## 0.7.17.1
 	Thanks to github user @bogen--ksp for this:
 		Make parts repairable after reload
 
