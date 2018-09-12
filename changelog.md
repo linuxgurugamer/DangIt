@@ -97,6 +97,10 @@
 	Added support for ToolbarController
 	Added support for ClickthroughBlocker
 
+0.7.17.1
+	Thanks to github user @bogen--ksp for this:
+		Make parts repairable after reload
+
 
 ============== Coffeeman's work below =========================
 ## ALPHA 6
