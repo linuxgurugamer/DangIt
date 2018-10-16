@@ -101,6 +101,8 @@
 	Thanks to github user @bogen--ksp for this:
 		Make parts repairable after reload
 
+## 0.7.18.0
+	Fixed alarm sound resounding when coming back from map view on failed batteries
 
 ============== Coffeeman's work below =========================
 ## ALPHA 6

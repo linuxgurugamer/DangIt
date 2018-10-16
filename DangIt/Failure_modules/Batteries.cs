@@ -12,6 +12,7 @@ namespace nsDangIt
         // Unlike other failure modules, batteries are not PartModules
         // We just need a reference to the ElectricCharge resource to simulate a battery short
         protected PartResource battery;
+        int batteryResIdx;
 
         public override string DebugName { get { return "DangItBattery"; } }
         public override string ScreenName { get { return "Battery"; } }
@@ -22,28 +23,22 @@ namespace nsDangIt
         public override string MaintenanceString { get { return "Replace battery"; } }
 		public override string ExtraEditorInfo{ get { return "This part can lose all electric charge if it fails"; } }
 
-
+        
         protected override void DI_Start(StartState state)
         {
             if (HighLogic.LoadedSceneIsFlight)
             {
-                int idx = -1;
-                foreach (PartResource pr in part.Resources)
+                for (int idx = 0; idx < part.Resources.Count; idx++)
                 {
+                    PartResource pr = part.Resources[idx];
                     if (pr.resourceName == "ElectricCharge")
                     {
-                        idx++;
-                        break;
+                        //battery = part.Resources[idx];
+                        batteryResIdx = idx;
+                        return;
                     }
                 }
-                if (idx < 0)
-                {
-                    throw new Exception("No ElectricCharge was found in the part!");
-                }
-                else
-                {
-                    battery = part.Resources[idx];
-                } 
+                throw new Exception("No ElectricCharge was found in the part!");
             }
         }
 
@@ -65,12 +60,14 @@ namespace nsDangIt
             // Drain all the charge and disable the flow
             // Not really realistic as short circuits go
             // TODO: improve failure model
+            battery = part.Resources[batteryResIdx];
             battery.amount = 0;
             battery.flowMode = PartResource.FlowMode.None;
         }
         
         protected override void DI_EvaRepair()
         {
+            battery = part.Resources[batteryResIdx];
             battery.flowMode = PartResource.FlowMode.Both;
         }
 

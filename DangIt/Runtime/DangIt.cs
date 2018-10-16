@@ -135,9 +135,10 @@ namespace nsDangIt
         {
             //  this.IsReady = false;
             //DangIt.Instance.StartPartInfoCacheReload();
-            if (FindObjectOfType<AlarmManager>() != null)
+            AlarmManager alarmManager = FindObjectOfType<AlarmManager>();
+            if (alarmManager != null)
             {
-                FindObjectOfType<AlarmManager>().UpdateSettings();
+                alarmManager.UpdateSettings();
             }
             DangIt.Instance.StartPartInfoCacheReload();
 

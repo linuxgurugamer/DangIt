@@ -34,38 +34,6 @@ namespace nsDangIt
         /// </summary>
         void AddAppButton()
         {
-#if false
-            while (!ApplicationLauncher.Ready || !this.IsReady)
-                yield return null;
-
-            try
-            {
-                if (HighLogic.LoadedScene == GameScenes.SPACECENTER || HighLogic.LoadedScene == GameScenes.FLIGHT ||
-                    HighLogic.LoadedScene == GameScenes.TRACKSTATION)
-                {
-                    // Load the icon for the button
-                    Texture btnTex = GameDatabase.Instance.GetTexture("DangIt/Textures/appBtn", false);
-                    if (btnTex == null)
-                        throw new Exception("The button texture wasn't loaded!");
-                    
-                    appBtn = ApplicationLauncher.Instance.AddModApplication(
-                                onAppBtnToggle,
-                                onAppBtnToggle,
-                                dummyVoid,  // ignore callbacks for more elaborate events
-                                dummyVoid,
-                                dummyVoid,
-                                dummyVoid,
-                                ApplicationLauncher.AppScenes.ALWAYS,
-                                btnTex);
-                }
-                
-            }
-            catch (Exception e)
-            {
-                this.Log("Error! " + e.Message);
-                throw e;
-            }
-#endif
             toolbarControl = gameObject.AddComponent<ToolbarControl>();
             toolbarControl.AddToAllToolbars(onAppBtnToggle, onAppBtnToggle,
                 ApplicationLauncher.AppScenes.ALWAYS,
@@ -81,14 +49,6 @@ namespace nsDangIt
 
         private void OnGUIAppLauncherDestroyed()
         {
-#if false
-            if (appBtn != null)
-            {
-                ApplicationLauncher.Instance.RemoveModApplication(appBtn);
-
-                appBtn = null;
-            }
-#endif
             if (toolbarControl != null)
             {
                 toolbarControl.OnDestroy();

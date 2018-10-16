@@ -172,7 +172,7 @@ namespace nsDangIt
         #endregion
 
 
-#if DEBUG
+#if false
         bool printChances = false;
         [KSPEvent(active = true, guiActive = true)]
         public void PrintChances()
@@ -194,7 +194,7 @@ namespace nsDangIt
                     * LambdaMultiplier()                // optional multiplier from the child class
                     * InspectionLambdaMultiplier()           // temporary inspection bonus
                     * StreamMultiplier(); // for streamers, temporarily increase the chance for failure
-#if DEBUG
+#if false
             if (printChances)
                 Logger.Info("Lambda: " + f.ToString());
 #endif      
@@ -233,7 +233,7 @@ namespace nsDangIt
             float elapsed = (DangIt.Now() - this.TimeOfLastInspection);
             // Constrain it between 0 and 1
             float f = Math.Max(0f, Math.Min(elapsed / this.InspectionBonus, 1f));
-#if DEBUG
+#if false
             if (printChances)
                 print("InspectionLambdaMultiplier: " + f.ToString());
 #endif    
@@ -653,15 +653,20 @@ namespace nsDangIt
                                        MessageSystemButton.MessageButtonColor.RED,
                                        MessageSystemButton.ButtonIcons.ALERT);
 
-                    if (FindObjectOfType<AlarmManager>() != null)
+                    AlarmManager alarmManager = FindObjectOfType<AlarmManager>();
+                    if (alarmManager != null)
                     {
-                        FindObjectOfType<AlarmManager>().AddAlarm(this, DangIt.Instance.CurrentSettings.GetSoundLoopsForPriority(Priority));
-                        if (FindObjectOfType<AlarmManager>().HasAlarmsForModule(this))
+                        Logger.Info("alarmManager is not null");
+                        alarmManager.AddAlarm(this, DangIt.Instance.CurrentSettings.GetSoundLoopsForPriority(Priority));
+                        if (alarmManager.HasAlarmsForModule(this))
                         {
+                            Logger.Info("Muting the alarm");
                             Events["MuteAlarms"].active = true;
                             Events["MuteAlarms"].guiActive = true;
                         }
                     }
+                    else
+                        Logger.Info("alarmManager is null");
                 }
 
                 DangIt.FlightLog(this.FailureMessage);
@@ -741,8 +746,8 @@ namespace nsDangIt
                     {
                         DangIt.Broadcast(evaPart.protoModuleCrew[0].name + " was able to save " + discount + " spare parts");
                     }
-
-                    FindObjectOfType<AlarmManager>().RemoveAllAlarmsForModule(this); //Remove alarms from this module
+                    AlarmManager alarmManager = FindObjectOfType<AlarmManager>();
+                    alarmManager.RemoveAllAlarmsForModule(this); //Remove alarms from this module
                 }
 
             }
@@ -882,9 +887,10 @@ namespace nsDangIt
         public void MuteAlarms()
         {
             Logger.Info("Muting alarms for... " + this.ToString());
-            if (FindObjectOfType<AlarmManager>() != null)
+            AlarmManager alarmManager = FindObjectOfType<AlarmManager>();
+            if (alarmManager != null)
             {
-                FindObjectOfType<AlarmManager>().RemoveAllAlarmsForModule(this);
+                alarmManager.RemoveAllAlarmsForModule(this);
             }
         }
 
