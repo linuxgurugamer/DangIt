@@ -104,6 +104,9 @@
 ## 0.7.18.0
 	Fixed alarm sound resounding when coming back from map view on failed batteries
 
+## 0.7.18.1
+	Version bump for 1.5 rebuild
+
 ============== Coffeeman's work below =========================
 ## ALPHA 6
 

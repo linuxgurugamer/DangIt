@@ -1,6 +1,6 @@
 {
   "NAME": "DangIt",
-  "URL": "https://raw.githubusercontent.com/linuxgurugamer/DangIt/master/DangIt.version",
+  "URL": "http://ksp.spacetux.net/avc/DangIt",
   "DOWNLOAD": "http://spacedock.info/mod/613/DangIt",
   "GITHUB": {
     "USERNAME": "linuxgurugamer",
@@ -10,21 +10,21 @@
     "MAJOR": 0,
     "MINOR": 7,
     "PATCH": 18,
-    "BUILD": 0
+    "BUILD": 1
   },
   "KSP_VERSION": {
     "MAJOR": 1,
-    "MINOR": 4,
+    "MINOR": 5,
     "PATCH": 1
   },
   "KSP_VERSION_MIN": {
     "MAJOR": 1,
-    "MINOR": 4,
+    "MINOR": 5,
     "PATCH": 1
   },
   "KSP_VERSION_MAX": {
     "MAJOR": 1,
-    "MINOR": 4,
+    "MINOR": 5,
     "PATCH": 99
   }
 }
