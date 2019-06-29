@@ -107,6 +107,10 @@
 ## 0.7.18.1
 	Version bump for 1.5 rebuild
 
+## 0.7.18.3
+	Version bump for 1.7.2
+	Updated AssemblyVersion.tt for device-independent builds
+
 ============== Coffeeman's work below =========================
 ## ALPHA 6
 
