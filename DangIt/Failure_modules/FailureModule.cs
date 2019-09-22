@@ -817,7 +817,7 @@ namespace nsDangIt
             this.FailureLog("kerbal.experienceTrait.TypeName = " + kerbal.experienceTrait.TypeName);
             this.FailureLog("kerbal.experienceLevel          = " + kerbal.experienceLevel);
             return !DangIt.Instance.CurrentSettings.RequireExperience || string.IsNullOrEmpty(this.PerksRequirementName)                  // empty string means no restrictions
-                || ((kerbal.experienceTrait.TypeName == this.PerksRequirementName) && (kerbal.experienceLevel >= this.PerksRequirementValue));
+                || ((kerbal.experienceTrait.Config.Name == this.PerksRequirementName) && (kerbal.experienceLevel >= this.PerksRequirementValue));
         }
 
 

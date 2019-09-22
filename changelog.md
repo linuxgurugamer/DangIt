@@ -83,6 +83,7 @@
 ## release 0.7.14
 	Added button, calls modifier window, to add a modifier to the chances of the fialure with configurable decay of modifier
 
+
 ## release 0.7.14.1
 	Fixed multiple toolbar buttons
 
@@ -110,6 +111,10 @@
 ## 0.7.18.3
 	Version bump for 1.7.2
 	Updated AssemblyVersion.tt for device-independent builds
+
+0.7.18.4
+	Thanks to github user @gnbo for this:
+		Fixes error when in non-english language errors are thrown when repair attempts are made
 
 ============== Coffeeman's work below =========================
 ## ALPHA 6
