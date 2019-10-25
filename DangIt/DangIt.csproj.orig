@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9B88953E-3F14-4DEA-8078-B3418A17E2F8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ippo</RootNamespace>
+    <AssemblyName>DangIt</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <ProductVersion>12.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;LOG_WALL_OF_TEXT</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="AssemblyVersion.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AssemblyVersion.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Failure_modules\CoolantCore.cs" />
+    <Compile Include="Failure_modules\DeployableAntenna.cs" />
+    <Compile Include="Failure_modules\Entropy\Animate.cs" />
+    <Compile Include="Failure_modules\Entropy\Generator.cs" />
+    <Compile Include="Failure_modules\Entropy\Parachutes.cs" />
+    <Compile Include="Failure_modules\Entropy\SmallPartExploder.cs" />
+    <Compile Include="Failure_modules\Entropy\Solar.cs" />
+    <Compile Include="Failure_modules\Entropy\SRB.cs" />
+    <Compile Include="Failure_modules\Entropy\SRB_engineFX.cs" />
+    <Compile Include="Failure_modules\WheelMotor.cs" />
+    <Compile Include="Failure_modules\WheelTire.cs" />
+    <Compile Include="Runtime\GUI\StreamMultiplier.cs" />
+    <Compile Include="Utilities\Logging.cs" />
+    <Compile Include="API\API.cs" />
+    <Compile Include="API\DangItHook.cs" />
+    <Compile Include="Runtime\AlarmManager.cs" />
+    <Compile Include="Runtime\GUI\SettingsWindow.cs" />
+    <Compile Include="Runtime\ScenarioInjector.cs" />
+    <Compile Include="Runtime\GUI\GUI.cs" />
+    <Compile Include="Utilities\EnginesManager.cs" />
+    <Compile Include="Failure_modules\Alternator.cs" />
+    <Compile Include="Failure_modules\Batteries.cs" />
+    <Compile Include="Failure_modules\ControlSurface.cs" />
+    <Compile Include="Runtime\DangIt.cs" />
+    <Compile Include="Failure_modules\Engines.cs" />
+    <Compile Include="Failure_modules\Gimbal.cs" />
+    <Compile Include="Failure_modules\Lights.cs" />
+    <Compile Include="Failure_modules\FailureModule.cs" />
+    <Compile Include="Failure_modules\ModuleRCSReliability.cs" />
+    <Compile Include="Maintenance\InspectionModule.cs" />
+    <Compile Include="Maintenance\ModuleReliabilityInfo.cs" />
+    <Compile Include="Runtime\Settings.cs" />
+    <Compile Include="Runtime\SparesInfo.cs" />
+    <Compile Include="Runtime\Static.cs" />
+    <Compile Include="Maintenance\SparesContainer.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Failure_modules\ReactionWheel.cs" />
+    <Compile Include="Failure_modules\Tanks.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="AssemblyVersion.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AssemblyVersion.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Failure_modules\Entropy\RealChutes\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>R:\KSP_1.7.3_dev\KSP_x64_Data\Managed\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="ClickThroughBlocker">
+      <HintPath>R:\KSP_1.7.3_dev\GameData\000_ClickThroughBlocker\Plugins\ClickThroughBlocker.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="ToolbarControl">
+      <HintPath>R:\KSP_1.7.3_dev\GameData\001_ToolbarControl\Plugins\ToolbarControl.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>R:\KSP_1.7.3_dev\KSP_x64_Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>R:\KSP_1.7.3_dev\KSP_x64_Data\Managed\UnityEngine.UI.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+start /D D:\Users\jbb\github\DangIt /WAIT deploy.bat  $(TargetDir) $(TargetFileName)
+
+if $(ConfigurationName) == Release (
+     start /D D:\Users\jbb\github\DangIt  /WAIT buildRelease.bat $(TargetDir) $(TargetFileName)
+)</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>
+set textTemplatingPath="%25ProgramFiles(x86)%25\Microsoft Visual Studio\2017\Community\Common7\IDE \texttransform.exe"
+
+%25textTemplatingPath%25 "$(ProjectDir)AssemblyVersion.tt"</PreBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

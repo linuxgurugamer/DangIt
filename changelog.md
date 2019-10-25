@@ -115,6 +115,12 @@
 0.7.18.4
 	Thanks to github user @gnbo for this:
 		Fixes error when in non-english language errors are thrown when repair attempts are made
+		
+0.7.19
+	Added Installchecker
+	Updated MiniAVC to 1.4
+	Rebuild for 1.8
+
 
 ============== Coffeeman's work below =========================
 ## ALPHA 6
