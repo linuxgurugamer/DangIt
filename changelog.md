@@ -121,6 +121,10 @@
 	Updated MiniAVC to 1.4
 	Rebuild for 1.8
 
+0.7.19.1
+	Updated MiniAVC.dll to 1.4.0.2 to fix a nasty CTD
+
+
 
 ============== Coffeeman's work below =========================
 ## ALPHA 6
