@@ -18,7 +18,7 @@ namespace ippo.Runtime.GUI
 
         internal bool isVisible = false;
         private Rect settingsRect = new Rect(200, 200, 350, 300);
-        static int failedHighlightID = -1;
+        internal static int failedHighlightID = -1;
         List<Part> Parts = new List<Part>();
         void Start()
         {
@@ -55,6 +55,12 @@ namespace ippo.Runtime.GUI
                                             GUILayout.ExpandWidth(true),
                                             GUILayout.ExpandHeight(true));
 
+        }
+
+        internal void RemoveBCRepaired(Part part)
+        {
+            if (FailureModule.phl.HighlightListContains(failedHighlightID, part))
+                FailureModule.phl.RemovePartFromList(failedHighlightID, part);
         }
 
         Vector2 pos;

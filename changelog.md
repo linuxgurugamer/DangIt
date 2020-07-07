@@ -155,6 +155,9 @@
 0.7.20.2
 	Fixed longstanding issue of alarm playing again after leaving the map view
 
+0.7.20.3
+	Disabled the highlighting when a part is repaired
+
 ============== Coffeeman's work below =========================
 ## ALPHA 6
 

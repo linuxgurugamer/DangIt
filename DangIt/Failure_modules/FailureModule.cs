@@ -7,7 +7,7 @@ using KSP.UI.Screens;
 using KSP_PartHighlighter;
 
 using static nsDangIt.DangIt;
-
+using ippo.Runtime.GUI;
 
 namespace nsDangIt
 {
@@ -774,6 +774,7 @@ namespace nsDangIt
                     }
                     AlarmManager alarmManager = FindObjectOfType<AlarmManager>();
                     alarmManager.RemoveAllAlarmsForModule(this); //Remove alarms from this module
+                    FailureStatusWindow.instance.RemoveBCRepaired(this.part);
                 }
 
             }
