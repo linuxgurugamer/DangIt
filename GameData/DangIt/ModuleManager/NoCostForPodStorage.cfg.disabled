@@ -4,51 +4,51 @@
 
 @PART[*]:HAS[#CrewCapacity[1]]:FOR[DangIt]:AFTER[DangIt]
 {
-	@cost -= 2520
+	@cost -= 700
 }
 
 @PART[*]:HAS[#CrewCapacity[2]]:FOR[DangIt]:AFTER[DangIt]
 {
-	@cost -= 5040
+	@cost -= 1400
 }
 
 @PART[*]:HAS[#CrewCapacity[3]]:FOR[DangIt]:AFTER[DangIt]
 {
-	@cost -= 7560
+	@cost -= 2100
 }
 
 @PART[*]:HAS[#CrewCapacity[4]]:FOR[DangIt]:AFTER[DangIt]
 {
-	@cost -= 10080
+	@cost -= 2800
 }
 
 @PART[*]:HAS[#CrewCapacity[5]]:FOR[DangIt]:AFTER[DangIt]
 {
-	@cost -= 12600
+	@cost -= 3500
 }
 
 @PART[*]:HAS[#CrewCapacity[6]]:FOR[DangIt]:AFTER[DangIt]
 {
-	@cost -= 15120
+	@cost -= 4200
 }
 
 @PART[*]:HAS[#CrewCapacity[7]]:FOR[DangIt]:AFTER[DangIt]
 {
-	@cost -= 17640
+	@cost -= 4900
 }
 
 @PART[*]:HAS[#CrewCapacity[8]]:FOR[DangIt]:AFTER[DangIt]
 {
-	@cost -= 20160
+	@cost -= 5000
 }
 
 @PART[Mk1FuselageStructural]:FOR[DangIt]:AFTER[DangIt]
 {
-	@cost -= 7560
+	@cost -= 2100
 }
 // Add to all cargo bays
 @PART[*]:HAS[@MODULE[ModuleCargoBay],!MODULE[ModuleProceduralFairing],~name[RadialBay]]:FOR[DangIt]:AFTER[DangIt]
 {
-	@cost -= 7560
+	@cost -= 2100
 }
  
