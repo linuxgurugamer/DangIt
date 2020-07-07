@@ -29,7 +29,7 @@ namespace nsDangIt
                     if (!DangIt.LeakBlackList.Contains(pr.resourceName))
                         temp += pr.resourceName + ", ";
                 };
-                print(temp);
+                Log.Info(temp);
                 return temp.TrimEnd(' ').TrimEnd(',');
             }
         }
@@ -129,9 +129,9 @@ namespace nsDangIt
         protected override void DI_OnSave(ConfigNode node)
         {
             if (leakName == null)
-                leakName = "none"; //  print("Adding leak: (empty)");
+                leakName = "none"; //  Log.Info("Adding leak: (empty)");
             else
-                print("Adding leak: [" + leakName + "]");
+                Log.Info("Adding leak: [" + leakName + "]");
 
             node.SetValue("leakName", (leakName == null) ? "none" : leakName);
             node.SetValue("pole", this.pole.ToString());
@@ -203,9 +203,9 @@ namespace nsDangIt
                 // e.g. [1].Count == 1 but MyListWithOneItem[1] == IndexError
 
                 int idx = UnityEngine.Random.Range(0, leakables.Count);
-                print("Selected IDX: " + idx.ToString());
-                print("Length of leakables: " + this.leakables.Count.ToString());
-                print("Leakables: " + this.leakables.ToString());
+                Log.Info("Selected IDX: " + idx.ToString());
+                Log.Info("Length of leakables: " + this.leakables.Count.ToString());
+                Log.Info("Leakables: " + this.leakables.ToString());
 
                 this.leakName = leakables[idx].resourceName;
 

@@ -223,7 +223,7 @@ namespace nsDangIt
             }
 #if false
             if (printChances)
-                print("LambdaFromMTBF: " + f.ToString());
+                Log.Info("LambdaFromMTBF: " + f.ToString());
 #endif    
             return f;
         }
@@ -239,7 +239,7 @@ namespace nsDangIt
             float f = Math.Max(0f, Math.Min(elapsed / this.InspectionBonus, 1f));
 #if false
             if (printChances)
-                print("InspectionLambdaMultiplier: " + f.ToString());
+                Log.Info("InspectionLambdaMultiplier: " + f.ToString());
 #endif    
             return f;
 
@@ -337,7 +337,7 @@ namespace nsDangIt
                 this.LifeTimeSecs = DangIt.Parse<float>(node.GetValue("LifeTimeSecs"), defaultTo: float.PositiveInfinity);
                 this.HasFailed = DangIt.Parse<bool>(node.GetValue("HasFailed"), defaultTo: false);
 
-                print("FailureModule.OnLoad");
+                Log.Info("FailureModule.OnLoad");
                 // Run the subclass' custom onload
                 this.DI_OnLoad(node);
 
@@ -510,7 +510,6 @@ namespace nsDangIt
                         if (!AlarmManager.partFailures.ContainsKey(this.part))
                         {
                             phl.DisablePartHighlighting(vesselHighlightDict[this.vessel.id], this.part);
-                            //Debug.Log("Removing part from highlight list: " + this.part.partInfo.title);
                         }
                     }
 
@@ -579,7 +578,7 @@ namespace nsDangIt
             float f = 3 * (float)Math.Pow((Math.Max(part.temperature, 0) / part.maxTemp), 5);
 #if false
             if (printChances)
-                print("TemperatureMultiplier: " + f.ToString());
+                Log.Info("TemperatureMultiplier: " + f.ToString());
 #endif
             return f;
 
@@ -685,11 +684,9 @@ namespace nsDangIt
                     AlarmManager alarmManager = FindObjectOfType<AlarmManager>();
                     if (alarmManager != null)
                     {
-                        Log.Info("alarmManager is not null");
                         alarmManager.AddAlarm(this, DangIt.Instance.CurrentSettings.GetSoundLoopsForPriority(Priority));
                         if (alarmManager.HasAlarmsForModule(this))
                         {
-                            Log.Info("Muting the alarm");
                             Events["MuteAlarms"].active = true;
                             Events["MuteAlarms"].guiActive = true;
                         }

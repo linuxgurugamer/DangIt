@@ -7,29 +7,22 @@ namespace nsDangIt
 {
     using static nsDangIt.DangIt;
 
-    //	[RequireComponent(typeof(AudioSource))]
     [KSPAddon(KSPAddon.Startup.Flight, false)]
     public class AlarmManager : MonoBehaviour
     {
         public static Dictionary<FailureModule, int> loops;
         public static Dictionary<Part, int> partFailures;
 
-        //AudioSource audio;
+
         static FXGroup audioSource = null;
 
 
         public void Start()
         {
-            print("[DangIt] [AlarmManager] Starting...");
-            print("[DangIt] [AlarmManager] Setting Volume...");
-            audioSource = new FXGroup("DangItAlarm");
-            audioSource.audio = Camera.main.gameObject.AddComponent<AudioSource>();
-            // audio = new AudioSource();
-            audioSource.audio.spatialBlend = 0f; //This disable the game scaling volume with distance from source
-            audioSource.audio.volume = 0f;
+            Log.Info("[DangIt] [AlarmManager] Starting...");
 
-            Log.Info("[DangIt] [AlarmManager] Creating Clip");
-            audioSource.audio.clip = GameDatabase.Instance.GetAudioClip("DangIt/Sounds/alarm"); //Load alarm sound
+            audioSource = new FXGroup("DangItAlarm");
+            //AddAudio();
 
             Log.Info("[DangIt] [AlarmManager] Creating Dictionary");
             if (loops == null)
@@ -42,6 +35,17 @@ namespace nsDangIt
             //DontDestroyOnLoad(this);
         }
 
+        void AddAudio()
+        {
+            audioSource.audio = Camera.main.gameObject.AddComponent<AudioSource>();
+
+            audioSource.audio.spatialBlend = 0f; //This disable the game scaling volume with distance from source
+            audioSource.audio.volume = 0f;
+
+            Log.Info("[DangIt] [AlarmManager] Creating Clip");
+            audioSource.audio.clip = GameDatabase.Instance.GetAudioClip("DangIt/Sounds/alarm"); //Load alarm sound
+
+        }
         public static bool visibleUI = true;
         internal void showUI() // triggered on F2
         {
@@ -58,16 +62,6 @@ namespace nsDangIt
         {
             GameEvents.onShowUI.Remove(showUI);
             GameEvents.onHideUI.Remove(hideUI);
-
-        }
-
-        public void UpdateSettings()
-        {
-            print("[DangIt] [AlarmManager] UpdateSettings");
-            // float scaledVolume = DangIt.Instance.CurrentSettings.AlarmVolume / 100f;
-            //DangIt.myLog.Info("[DangIt] [AlarmManager] Rescaling Volume (at UpdateSettings queue)..., now at " + scaledVolume);
-            // if (audioSource != null)
-            //     audioSource.audio.volume = 0; // scaledVolume;
         }
 
         void AddPartFailure(Part p)
@@ -81,7 +75,7 @@ namespace nsDangIt
                 partFailures[p] = i1 + 1;
             }
             else
-            { 
+            {
                 Log.Info("Adding new failed part");
                 partFailures.Add(p, 1);
             }
@@ -96,18 +90,16 @@ namespace nsDangIt
                 if (i1 > 0)
                     partFailures[p] = i1;
                 else
-                    partFailures.Remove(p);                
+                    partFailures.Remove(p);
             }
         }
 
         public void AddAlarm(FailureModule fm, int number)
         {
             AddPartFailure(fm.part);
-            audioSource.audio.volume = DangIt.Instance.CurrentSettings.GetMappedVolume(); //This seems like an OK place for this, because if I put it in the constructor...
-                                                                                          // ...you would have to reboot to change it, but I don't want to add lag by adding it to each frame in Update()
             if (number != 0)
             {
-                Log.Info("[DangIt] [AlarmManager] Adding '" + number + "' alarms from '" + fm.ToString() + "', volume: " + audioSource.audio.volume);
+                Log.Info("[DangIt] [AlarmManager] Adding '" + number + "' alarms from '" + fm.ToString());
                 loops.Add(fm, number);
             }
             else
@@ -119,12 +111,20 @@ namespace nsDangIt
 
         public void LateUpdate()
         {
-            if (audioSource.audio != null)
+            if (loops.Count > 0)
             {
-                if (!audioSource.audio.isPlaying)
+                if (audioSource.audio == null)
                 {
-                    if (loops.Count > 0)
+                    AddAudio();
+                    audioSource.audio.volume = DangIt.Instance.CurrentSettings.GetMappedVolume();
+                    Log.Info("Audio added, volume: " + audioSource.audio.volume);
+                }
+                if (audioSource.audio != null)
+                {
+                    if (!audioSource.audio.isPlaying)
                     {
+                        Log.Info("[DangIt] [AlarmManager] Playing Clip, loops.Count: " + loops.Count);
+
                         // Dictionary key,pair can't be modified, so first remove the first element from the dictionary
                         // Then play the audio clip, finally, if this was NOT the last time for the audio to be played, add it back to the dictionary
                         // otherwise silence the alarm and clear it out
@@ -133,12 +133,11 @@ namespace nsDangIt
                         loops.Remove(element.Key);
                         RemovePartFailure(element.Key.part);
 
-                        Log.Info("[DangIt] [AlarmManager] Playing Clip");
                         float scaledVolume = DangIt.Instance.CurrentSettings.GetMappedVolume();
                         audioSource.audio.volume = scaledVolume;
                         audioSource.audio.Play();
 
-                        if (element.Value != 0 /*&& element.Value != 1 */)
+                        if (element.Value != 0)
                         {
                             if (element.Key.vessel == FlightGlobals.ActiveVessel)
                             {
@@ -147,13 +146,15 @@ namespace nsDangIt
                             }
                             else
                             {
-                                audioSource.audio.volume = 0;
+                                Destroy(audioSource.audio);
+                                //audioSource.audio.volume = 0;
                                 element.Key.AlarmsDoneCallback();
                             }
                         }
                         else
                         {
-                            audioSource.audio.volume = 0;
+                            Destroy(audioSource.audio);
+                            //audioSource.audio.volume = 0;
                             element.Key.AlarmsDoneCallback();
                         }
                     }
@@ -181,6 +182,7 @@ namespace nsDangIt
                 loops.Remove(element.Key);
                 RemovePartFailure(element.Key.part);
             }
+            Destroy(audioSource.audio);
         }
         public bool HasAlarmsForModule(FailureModule fm)
         {

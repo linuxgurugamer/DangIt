@@ -100,10 +100,12 @@ namespace nsDangIt
 #endif
         public bool DebugStats = false;         // show debug stats of the part in the right-click menu
 
-        [GameParameters.CustomParameterUI("Glow")]
+        [GameParameters.CustomParameterUI("Glow", 
+            toolTip = "Enable the part's glow upon failure")]
         public bool Glow = true;                // enable the part's glow upon failure
 
-        [GameParameters.CustomParameterUI("Flashing Glow")]
+        [GameParameters.CustomParameterUI("Flashing Glow",
+            toolTip = "Enables the glow effect to be flashing")]
         public bool flashingGlow = true;
 
         [GameParameters.CustomFloatParameterUI("Flash interval", minValue = 0.25f, maxValue = 5.0f, asPercentage = false,
@@ -114,10 +116,12 @@ namespace nsDangIt
         [GameParameters.CustomParameterUI("Disable Glow on F2")]
         public bool DisableGlowOnF2 = true;                
 
-        [GameParameters.CustomParameterUI("Check Experience")]
+        [GameParameters.CustomParameterUI("Check Experience",
+            toolTip = "Enable requiring experience levels to do repairs")]
         public bool RequireExperience = true;   // enable requiring experience levels
 
-        [GameParameters.CustomParameterUI("Messages")]
+        [GameParameters.CustomParameterUI("Messages",
+            toolTip = "Enable messages and screen posts")]
         public bool Messages = true;            // enable messages and screen posts
 
         [GameParameters.CustomFloatParameterUI("Max EVA distance", minValue = 1.0f, maxValue = 15.0f, asPercentage = false,

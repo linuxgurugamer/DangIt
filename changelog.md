@@ -47,7 +47,8 @@
 	Moved some items around in the settings window
 
 ## Release 0.7.7
-	Changed minimum value for alarm from 1 to 0 Recompiled to fix issue of sound restarting when coming back from map view
+	Changed minimum value for alarm from 1 to 0 
+	Recompiled to fix issue of sound restarting when coming back from map view
 
 ## Release 0.7.8
 	Added code to prevent the ResetShipGlow from being executed every fixed update
@@ -58,7 +59,7 @@
 
 ## Release 0.7.10
 	Removed the lastTimeReset code, wasn't needed after 0.7.9
-	Changed print to Logger.debug, to reduce log spamzt 
+	Changed Log.Info to Logger.debug, to reduce log spamzt 
 
 ## release 0.7.11
 	Thanks to EugeneButrik, removing unnecessary and old functions
@@ -140,6 +141,19 @@
 	Replaced internal logging with KSP_Log
 	Change toolbar button visibility to be spacecenter only for config, flight only for status
 	Cleaned up logging code
+
+0.7.20.1
+	Added more tooltips to stock settings page
+	Thanks to github user @ippo343 for this:
+		Lowered additional part cost for storage containers significantly. Storage in 
+			command pods and cargobay costs now 14$ per unit of spare parts instead 
+			of 63$, making it slightly more expensive compared to the DangIt Repair Bay (12.8$ per unit).
+
+		Additionaly made the resource initiation check for CommunityResourcePack and 
+			made SpareParts transferable according to a suggestion by forum user Fulgora
+
+0.7.20.2
+	Fixed longstanding issue of alarm playing again after leaving the map view
 
 ============== Coffeeman's work below =========================
 ## ALPHA 6

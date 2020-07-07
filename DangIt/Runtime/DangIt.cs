@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections;
-//using System.Xml.Serialization;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
@@ -61,7 +60,6 @@ namespace nsDangIt
         internal static List<string> _leakBlackList = null;
 
 
-        // private DangIt.Settings currentSettings;
         public AlarmManager alarmManager;
 
 
@@ -101,12 +99,7 @@ namespace nsDangIt
 
         void ReloadSettings()
         {
-            //  this.IsReady = false;
             AlarmManager alarmManager = FindObjectOfType<AlarmManager>();
-            if (alarmManager != null)
-            {
-                alarmManager.UpdateSettings();
-            }
             DangIt.Instance.StartPartInfoCacheReload();
         }
 
