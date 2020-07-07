@@ -7,6 +7,8 @@ using UnityEngine;
 
 namespace nsDangIt
 {
+	using static nsDangIt.DangIt;
+
 	class ModuleSmallTankExploder : FailureModule
 	{
 		public override string DebugName { get { return "EntropyExploder"; } }

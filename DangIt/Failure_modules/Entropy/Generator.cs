@@ -8,6 +8,8 @@ using KSP;
 
 namespace nsDangIt
 {
+	using static nsDangIt.DangIt;
+
 	public class ModuleGeneratorReliability : FailureModule
 	{
 		ModuleGenerator generator;

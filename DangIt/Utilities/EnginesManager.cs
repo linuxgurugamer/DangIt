@@ -5,6 +5,8 @@ using System.Text;
 
 namespace nsDangIt
 {
+    using static nsDangIt.DangIt;
+
     /// <summary>
     /// Helper class that can manage multiple engine modules in the same part,
     /// both of type ModuleEngines and ModuleEnginesFX.

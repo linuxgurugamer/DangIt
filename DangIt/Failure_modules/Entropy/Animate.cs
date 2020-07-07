@@ -8,6 +8,8 @@ using KSP;
 
 namespace nsDangIt
 {
+	using static nsDangIt.DangIt;
+
 	public class ModuleAnimationReliability : FailureModule
 	{
 		ModuleAnimateGeneric bay;

@@ -8,6 +8,8 @@ using UnityEngine;
 
 namespace nsDangIt
 {
+    using static nsDangIt.DangIt;
+
     public class ModuleDeployableAntennaReliability : FailureModule
     {
         ModuleDeployableAntenna antennaModule;

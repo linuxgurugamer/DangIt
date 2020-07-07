@@ -5,6 +5,8 @@ using System.Text;
 
 namespace nsDangIt
 {
+    using static nsDangIt.DangIt;
+
     class ModuleRCSReliability : FailureModule
     {
         ModuleRCS rcsModule;

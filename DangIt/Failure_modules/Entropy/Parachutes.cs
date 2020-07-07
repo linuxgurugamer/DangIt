@@ -8,6 +8,8 @@ using KSP;
 
 namespace nsDangIt
 {
+	using static nsDangIt.DangIt;
+
 	public class ModuleParachuteReliability : FailureModule
 	{
 		ModuleParachute chute;
@@ -30,16 +32,18 @@ namespace nsDangIt
 
 		protected override void DI_Start(StartState state)
 		{
-			chute = this.part.Modules.OfType<ModuleParachute>().First();
+			if (this.vessel == null)
+				return;
+			chute = this.part.Modules.OfType<ModuleParachute>().FirstOrDefault();
 
-            if (HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams3>().Allow1ParachuteFailures == false)
+			if (HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams3>().Allow1ParachuteFailures == false)
             {
-
-                foreach (Part part_each in this.part.vessel.Parts)
-                { //Make sure that there is at least one other chute on the craft!
-                    if (part_each != this.part)
+				foreach (Part part_each in this.vessel.Parts)
+                {
+					//Make sure that there is at least one other chute on the craft!
+					if (part_each != this.part)
                     {
-                        foreach (PartModule module_each in part_each.Modules)
+						foreach (PartModule module_each in part_each.Modules)
                         {
                             if (module_each is ModuleParachute)
                             {

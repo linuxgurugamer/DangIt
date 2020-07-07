@@ -6,6 +6,8 @@ using UnityEngine;
 
 namespace nsDangIt
 {
+	using static nsDangIt.DangIt;
+
 	public class ModuleWheelTireReliability : FailureModule
 	{
 		//ModuleWheelBase wheelBase;
@@ -63,20 +65,12 @@ namespace nsDangIt
 		}
 
 		protected override void DI_Update(){
-#if false
-            if (this.HasFailed) {
-				if (!wheelDamage.isDamaged()) {
-					this.EvaRepair ();
-				}
-			}
-#endif
 		}
 
 		protected override void DI_EvaRepair()
 		{
             if (wheelDamage.isRepairable)
                 wheelDamage.SetDamaged(false);
-            //this.wheel.wheels[0].repairWheel ();
         }
 
 	}

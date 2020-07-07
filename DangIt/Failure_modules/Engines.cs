@@ -6,6 +6,8 @@ using UnityEngine;
 
 namespace nsDangIt
 {
+    using static nsDangIt.DangIt;
+
     public class ModuleEngineReliability : FailureModule
     {
 		EngineManager engines;

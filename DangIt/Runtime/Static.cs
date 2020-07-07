@@ -9,6 +9,8 @@ using KSP.UI.Screens;
 
 namespace nsDangIt
 {
+    using static nsDangIt.DangIt;
+
     public partial class DangIt
     {
 		/// <summary>
@@ -18,7 +20,7 @@ namespace nsDangIt
 		/// <param name="modeString">Priority string</param>
 		public static int PriorityIntFromString(string modeString)
 		{
-			Logger.Info("[DangIt] [Static] Translating '" + modeString + "' to int...");
+			Log.Info("[DangIt] [Static] Translating '" + modeString + "' to int...");
 			var keys = new List<string> ();
 			keys.Add ("LOW");
 			keys.Add ("MEDIUM");

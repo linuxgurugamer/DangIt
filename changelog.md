@@ -127,7 +127,19 @@
 0.7.19.2
 	Really did the MiniAVC update
 
-
+0.7.20
+	Updated toolbarControl code
+	Removed useBlizzy option, now controlled by the ToolbarController
+	Fixed nullref when landing gear exist which aren't wheels
+	Replaced internal part highlight code with KSP_PartHighlighter
+	Broken parts now flash instead of being solid
+	Added new options in stock Settings page to control flash speed
+	Added new dependency on the SpaceTuxLibrary
+	Added new monitor window, to show all the failed parts
+	Some code cleanup
+	Replaced internal logging with KSP_Log
+	Change toolbar button visibility to be spacecenter only for config, flight only for status
+	Cleaned up logging code
 
 ============== Coffeeman's work below =========================
 ## ALPHA 6

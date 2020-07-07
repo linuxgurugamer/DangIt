@@ -5,8 +5,12 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using KSP.UI.Screens;
+
+    using static nsDangIt.DangIt;
+
 namespace nsDangIt
 {
+
     /// <summary>
     /// Module that handles the spare parts so that the kerbal can grab them while on EVA.
     /// </summary>
@@ -33,7 +37,7 @@ namespace nsDangIt
             {
                 return base.part.Modules[index] as IScalarModule;
             }
-            Logger.Error("Module " + part.Modules[index].moduleName + " is not an IScalarModule");
+            Log.Error("Module " + part.Modules[index].moduleName + " is not an IScalarModule");
             return null;
         }
 
@@ -60,7 +64,7 @@ namespace nsDangIt
                 if (cargoModule != null && deployModule != null)
                 {
 
-                    Logger.Info("Cargo bay found");
+                    Log.Info("Cargo bay found");
                     if (cargoModule.ClosedAndLocked() || this.deployModule.IsMoving())
                     {
                         Events["DepositParts"].active = false;
@@ -119,7 +123,7 @@ namespace nsDangIt
             Part evaPart = DangIt.FindEVAPart();
 
             if (evaPart == null)
-                this.Log("ERROR: couldn't find an active EVA!");
+                Log.Error("ERROR: couldn't find an active EVA!");
             else
                 EmptyEvaSuit(evaPart, this.part);
 
@@ -133,7 +137,7 @@ namespace nsDangIt
 
         protected void EmptyEvaSuit(Part evaPart, Part container)
         {
-            this.Log("Emptying the EVA suit from " + evaPart.name + " to " + container.name);
+            Log.Info("Emptying the EVA suit from " + evaPart.name + " to " + container.name);
 
             // Compute how much can be left in the container
             double capacity = container.Resources[Spares.Name].maxAmount - container.Resources[Spares.Name].amount;
@@ -165,7 +169,7 @@ namespace nsDangIt
             // Check if the EVA part contains the spare parts resource: if not, add a new config node
             if (!evaPart.Resources.Contains(Spares.Name))
             {
-                this.Log("The eva part doesn't contain spares, adding the config node");
+                Log.Info("The eva part doesn't contain spares, adding the config node");
 
                 ConfigNode node = new ConfigNode("RESOURCE");
                 node.AddValue("name", Spares.Name);
@@ -203,7 +207,7 @@ namespace nsDangIt
         /// </summary>
         private void OnCrewBoardVessel(GameEvents.FromToAction<Part, Part> action)
         {
-            this.Log("OnCrewBoardVessel, emptying the EVA suit");
+            Log.Info("OnCrewBoardVessel, emptying the EVA suit");
 
             Part evaPart = action.from;
             Part container = action.to;
@@ -212,19 +216,6 @@ namespace nsDangIt
                 EmptyEvaSuit(evaPart, container);
         }
 
-
-        public void Log(string msg)
-        {
-            Vessel v = this.part.vessel;
-            StringBuilder sb = new StringBuilder();
-
-            sb.Append("[DangIt]: ");
-            sb.Append("SparesContainer");
-            sb.Append("[" + this.GetInstanceID() + "]");
-            sb.Append(": " + msg);
-
-            Logger.Info(sb.ToString());
-        }
 
 
     }

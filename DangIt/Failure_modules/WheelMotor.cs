@@ -7,6 +7,9 @@ using UnityEngine;
 
 namespace nsDangIt
 {
+
+	using static nsDangIt.DangIt;
+
 	public class ModuleWheelMotorReliability : FailureModule
 	{
 		ModuleWheels.ModuleWheelMotor wheelMotor;
@@ -29,9 +32,11 @@ namespace nsDangIt
 
 		protected override void DI_Start(StartState state)
 		{
-			if (HighLogic.LoadedSceneIsFlight && this.part != null && this.part.Modules != null)
+			if (HighLogic.LoadedSceneIsFlight && this.vessel != null && this.part != null && this.part.Modules != null)
 			{
-				this.wheelMotor = this.part.Modules.OfType<ModuleWheels.ModuleWheelMotor>().First();
+				var moduleWheels = this.part.Modules.OfType<ModuleWheels.ModuleWheelMotor>();
+				if (moduleWheels != null && moduleWheels.Count() > 0)
+					this.wheelMotor = moduleWheels.First();
 			}
 		}
 
@@ -46,6 +51,8 @@ namespace nsDangIt
 		}
 
 		protected override void DI_Disable(){
+			if (this.wheelMotor == null)
+				return;
 			this.wheelMotor.motorEnabled = false;
             this.wheelMotor.state = ModuleWheels.ModuleWheelMotor.MotorState.Inoperable;
 
@@ -58,6 +65,8 @@ namespace nsDangIt
 		}
 
 		protected override void DI_EvaRepair(){
+			if (this.wheelMotor == null)
+				return;
 			this.wheelMotor.motorEnabled = true;
             this.wheelMotor.state = ModuleWheels.ModuleWheelMotor.MotorState.Idle;
             foreach (BaseEvent e in this.wheelMotor.Events) {

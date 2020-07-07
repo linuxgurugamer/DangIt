@@ -6,6 +6,8 @@ using UnityEngine;
 
 namespace nsDangIt
 {
+    using static nsDangIt.DangIt;
+
     public class ModuleControlSurfaceReliability : FailureModule
     {
         ModuleControlSurface controlSurface;

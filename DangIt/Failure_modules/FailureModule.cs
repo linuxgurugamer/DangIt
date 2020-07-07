@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using UnityEngine;
-using Experience;
 using KSP.UI.Screens;
+using KSP_PartHighlighter;
+
+using static nsDangIt.DangIt;
+
 
 namespace nsDangIt
 {
@@ -39,6 +41,8 @@ namespace nsDangIt
         /// </summary>
         public virtual string InspectionMessage()
         {
+            Log.Info("InspectionMessage");
+
             if (this.HasFailed)
                 return "the part has failed!";
 
@@ -192,11 +196,11 @@ namespace nsDangIt
             float f = LambdaFromMTBF(this.CurrentMTBF)
                     * (1 + TemperatureMultiplier())     // the temperature increases the chance of failure
                     * LambdaMultiplier()                // optional multiplier from the child class
-                    * InspectionLambdaMultiplier()           // temporary inspection bonus
-                    * StreamMultiplier(); // for streamers, temporarily increase the chance for failure
+                    * InspectionLambdaMultiplier()      // temporary inspection bonus
+                    * StreamMultiplier();               // for streamers, temporarily increase the chance for failure
 #if false
             if (printChances)
-                Logger.Info("Lambda: " + f.ToString());
+                DangIt.myLog.Info("Lambda: " + f.ToString());
 #endif      
             return f;
         }
@@ -252,9 +256,11 @@ namespace nsDangIt
         /// </summary>
         IEnumerator RuntimeFetch()
         {
+            Log.Info("FailureModule.RuntimeFetch, part: " + this.part.partInfo.title);
             // Wait for the server to be available
             while (DangIt.Instance == null || !DangIt.Instance.IsReady)
                 yield return null;
+            Log.Info("FailureModule.RuntimeFetch, part: " + this.part.partInfo.title + " ready");
 
             if (DI_AllowedToFail())
                 this.Events["Fail"].guiActive = DangIt.Instance.CurrentSettings.ManualFailures;
@@ -277,7 +283,7 @@ namespace nsDangIt
         /// </summary>
         protected void Reset()
         {
-            Debug.Log("Reset(), HasInitted: " + HasInitted.ToString());
+            Log.Info("Reset(), HasInitted: " + HasInitted.ToString());
             try
             {
                 this.FailureLog("Resetting");
@@ -380,6 +386,20 @@ namespace nsDangIt
             }
         }
 
+        public static Dictionary<Guid, int> vesselHighlightDict = null;
+        public static PartHighlighter phl = null;
+
+        public override void OnAwake()
+        {
+            Log.Info("FailureModule.OnAwake");
+
+            if (phl == null)
+                phl = PartHighlighter.CreatePartHighlighter();
+            
+            if (vesselHighlightDict== null)
+                vesselHighlightDict = new Dictionary<Guid, int>();
+
+        }
 
 
         /// <summary>
@@ -389,7 +409,7 @@ namespace nsDangIt
         /// </summary>
         public override void OnStart(PartModule.StartState state)
         {
-            Logger.Info("FailureModule.OnStart");
+            Log.Info("FailureModule.OnStart, part: " + this.part.partInfo.title);
             try
             {
                 if (HighLogic.LoadedSceneIsFlight) // nothing to do in editor
@@ -404,12 +424,12 @@ namespace nsDangIt
                         }
                     }
 
-    	            #region Fail and repair events
+                    #region Fail and repair events
 
-            	    this.Events["Fail"].guiName = this.FailGuiName;
-    	            this.Events["EvaRepair"].guiName = this.EvaRepairGuiName;
-            	    this.Events["Maintenance"].guiName = this.MaintenanceString;
-    			
+                    this.Events["Fail"].guiName = this.FailGuiName;
+                    this.Events["EvaRepair"].guiName = this.EvaRepairGuiName;
+                    this.Events["Maintenance"].guiName = this.MaintenanceString;
+
                     #endregion
 
                     // Reset the internal state at the beginning of the flight
@@ -423,21 +443,32 @@ namespace nsDangIt
                     if (this.HasFailed)
                         this.DI_Disable();
 
-                    
-                    
-					this.SetFailureState(this.HasFailed);
-                }
+                    this.SetFailureState(this.HasFailed);
+
+                    if (!vesselHighlightDict.ContainsKey(vessel.id))
+                    {
+                        var failedHighlightID = phl.CreateHighlightList(0);
+                        if (failedHighlightID < 0)
+                            return;
+                        if (DangIt.Instance.CurrentSettings.FlashingGlow)
+                        {
+                            phl.SetFlashInterval(failedHighlightID, HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams1>().flashingInterval);
+                        }
+                        vesselHighlightDict[vessel.id] = failedHighlightID;
+                    }
+                    phl.UpdateHighlightColors(vesselHighlightDict[vessel.id], Color.red);
 
 
-
-                if (DangIt.Instance.CurrentSettings.EnabledForSave)
-                {
-                    this.DI_Start(state);
-                    this.StartCoroutine("RuntimeFetch");
+                    if (DangIt.Instance.CurrentSettings.EnabledForSave)
+                    {
+                        this.DI_Start(state);
+                        this.StartCoroutine("RuntimeFetch");
+                    }
                 }
             }
             catch (Exception e)
             {
+
                 OnError(e);
             }
 
@@ -465,24 +496,22 @@ namespace nsDangIt
                     // Actually, there is not any place in a code of  the whole mod where that 'silent' state is turning on
                     // (maybe some FailureModules can be defined as 'silent' by editing files)
 
-                    if (this.HasFailed && !this.Silent && (DangIt.Instance.CurrentSettings.Glow && (AlarmManager.visibleUI || !DangIt.Instance.CurrentSettings.DisableGlowOnF2)))
+                    if (this.HasFailed && /* !this.Silent */  (DangIt.Instance.CurrentSettings.Glow && (AlarmManager.visibleUI || !DangIt.Instance.CurrentSettings.DisableGlowOnF2)))
                     {
-
-                        this.part.SetHighlightDefault();
-
-                        this.part.SetHighlightColor(Color.red);                        
-                        this.part.SetHighlightType(Part.HighlightType.AlwaysOn);                                            
-                        this.part.highlighter.ConstantOn(Color.red);
-                        this.part.highlighter.SeeThroughOn();
-                        this.part.SetHighlight(true, false);
+                        phl.AddPartToHighlight(vesselHighlightDict[this.vessel.id], this.part);
+                        //Debug.Log("Adding part to highlight list: " + this.part.partInfo.title);
                     } else
 
                     // Turning off the highlighting of the part, which contains this updating FailureModule
                     // if it is not in a 'failed' state, or it is in 'silent' state, or if 'glow' is globally disabled
-              //      if (!this.HasFailed || this.Silent || !DangIt.Instance.CurrentSettings.Glow || (!visibleUI && DangIt.Instance.CurrentSettings.DisableGlowOnF2))
+                    //      if (!this.HasFailed || this.Silent || !DangIt.Instance.CurrentSettings.Glow || (!visibleUI && DangIt.Instance.CurrentSettings.DisableGlowOnF2))
                     {
+
                         if (!AlarmManager.partFailures.ContainsKey(this.part))
-                            this.part.SetHighlightDefault();
+                        {
+                            phl.DisablePartHighlighting(vesselHighlightDict[this.vessel.id], this.part);
+                            //Debug.Log("Removing part from highlight list: " + this.part.partInfo.title);
+                        }
                     }
 
 
@@ -509,7 +538,7 @@ namespace nsDangIt
                             float f = this.Lambda();
 #if DEBUG
                            // if (printChances)
-                           //     Logger.Debug("this.Lambda: " + f.ToString());
+                           //     DangIt.myLog.Debug("this.Lambda: " + f.ToString());
 #endif
 
 
@@ -551,7 +580,7 @@ namespace nsDangIt
 #if false
             if (printChances)
                 print("TemperatureMultiplier: " + f.ToString());
-#endif    
+#endif
             return f;
 
         }
@@ -656,17 +685,17 @@ namespace nsDangIt
                     AlarmManager alarmManager = FindObjectOfType<AlarmManager>();
                     if (alarmManager != null)
                     {
-                        Logger.Info("alarmManager is not null");
+                        Log.Info("alarmManager is not null");
                         alarmManager.AddAlarm(this, DangIt.Instance.CurrentSettings.GetSoundLoopsForPriority(Priority));
                         if (alarmManager.HasAlarmsForModule(this))
                         {
-                            Logger.Info("Muting the alarm");
+                            Log.Info("Muting the alarm");
                             Events["MuteAlarms"].active = true;
                             Events["MuteAlarms"].guiActive = true;
                         }
                     }
                     else
-                        Logger.Info("alarmManager is null");
+                        Log.Info("alarmManager is null");
                 }
 
                 DangIt.FlightLog(this.FailureMessage);
@@ -769,23 +798,23 @@ namespace nsDangIt
             string reason = string.Empty;
 
 
-            #region Amount of spare parts
+#region Amount of spare parts
             if (!evaPart.Resources.Contains(Spares.Name) || evaPart.Resources[Spares.Name].amount < this.RepairCost)
             {
                 allow = false;
                 reason = "not carrying enough spares";
                 DangIt.Broadcast("You need " + this.RepairCost + " spares to repair this.", true);
             }
-            #endregion
+#endregion
 
-            #region Part temperature
+#region Part temperature
             if (this.part.temperature > DangIt.Instance.CurrentSettings.GetMaxServicingTemp())
             {
                 allow = false;
                 reason = "part is too hot (" + part.temperature.ToString() + " degrees)";
                 DangIt.Broadcast("This is too hot to service right now", true);
             }
-            #endregion
+#endregion
 
 
             if (!CheckOutExperience(evaPart.protoModuleCrew[0]))
@@ -831,7 +860,7 @@ namespace nsDangIt
         }
 
 
-        #region Logging utilities
+#region Logging utilities
 
         public void FailureLog(string msg)
         {
@@ -848,7 +877,7 @@ namespace nsDangIt
                 }
                 sb.Append(": " + msg);
 
-                Logger.Info(sb.ToString());
+                Log.Info(sb.ToString());
             }
             catch (Exception e)
             {
@@ -869,10 +898,10 @@ namespace nsDangIt
 
         public void LogException(Exception e)
         {
-            Logger.Error("ERROR [" + e.GetType().ToString() + "]: " + e.Message + "\n" + e.StackTrace);
+            Log.Error("ERROR [" + e.GetType().ToString() + "]: " + e.Message + "\n" + e.StackTrace);
         }
 
-        #endregion
+#endregion
 
 
         /// <summary>
@@ -886,7 +915,7 @@ namespace nsDangIt
         [KSPEvent(guiActive = false, active = false, guiName = "Mute Alarm")]
         public void MuteAlarms()
         {
-            Logger.Info("Muting alarms for... " + this.ToString());
+            Log.Info("Muting alarms for... " + this.ToString());
             AlarmManager alarmManager = FindObjectOfType<AlarmManager>();
             if (alarmManager != null)
             {
@@ -896,7 +925,7 @@ namespace nsDangIt
 
         public void AlarmsDoneCallback()
         { //Called from AlarmManager when no alarms remain
-            Logger.Info("AlarmsDoneCallback called");
+            Log.Info("AlarmsDoneCallback called");
             Events["MuteAlarms"].active = false;
             Events["MuteAlarms"].guiActive = false;
         }

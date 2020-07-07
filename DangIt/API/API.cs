@@ -6,6 +6,8 @@ using UnityEngine;
 
 namespace nsDangIt
 {
+    using static nsDangIt.DangIt;
+
     public partial class DangIt
     {
         public static int CountFailures(Vessel v)

@@ -7,6 +7,8 @@ using UnityEngine;
 
 namespace nsDangIt
 {
+    using static nsDangIt.DangIt;
+
     public class ModuleBatteryReliability : FailureModule
     {
         // Unlike other failure modules, batteries are not PartModules

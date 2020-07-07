@@ -11,7 +11,8 @@ using ClickThroughFix;
 
 namespace ippo.Runtime.GUI
 {
-    
+    using static nsDangIt.DangIt;
+
     class StreamMultiplier : MonoBehaviour
     {
         private Rect settingsRect = new Rect(200, 200, 350, 150);

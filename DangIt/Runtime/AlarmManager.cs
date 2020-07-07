@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 namespace nsDangIt
 {
+    using static nsDangIt.DangIt;
+
     //	[RequireComponent(typeof(AudioSource))]
     [KSPAddon(KSPAddon.Startup.Flight, false)]
     public class AlarmManager : MonoBehaviour
@@ -26,10 +28,10 @@ namespace nsDangIt
             audioSource.audio.spatialBlend = 0f; //This disable the game scaling volume with distance from source
             audioSource.audio.volume = 0f;
 
-            Logger.Info("[DangIt] [AlarmManager] Creating Clip");
+            Log.Info("[DangIt] [AlarmManager] Creating Clip");
             audioSource.audio.clip = GameDatabase.Instance.GetAudioClip("DangIt/Sounds/alarm"); //Load alarm sound
 
-            Logger.Info("[DangIt] [AlarmManager] Creating Dictionary");
+            Log.Info("[DangIt] [AlarmManager] Creating Dictionary");
             if (loops == null)
             {
                 loops = new Dictionary<FailureModule, int>(); //Reset counter, so on logic pass we play it
@@ -63,7 +65,7 @@ namespace nsDangIt
         {
             print("[DangIt] [AlarmManager] UpdateSettings");
             // float scaledVolume = DangIt.Instance.CurrentSettings.AlarmVolume / 100f;
-            //Logger.Info("[DangIt] [AlarmManager] Rescaling Volume (at UpdateSettings queue)..., now at " + scaledVolume);
+            //DangIt.myLog.Info("[DangIt] [AlarmManager] Rescaling Volume (at UpdateSettings queue)..., now at " + scaledVolume);
             // if (audioSource != null)
             //     audioSource.audio.volume = 0; // scaledVolume;
         }
@@ -71,16 +73,16 @@ namespace nsDangIt
         void AddPartFailure(Part p)
         {
             int i;
-            Logger.Info("AddPartFailure, p: " + p.partInfo.title);
+            Log.Info("AddPartFailure, p: " + p.partInfo.title);
             if (partFailures.TryGetValue(p, out i))
             {
-                Logger.Info("Part already failed");
+                Log.Info("Part already failed");
                 var i1 = partFailures[p];
                 partFailures[p] = i1 + 1;
             }
             else
             { 
-                Logger.Info("Adding new failed part");
+                Log.Info("Adding new failed part");
                 partFailures.Add(p, 1);
             }
         }
@@ -105,14 +107,15 @@ namespace nsDangIt
                                                                                           // ...you would have to reboot to change it, but I don't want to add lag by adding it to each frame in Update()
             if (number != 0)
             {
-                Logger.Info("[DangIt] [AlarmManager] Adding '" + number + "' alarms from '" + fm.ToString() + "', volume: " + audioSource.audio.volume);
+                Log.Info("[DangIt] [AlarmManager] Adding '" + number + "' alarms from '" + fm.ToString() + "', volume: " + audioSource.audio.volume);
                 loops.Add(fm, number);
             }
             else
             {
-                Logger.Info("[DangIt] [AlarmManager] No alarms added: Would have added 0 alarms");
+                Log.Info("[DangIt] [AlarmManager] No alarms added: Would have added 0 alarms");
             }
         }
+
 
         public void LateUpdate()
         {
@@ -130,7 +133,7 @@ namespace nsDangIt
                         loops.Remove(element.Key);
                         RemovePartFailure(element.Key.part);
 
-                        Logger.Info("[DangIt] [AlarmManager] Playing Clip");
+                        Log.Info("[DangIt] [AlarmManager] Playing Clip");
                         float scaledVolume = DangIt.Instance.CurrentSettings.GetMappedVolume();
                         audioSource.audio.volume = scaledVolume;
                         audioSource.audio.Play();
@@ -161,7 +164,7 @@ namespace nsDangIt
         public void RemoveAllAlarmsForModule(FailureModule fm)
         {
             audioSource.audio.volume = 0;
-            Logger.Info("[DangIt] [AlarmManager] Removing alarms...");
+            Log.Info("[DangIt] [AlarmManager] Removing alarms...");
             if (loops.Keys.Contains(fm))
             {
                 fm.AlarmsDoneCallback();
@@ -170,6 +173,15 @@ namespace nsDangIt
             }
         }
 
+        public void RemoveAllAlarms()
+        {
+            while (loops.Count > 0)
+            {
+                var element = loops.ElementAt(0);
+                loops.Remove(element.Key);
+                RemovePartFailure(element.Key.part);
+            }
+        }
         public bool HasAlarmsForModule(FailureModule fm)
         {
             if (loops.Keys.Contains(fm))

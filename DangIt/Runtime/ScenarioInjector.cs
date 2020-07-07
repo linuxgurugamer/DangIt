@@ -7,6 +7,8 @@ using System.Reflection;
 
 namespace nsDangIt
 {
+    using static nsDangIt.DangIt;
+
     /*
      * Check that the current game contains the runtime ScenarioModule
      * and add it if it's missing.
@@ -24,7 +26,7 @@ namespace nsDangIt
 
             if (psm == null)
             {
-                Logger.Info("[DangIt]: Adding the controller to the game.");
+                Log.Info("[DangIt]: Adding the controller to the game.");
                 psm = game.AddProtoScenarioModule(typeof(DangIt), GameScenes.EDITOR,
                                                                   GameScenes.FLIGHT,
                                                                   GameScenes.SPACECENTER,
@@ -32,7 +34,7 @@ namespace nsDangIt
             }
             else // make sure the scenario is targeting all the scenes
             {
-                Logger.Info("[DangIt]: The runtime is already installed (OK).");
+                Log.Info("[DangIt]: The runtime is already installed (OK).");
 
                 SetTargetScene(psm, GameScenes.EDITOR);
                 SetTargetScene(psm, GameScenes.FLIGHT);

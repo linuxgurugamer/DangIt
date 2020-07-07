@@ -8,6 +8,8 @@ using KSP;
 
 namespace nsDangIt
 {
+	using static nsDangIt.DangIt;
+
 	public class ModuleSRBReliability : FailureModule
 	{
 		ModuleEngines srb;
@@ -49,7 +51,7 @@ namespace nsDangIt
 
         protected override bool DI_FailBegin()
 		{
-            Logger.Info("ModuleSRBReliability.DI_FailBegin: AllowSRBFailures: " + HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams3>().AllowSRBFailures.ToString() +
+            Log.Info("ModuleSRBReliability.DI_FailBegin: AllowSRBFailures: " + HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams3>().AllowSRBFailures.ToString() +
                 "   PartIsActive: " + PartIsActive().ToString());
 		    return DI_AllowedToFail() & PartIsActive();
             //return PartIsActive();

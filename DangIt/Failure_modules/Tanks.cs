@@ -7,6 +7,8 @@ using UnityEngine;
 
 namespace nsDangIt
 {
+    using static nsDangIt.DangIt;
+
     public class ModuleTankReliability : FailureModule
     {
         public override string DebugName { get { return "DangItTank"; } }
@@ -66,7 +68,6 @@ namespace nsDangIt
         // this method.
         protected override void DI_RuntimeFetch()
         {
-            Logger.Info("ModuleTankReliability.DI_RuntimeFetch, part: " + part.partInfo.title);
             leakables = new List<PartResource>();
 
             // At this point DangIt.Instance is not null: fetch the blacklist
@@ -80,7 +81,7 @@ namespace nsDangIt
             // If no leakables are found, just disable the module
             if (leakables.Count == 0)
             {
-                Logger.Info("The part " + this.part.name + " does not contain any leakable resource.");
+                Log.Info("The part " + this.part.name + " does not contain any leakable resource.");
                 this.Events["Fail"].active = false;
                 this.leakName = "none"; // null;
                 this.enabled = false; // disable the monobehaviour: this won't be updated
@@ -89,7 +90,6 @@ namespace nsDangIt
 
         protected override void DI_Start(StartState state)
         {
-            Logger.Info("ModuleTankReliability.DI_Start, part: " + part.partInfo.title);
             if (HighLogic.LoadedSceneIsFlight)
             {
                 // The part was already failed when loaded:
@@ -111,9 +111,9 @@ namespace nsDangIt
         protected override void DI_OnLoad(ConfigNode node)
         {
             if (part != null && part.partInfo != null)
-                Logger.Info("ModuleTankReliability.DI_OnLoad, part: " + part.partInfo.title);
+                Log.Info("ModuleTankReliability.DI_OnLoad, part: " + part.partInfo.title);
             else
-                Logger.Info("ModuleTankReliability.DI_OnLoad, no part");
+                Log.Info("ModuleTankReliability.DI_OnLoad, no part");
             this.pole = DangIt.Parse<float>("pole", 0.01f);
 
             this.leakName = node.GetValue("leakName");
@@ -128,7 +128,6 @@ namespace nsDangIt
 
         protected override void DI_OnSave(ConfigNode node)
         {
-            Logger.Info("ModuleTankReliability.DI_OnSave, part: " + part.partInfo.title);
             if (leakName == null)
                 leakName = "none"; //  print("Adding leak: (empty)");
             else
@@ -142,7 +141,6 @@ namespace nsDangIt
 
         protected override void DI_Update()
         {
-            Logger.Info("ModuleTankReliability.DI_Update, part: " + part.partInfo.title);
             try
             {
                 if (this.HasFailed &&
@@ -180,7 +178,6 @@ namespace nsDangIt
 
         protected override bool DI_FailBegin()
         {
-            Logger.Info("ModuleTankReliability.DI_FailBegin, part: " + part.partInfo.title);
             if (!DI_AllowedToFail())
                 return false;
 
@@ -229,7 +226,6 @@ namespace nsDangIt
 
         protected override void DI_Disable()
         {
-            Logger.Info("ModuleTankReliability.DI_Disable, part: " + part.partInfo.title);
             // nothing to do for tanks
             return;
         }

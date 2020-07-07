@@ -6,6 +6,8 @@ using UnityEngine;
 
 namespace nsDangIt
 {
+    using static nsDangIt.DangIt;
+
     public partial class DangIt
     {
         /// <summary>
@@ -32,6 +34,10 @@ namespace nsDangIt
             public bool Glow
             {
                 get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams1>().Glow; }
+            }
+            public bool FlashingGlow
+            {
+                get { return HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams1>().flashingGlow; }
             }
             public bool DisableGlowOnF2
             {
@@ -101,7 +107,7 @@ namespace nsDangIt
                 foreach (UrlDir.UrlConfig curSet in node)
                 {
                     string val = curSet.config.GetValue("SparesResource");
-                    DangIt.Instance.Log("Found a DANGIT_SETTINGS, its SparesResource is " + val.ToString());
+                    //DangIt.Instance.Log("Found a DANGIT_SETTINGS, its SparesResource is " + val.ToString());
                     return val;
                 }
                 return "SpareParts";
@@ -113,7 +119,7 @@ namespace nsDangIt
 				foreach (UrlDir.UrlConfig curSet in node)
 				{
 					int val = DangIt.Parse<int> (curSet.config.GetValue ("MaxServicingTemp"), 400);
-					DangIt.Instance.Log ("Found a DANGIT_SETTINGS, its MaxServiceTemp is " + val.ToString ());
+                    Log.Info("Found a DANGIT_SETTINGS, its MaxServiceTemp is " + val.ToString ());
 					return val;
 				}
 				return 400;

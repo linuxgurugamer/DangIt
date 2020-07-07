@@ -11,6 +11,7 @@ using ClickThroughFix;
 
 namespace nsDangIt
 {
+    using static nsDangIt.DangIt;
 
     [KSPAddon(KSPAddon.Startup.SpaceCentre, false)]
     class DangItCheckEnabledChange : MonoBehaviour
@@ -41,10 +42,6 @@ namespace nsDangIt
             if (answer == Answer.inActive)
                 return;
 
-            Draw();
-        }
-        public void Draw()
-        {
             // The settings are only available in the space center
             GUI.skin = HighLogic.Skin;
             settingsRect = ClickThruBlocker.GUILayoutWindow("DangItSettings".GetHashCode(),
@@ -95,9 +92,6 @@ namespace nsDangIt
         [GameParameters.CustomParameterUI("Mod Enabled")]
         public bool EnabledForSave = true;      // is enabled for this save file
 
-        [GameParameters.CustomParameterUI("Use Blizzy toolbar if available")]
-        public bool useBlizzy = false;
-
         [GameParameters.CustomParameterUI("Manual failures")]
         public bool ManualFailures = false;     // initiate failures manually
 
@@ -109,8 +103,16 @@ namespace nsDangIt
         [GameParameters.CustomParameterUI("Glow")]
         public bool Glow = true;                // enable the part's glow upon failure
 
+        [GameParameters.CustomParameterUI("Flashing Glow")]
+        public bool flashingGlow = true;
+
+        [GameParameters.CustomFloatParameterUI("Flash interval", minValue = 0.25f, maxValue = 5.0f, asPercentage = false,
+            toolTip ="Any changes to this will only take effect after restarting the game")]
+        public float flashingInterval = 1f;      
+
+
         [GameParameters.CustomParameterUI("Disable Glow on F2")]
-        public bool DisableGlowOnF2 = true;                // enable the part's glow upon failure
+        public bool DisableGlowOnF2 = true;                
 
         [GameParameters.CustomParameterUI("Check Experience")]
         public bool RequireExperience = true;   // enable requiring experience levels
@@ -238,6 +240,8 @@ namespace nsDangIt
         {
             //if (HighLogic.LoadedScene != GameScenes.SPACECENTER)
             //    return false;
+            if (member.Name == "flashingInterval")
+                return flashingGlow;
             if (oldEnabled != EnabledForSave)
             {
                

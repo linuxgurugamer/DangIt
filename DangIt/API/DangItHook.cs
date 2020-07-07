@@ -4,6 +4,8 @@ using System.Reflection;
 
 namespace nsDangIt
 {
+    using static nsDangIt.DangIt;
+
     /// <summary>
     /// Reflection wrapper to interact with DangIt
     /// </summary>

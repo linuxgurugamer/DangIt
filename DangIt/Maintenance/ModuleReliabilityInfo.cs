@@ -6,6 +6,8 @@ using UnityEngine;
 
 namespace nsDangIt
 {
+    using static nsDangIt.DangIt;
+
     /// <summary>
     /// Module that produces the reliability info about a part to display in the VAB / SPH info tab.
     /// It aggregates the information from all the failure modules into one, instead of many separate tabs.
@@ -25,20 +27,20 @@ namespace nsDangIt
 				}
 			}
             
-            Logger.Info("ModuleReliabilityInfo.GetInfo");
+            Log.Info("ModuleReliabilityInfo.GetInfo");
 			if (fails.Count == 0)   // no failure module, return a placeholder message
                 return "This part has been built to last";
             else
             {
                 StringBuilder sb = new StringBuilder();
 
-                Logger.Info("ModuleReliabilityInfo, part: " + part.partInfo.title);
+                Log.Info("ModuleReliabilityInfo, part: " + part.partInfo.title);
                 
                 foreach (FailureModule fm in fails)
                 {
-                    Logger.Info("failureModule: " + fm.name);
-                    Logger.Info("Lifetime: " + fm.LifeTime.ToString());
-                    Logger.Info("MTBF: " + fm.MTBF.ToString());
+                    Log.Info("failureModule: " + fm.name);
+                    Log.Info("Lifetime: " + fm.LifeTime.ToString());
+                    Log.Info("MTBF: " + fm.MTBF.ToString());
 
                     float mtbfMultipler = 1.0f;
                     float lifetimeMultiplier = 1f;
@@ -50,7 +52,7 @@ namespace nsDangIt
 
                     double EOL = Math.Round (Math.Max (-fm.LifeTime * lifetimeMultiplier * Math.Log (1 / fm.MTBF * mtbfMultipler ), 0));
 
-                    Logger.Info("EOL: " + EOL.ToString());
+                    Log.Info("EOL: " + EOL.ToString());
 					sb.AppendLine (fm.ScreenName);
 					sb.AppendLine (" - MTBF: " + fm.MTBF * mtbfMultipler  + " hours");
 					sb.AppendLine (" - Lifetime: " + fm.LifeTime * lifetimeMultiplier + " hours");

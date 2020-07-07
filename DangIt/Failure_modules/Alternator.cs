@@ -6,6 +6,8 @@ using UnityEngine;
 
 namespace nsDangIt
 {
+    using static nsDangIt.DangIt;
+
     public class ModuleAlternatorReliability : FailureModule
     {
         EngineManager engineManager;
@@ -32,7 +34,7 @@ namespace nsDangIt
         {
             if (HighLogic.LoadedSceneIsFlight)
             {
-                this.alternatorModule = this.part.Modules.OfType<ModuleAlternator>().First();
+                this.alternatorModule = this.part.Modules.OfType<ModuleAlternator>().FirstOrDefault();
                 this.engineManager = new EngineManager(this.part);
             }
         }

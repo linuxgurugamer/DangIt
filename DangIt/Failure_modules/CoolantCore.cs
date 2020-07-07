@@ -8,6 +8,8 @@ using KSP;
 
 namespace nsDangIt
 {
+	using static nsDangIt.DangIt;
+
 	public class ModuleCoolantReliabilityCore : FailureModule //Renamed so that it dosen't conflict if user has an old version of Entropy
 	{
 		EngineManager engines;

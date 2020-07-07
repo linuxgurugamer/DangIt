@@ -5,6 +5,8 @@ using System.Text;
 
 namespace nsDangIt
 {
+    using static nsDangIt.DangIt;
+
     /// <summary>
     /// Constants related to the spare parts resource
     /// </summary>

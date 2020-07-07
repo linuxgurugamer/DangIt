@@ -6,6 +6,8 @@ using UnityEngine;
 
 namespace nsDangIt
 {
+    using static nsDangIt.DangIt;
+
     public class ModuleReactionWheelReliability : FailureModule
     {
         ModuleReactionWheel torqueModule;
