@@ -33,7 +33,7 @@
 3:DangIt.version,GameData/DangIt
 3:README.md,GameData/DangIt
 
-3:changelog.cfg,GameData/ResourceMonitors
+3:changelog.cfg,GameData/DangIt
 
 
 # 4:SOURCDIR, DESTDIR
