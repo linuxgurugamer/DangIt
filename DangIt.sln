@@ -1,13 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26730.8
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30225.117
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DangIt", "DangIt\DangIt.csproj", "{9B88953E-3F14-4DEA-8078-B3418A17E2F8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6B1F6B38-B595-46FF-B065-FABB6052B72E}"
 	ProjectSection(SolutionItems) = preProject
 		buildRelease.bat = buildRelease.bat
+		changelog.cfg = changelog.cfg
 		changelog.md = changelog.md
 		DangIt.version = DangIt.version
 		deploy.bat = deploy.bat

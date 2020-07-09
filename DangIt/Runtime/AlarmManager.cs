@@ -7,11 +7,23 @@ namespace nsDangIt
 {
     using static nsDangIt.DangIt;
 
+    public class FailedPart
+    {
+        public Part part;
+        public string PartId { get { return part.vessel.id.ToString() + ":" + part.persistentId.ToString(); } }
+        public override int GetHashCode() { return PartId.GetHashCode(); }
+        public override bool Equals(object obj) { return Equals(obj as FailedPart); }
+        public bool Equals(FailedPart obj) { return obj != null && obj.PartId == this.PartId; }
+
+        public FailedPart(Part p) { this.part = p; }
+    }
+
     [KSPAddon(KSPAddon.Startup.Flight, false)]
     public class AlarmManager : MonoBehaviour
     {
+
         public static Dictionary<FailureModule, int> loops;
-        public static Dictionary<Part, int> partFailures;
+        public static Dictionary<FailedPart, int> failedParts;
 
 
         static FXGroup audioSource = null;
@@ -22,13 +34,12 @@ namespace nsDangIt
             Log.Info("[DangIt] [AlarmManager] Starting...");
 
             audioSource = new FXGroup("DangItAlarm");
-            //AddAudio();
 
             Log.Info("[DangIt] [AlarmManager] Creating Dictionary");
             if (loops == null)
             {
                 loops = new Dictionary<FailureModule, int>(); //Reset counter, so on logic pass we play it
-                partFailures = new Dictionary<Part, int>();
+                failedParts = new Dictionary<FailedPart, int>();
             }
             GameEvents.onShowUI.Add(showUI);
             GameEvents.onHideUI.Add(hideUI);
@@ -68,30 +79,32 @@ namespace nsDangIt
         {
             int i;
             Log.Info("AddPartFailure, p: " + p.partInfo.title);
-            if (partFailures.TryGetValue(p, out i))
+            if (failedParts.TryGetValue(new FailedPart(p), out i))
             {
                 Log.Info("Part already failed");
-                var i1 = partFailures[p];
-                partFailures[p] = i1 + 1;
+                var i1 = failedParts[new FailedPart(p)];
+                failedParts[new FailedPart(p)] = i1 + 1;
             }
             else
             {
                 Log.Info("Adding new failed part");
-                partFailures.Add(p, 1);
+                failedParts[new FailedPart(p)] = 1;
             }
         }
 
-        void RemovePartFailure(Part p)
+        static internal void RemovePartFailure(Part p)
         {
-            int i;
-            if (partFailures.TryGetValue(p, out i))
+            FailedPart fp = new FailedPart(p);
+            if (failedParts.ContainsKey(fp))
             {
-                var i1 = partFailures[p] - 1;
+                var i1 = failedParts[fp] - 1;
                 if (i1 > 0)
-                    partFailures[p] = i1;
+                    failedParts[fp] = i1;
                 else
-                    partFailures.Remove(p);
+                    failedParts.Remove(fp);
             }
+            else
+                Log.Error("RemovePartFailure, failedParts does NOT contain key: " + p.vessel.id.ToString() + ":" + p.persistentId.ToString());
         }
 
         public void AddAlarm(FailureModule fm, int number)
@@ -131,7 +144,7 @@ namespace nsDangIt
 
                         var element = loops.ElementAt(0);
                         loops.Remove(element.Key);
-                        RemovePartFailure(element.Key.part);
+                        //RemovePartFailure(element.Key.part);
 
                         float scaledVolume = DangIt.Instance.CurrentSettings.GetMappedVolume();
                         audioSource.audio.volume = scaledVolume;
@@ -147,14 +160,12 @@ namespace nsDangIt
                             else
                             {
                                 Destroy(audioSource.audio);
-                                //audioSource.audio.volume = 0;
                                 element.Key.AlarmsDoneCallback();
                             }
                         }
                         else
                         {
                             Destroy(audioSource.audio);
-                            //audioSource.audio.volume = 0;
                             element.Key.AlarmsDoneCallback();
                         }
                     }
@@ -164,13 +175,14 @@ namespace nsDangIt
 
         public void RemoveAllAlarmsForModule(FailureModule fm)
         {
-            audioSource.audio.volume = 0;
-            Log.Info("[DangIt] [AlarmManager] Removing alarms...");
+             Log.Info("[DangIt] [AlarmManager] Removing alarms...");
+           if (audioSource.audio != null)
+                audioSource.audio.volume = 0;
             if (loops.Keys.Contains(fm))
             {
                 fm.AlarmsDoneCallback();
                 loops.Remove(fm);
-                RemovePartFailure(fm.part);
+                //RemovePartFailure(fm.part);
             }
         }
 
@@ -180,7 +192,7 @@ namespace nsDangIt
             {
                 var element = loops.ElementAt(0);
                 loops.Remove(element.Key);
-                RemovePartFailure(element.Key.part);
+               // RemovePartFailure(element.Key.part);
             }
             Destroy(audioSource.audio);
         }

@@ -92,7 +92,8 @@ namespace nsDangIt
         [GameParameters.CustomParameterUI("Mod Enabled")]
         public bool EnabledForSave = true;      // is enabled for this save file
 
-        [GameParameters.CustomParameterUI("Manual failures")]
+        [GameParameters.CustomParameterUI("Manual failures",
+            toolTip = "Allow interacting directly with the part's menu and manually set a failure")]
         public bool ManualFailures = false;     // initiate failures manually
 
 #if false
@@ -105,7 +106,7 @@ namespace nsDangIt
         public bool Glow = true;                // enable the part's glow upon failure
 
         [GameParameters.CustomParameterUI("Flashing Glow",
-            toolTip = "Enables the glow effect to be flashing")]
+            toolTip = "Sets a pulsating flash to highlight failed parts")]
         public bool flashingGlow = true;
 
         [GameParameters.CustomFloatParameterUI("Flash interval", minValue = 0.25f, maxValue = 5.0f, asPercentage = false,
@@ -113,15 +114,16 @@ namespace nsDangIt
         public float flashingInterval = 1f;      
 
 
-        [GameParameters.CustomParameterUI("Disable Glow on F2")]
+        [GameParameters.CustomParameterUI("Disable Glow on F2",
+            toolTip = "Disables the flashing glow when F2 is pressed")]
         public bool DisableGlowOnF2 = true;                
 
         [GameParameters.CustomParameterUI("Check Experience",
-            toolTip = "Enable requiring experience levels to do repairs")]
+            toolTip = "Toggles if experience is required for repairing certain parts")]
         public bool RequireExperience = true;   // enable requiring experience levels
 
         [GameParameters.CustomParameterUI("Messages",
-            toolTip = "Enable messages and screen posts")]
+            toolTip = "Allows on-screen notification whenever a failure occurs")]
         public bool Messages = true;            // enable messages and screen posts
 
         [GameParameters.CustomFloatParameterUI("Max EVA distance", minValue = 1.0f, maxValue = 15.0f, asPercentage = false,
@@ -398,12 +400,8 @@ namespace nsDangIt
         }
 
         public override bool Interactible(MemberInfo member, GameParameters parameters)
-        {
-            //if (HighLogic.LoadedScene != GameScenes.SPACECENTER)
-            //    return false;
-            
+        {            
             return true;
-            //            return true; //otherwise return true
         }
 
         public override IList ValidValues(MemberInfo member)
@@ -527,15 +525,12 @@ namespace nsDangIt
 
         public override bool Interactible(MemberInfo member, GameParameters parameters)
         {
-            //if (HighLogic.LoadedScene != GameScenes.SPACECENTER)
-            //    return false;
             if (member.Name == "AllowParachuteFailures")
             {
                 if (!AllowParachuteFailures)
                     Allow1ParachuteFailures = false;
             }
             return true;
-            //            return true; //otherwise return true
         }
 
         public override IList ValidValues(MemberInfo member)

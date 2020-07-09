@@ -63,8 +63,6 @@ namespace nsDangIt
 
                 if (cargoModule != null && deployModule != null)
                 {
-
-                    Log.Info("Cargo bay found");
                     if (cargoModule.ClosedAndLocked() || this.deployModule.IsMoving())
                     {
                         Events["DepositParts"].active = false;

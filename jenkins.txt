@@ -33,6 +33,9 @@
 3:DangIt.version,GameData/DangIt
 3:README.md,GameData/DangIt
 
+3:changelog.cfg,GameData/ResourceMonitors
+
+
 # 4:SOURCDIR, DESTDIR
 #4:Textures,GameData/ManeuverQueue/Textures
 

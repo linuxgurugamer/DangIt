@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 using KSP.UI.Screens;
@@ -35,7 +36,7 @@ namespace nsDangIt
         public abstract string MaintenanceString { get; }            // gui name for maintinence event
         public virtual string ExtraEditorInfo { get { return ""; } }  // extra descriptive info for the
 
-      
+
         /// <summary>
         /// Returns the string that is displayed during an inspection.
         /// </summary>
@@ -93,7 +94,25 @@ namespace nsDangIt
         public virtual bool DI_ShowInfoInEditor() { return true; }
 
         #endregion
-        #region IPartCostModifier
+
+#if false
+#region statics
+        // This dictionary simply stores a count of how many active failures are current in the vessel
+        static Dictionary<Guid, int> vesselDict = new Dictionary<Guid, int>();
+          
+
+#endregion
+
+        void Start()
+        {
+            if (!vesselDict.ContainsKey(vessel.id))
+            {
+                vesselDict[vessel.id] = CountFailures(vessel);
+            }
+        }
+#endif
+
+#region IPartCostModifier
         public float GetModuleCost(float defaultCost, ModifierStagingSituation sit)
         {
             return 0;
@@ -103,9 +122,9 @@ namespace nsDangIt
         {
             return ModifierChangeWhen.FIXED;
         }
-        #endregion
+#endregion
 
-        #region Fields from the cfg file
+#region Fields from the cfg file
 
         [KSPField(isPersistant = true, guiActive = false)]
         public float MTBF = 1000f;                                  // Original Mean Time Between Failures.
@@ -144,10 +163,10 @@ namespace nsDangIt
         internal static float streamMultiplier = 0;
         internal static float decayPerMinute = 0;
         internal static double lastDecayTime = 0;
-        #endregion
+#endregion
 
 
-        #region Internal state
+#region Internal state
 
         [KSPField(isPersistant = true, guiActive = false)]
         public bool HasInitted = false;
@@ -173,8 +192,12 @@ namespace nsDangIt
         [KSPField(isPersistant = true, guiActive = false)]
         public bool HasFailed = false;
 
+        [KSPField(isPersistant = true, guiActive = false)]
+        public bool alarmDisabled = false;
+
         #endregion
 
+        public void DisableAlarm(bool b = true)        { alarmDisabled = b; } 
 
 #if false
         bool printChances = false;
@@ -201,7 +224,7 @@ namespace nsDangIt
 #if false
             if (printChances)
                 DangIt.myLog.Info("Lambda: " + f.ToString());
-#endif      
+#endif
             return f;
         }
 
@@ -224,7 +247,7 @@ namespace nsDangIt
 #if false
             if (printChances)
                 Log.Info("LambdaFromMTBF: " + f.ToString());
-#endif    
+#endif
             return f;
         }
 
@@ -240,13 +263,13 @@ namespace nsDangIt
 #if false
             if (printChances)
                 Log.Info("InspectionLambdaMultiplier: " + f.ToString());
-#endif    
+#endif
             return f;
 
         }
 
 
-        #endregion
+#endregion
 
 
         /// <summary>
@@ -290,7 +313,7 @@ namespace nsDangIt
 
                 float now = DangIt.Now();
 
-                #region Internal state
+#region Internal state
 
                 this.Age = 0;
                 this.TimeOfLastReset = now;
@@ -301,8 +324,8 @@ namespace nsDangIt
                 this.CurrentMTBF = this.MTBF * HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams1>().MTBF_Multiplier;
                 this.LifeTimeSecs = this.LifeTime * HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams1>().Lifetime_Multiplier * 3600f;
                 this.HasFailed = false;
-                #endregion
-              
+#endregion
+
                 // Run the custom reset of the subclasses
                 this.DI_Reset();
 
@@ -346,7 +369,7 @@ namespace nsDangIt
                 if (HighLogic.LoadedSceneIsFlight)
                     this.DI_Start(StartState.Flying);
 
-                base.OnLoad(node);                
+                base.OnLoad(node);
 
             }
             catch (Exception e)
@@ -395,8 +418,8 @@ namespace nsDangIt
 
             if (phl == null)
                 phl = PartHighlighter.CreatePartHighlighter();
-            
-            if (vesselHighlightDict== null)
+
+            if (vesselHighlightDict == null)
                 vesselHighlightDict = new Dictionary<Guid, int>();
 
         }
@@ -424,13 +447,13 @@ namespace nsDangIt
                         }
                     }
 
-                    #region Fail and repair events
+#region Fail and repair events
 
                     this.Events["Fail"].guiName = this.FailGuiName;
                     this.Events["EvaRepair"].guiName = this.EvaRepairGuiName;
                     this.Events["Maintenance"].guiName = this.MaintenanceString;
 
-                    #endregion
+#endregion
 
                     // Reset the internal state at the beginning of the flight
                     // this condition also catches a revert to launch (+1 second for safety)
@@ -481,81 +504,89 @@ namespace nsDangIt
         /// </summary>
         public void FixedUpdate()
         {
+            if (!HighLogic.LoadedSceneIsFlight || alarmDisabled) return;
             if (streamMultiplier > 0 && Planetarium.GetUniversalTime() - lastDecayTime > 1)
             {
-                streamMultiplier = Math.Max(0, streamMultiplier -  decayPerMinute);
+                streamMultiplier = Math.Max(0, streamMultiplier - decayPerMinute);
                 lastDecayTime = Planetarium.GetUniversalTime();
             }
-            try
+            if (vesselHighlightDict.ContainsKey(this.vessel.id))
             {
-                // Only update the module during flight and after the re-initialization has run
-                if (HighLogic.LoadedSceneIsFlight && this.HasInitted && this.vessel == FlightGlobals.ActiveVessel)
+                try
                 {
-                    // Highlighting the part, which contains this updating FailureModule if it is in a 'failed' state,
-                    // it is not in 'silent' state and 'glow' is globally enabled
-                    // Actually, there is not any place in a code of  the whole mod where that 'silent' state is turning on
-                    // (maybe some FailureModules can be defined as 'silent' by editing files)
-
-                    if (this.HasFailed && /* !this.Silent */  (DangIt.Instance.CurrentSettings.Glow && (AlarmManager.visibleUI || !DangIt.Instance.CurrentSettings.DisableGlowOnF2)))
+                    // Only update the module during flight and after the re-initialization has run
+                    if (HighLogic.LoadedSceneIsFlight && this.HasInitted && this.vessel == FlightGlobals.ActiveVessel)
                     {
-                        phl.AddPartToHighlight(vesselHighlightDict[this.vessel.id], this.part);
-                        //Debug.Log("Adding part to highlight list: " + this.part.partInfo.title);
-                    } else
+                        // Highlighting the part, which contains this updating FailureModule if it is in a 'failed' state,
+                        // it is not in 'silent' state and 'glow' is globally enabled
+                        // Actually, there is not any place in a code of  the whole mod where that 'silent' state is turning on
+                        // (maybe some FailureModules can be defined as 'silent' by editing files)
 
-                    // Turning off the highlighting of the part, which contains this updating FailureModule
-                    // if it is not in a 'failed' state, or it is in 'silent' state, or if 'glow' is globally disabled
-                    //      if (!this.HasFailed || this.Silent || !DangIt.Instance.CurrentSettings.Glow || (!visibleUI && DangIt.Instance.CurrentSettings.DisableGlowOnF2))
-                    {
-
-                        if (!AlarmManager.partFailures.ContainsKey(this.part))
+                        if (this.HasFailed && (DangIt.Instance.CurrentSettings.Glow &&
+                                (AlarmManager.visibleUI || !DangIt.Instance.CurrentSettings.DisableGlowOnF2)))
                         {
-                            phl.DisablePartHighlighting(vesselHighlightDict[this.vessel.id], this.part);
-                        }
-                    }
-
-
-
-                    float now = DangIt.Now();
-
-                    float dt = now - LastFixedUpdate;
-                    this.LastFixedUpdate = now;
-
-                    // The temperature aging is independent from the use of the part
-                    this.Age += (dt * this.TemperatureMultiplier());
-
-                    if (!PartIsActive() || !DangIt.Instance.CurrentSettings.EnabledForSave)
-                        return;
-                    else
-                    {
-                        this.Age += dt;
-
-                        this.CurrentMTBF = this.MTBF * HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams1>().MTBF_Multiplier * this.ExponentialDecay();
-
-                        // If the part has not already failed, toss the dice
-                        if (!this.HasFailed)
-                        {
-                            float f = this.Lambda();
-#if DEBUG
-                           // if (printChances)
-                           //     DangIt.myLog.Debug("this.Lambda: " + f.ToString());
-#endif
-
-
-                            if (UnityEngine.Random.Range(0f, 1f) < f)
+                            if (!phl.HighlightListContains(vesselHighlightDict[this.vessel.id], this.part))
                             {
-                                streamMultiplier = 0;
-                                this.Fail();
+                                phl.AddPartToHighlight(vesselHighlightDict[this.vessel.id], this.part);
+                                Log.Info("Adding part to highlight list:   part: " + part.persistentId + ", " + part.partInfo.title);
+                            }
+                        }
+                        else
+
+                        // Turning off the highlighting of the part, which contains this updating FailureModule
+                        // if it is not in a 'failed' state, or it is in 'silent' state, or if 'glow' is globally disabled
+                        //      if (!this.HasFailed || this.Silent || !DangIt.Instance.CurrentSettings.Glow || (!visibleUI && DangIt.Instance.CurrentSettings.DisableGlowOnF2))
+                        {
+
+                            if (!AlarmManager.failedParts.ContainsKey(new FailedPart(this.part)))
+                            {
+                                //Log.Info("Calling DisablePartHighlighting  part: " + part.persistentId + ", " + part.partInfo.title);
+                                if (AlarmManager.failedParts.ContainsKey(new FailedPart(this.part)))
+                                    phl.DisablePartHighlighting(vesselHighlightDict[this.vessel.id], this.part);
                             }
                         }
 
-                        // Run custom update logic
-                        this.DI_Update();
+                        float now = DangIt.Now();
+
+                        float dt = now - LastFixedUpdate;
+                        this.LastFixedUpdate = now;
+
+                        // The temperature aging is independent from the use of the part
+                        this.Age += (dt * this.TemperatureMultiplier());
+
+                        if (!PartIsActive() || !DangIt.Instance.CurrentSettings.EnabledForSave)
+                            return;
+                        else
+                        {
+                            this.Age += dt;
+
+                            this.CurrentMTBF = this.MTBF * HighLogic.CurrentGame.Parameters.CustomParams<DangItCustomParams1>().MTBF_Multiplier * this.ExponentialDecay();
+
+                            // If the part has not already failed, toss the dice
+                            if (!this.HasFailed)
+                            {
+                                float f = this.Lambda();
+#if DEBUG
+                                // if (printChances)
+                                //     DangIt.myLog.Debug("this.Lambda: " + f.ToString());
+#endif
+
+
+                                if (UnityEngine.Random.Range(0f, 1f) < f)
+                                {
+                                    streamMultiplier = 0;
+                                    this.Fail();
+                                }
+                            }
+                            // Run custom update logic
+                            this.DI_Update();
+                        }
                     }
                 }
-            }
-            catch (Exception e)
-            {
-                OnError(e);
+                catch (Exception e)
+                {
+                    OnError(e);
+                }
             }
         }
 
@@ -646,7 +677,7 @@ namespace nsDangIt
         /// Initiates the part's failure.
         /// Put your custom failure code in DI_Fail()
         /// </summary>
-        [KSPEvent(active=true, guiActive = false)]
+        [KSPEvent(active = true, guiActive = false)]
         public void Fail()
         {
             try
@@ -774,7 +805,8 @@ namespace nsDangIt
                     }
                     AlarmManager alarmManager = FindObjectOfType<AlarmManager>();
                     alarmManager.RemoveAllAlarmsForModule(this); //Remove alarms from this module
-                    FailureStatusWindow.instance.RemoveBCRepaired(this.part);
+                    RemoveBCRepaired(this.part);
+                    DisableAlarm(false);
                 }
 
             }
@@ -785,12 +817,24 @@ namespace nsDangIt
 
         }
 
+        internal void RemoveBCRepaired(Part part)
+        {
+            var failedHighlightID = vesselHighlightDict[vessel.id];
+            if (FailureModule.phl.HighlightListContains(failedHighlightID, part))
+            {
+                var b = FailureModule.phl.RemovePartFromList(failedHighlightID, part);
+                Log.Info("Result of RemovePartFromList; " + b);
+            }
+            else
+                Log.Info("Part not found in highlight list: " + failedHighlightID + ", part: " + part.persistentId + ", " + part.partInfo.title);
+            AlarmManager.RemovePartFailure(part);
+        }
 
-        /// <summary>
-        /// Check if a kerbal is able to repair a part,
-        /// factoring spares, perks, and additional conditions
-        /// </summary>
-        private bool CheckRepairConditions(Part evaPart)
+            /// <summary>
+            /// Check if a kerbal is able to repair a part,
+            /// factoring spares, perks, and additional conditions
+            /// </summary>
+            private bool CheckRepairConditions(Part evaPart)
         {
             bool allow = true;
             string reason = string.Empty;

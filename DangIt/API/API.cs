@@ -29,5 +29,16 @@ namespace nsDangIt
 
             return counter;
         }
+
+        private static int CountFailuresInPart(Part part)
+        {
+            int counter = 0;
+
+            // Count all the failures on the part
+            foreach (FailureModule fm in part.Modules.OfType<FailureModule>())
+                if (fm.HasFailed) counter++;
+
+            return counter;
+        }
     }
 }

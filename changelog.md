@@ -158,6 +158,17 @@
 0.7.20.3
 	Disabled the highlighting when a part is repaired
 
+0.7.20.4
+	Fixed nullref in fixedUpdate when a kerbal went EVA
+	Fixed new status window properly disabling the correct parts
+	Changed dictionary key from Part to a hashed key
+	Added alarmDisabled flag to allow alarm to be permenantly disabled
+	Added support for KerbalChangeLog
+
+0.7.20.5
+	Added and improved tooltips on the stock settings page
+	My thanks to forum user @Daniel Prates for his willingness to be a QA tester for me
+
 ============== Coffeeman's work below =========================
 ## ALPHA 6
 

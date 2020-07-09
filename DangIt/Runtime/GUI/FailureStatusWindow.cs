@@ -11,62 +11,57 @@ using static nsDangIt.DangIt;
 namespace ippo.Runtime.GUI
 {
     [KSPAddon(KSPAddon.Startup.Flight, false)]
-    internal class FailureStatusWindow: MonoBehaviour
+    internal class FailureStatusWindow : MonoBehaviour
     {
 
         internal static FailureStatusWindow instance;
 
         internal bool isVisible = false;
         private Rect settingsRect = new Rect(200, 200, 350, 300);
-        internal static int failedHighlightID = -1;
-        List<Part> Parts = new List<Part>();
+
+        internal static int failureWinHighlightID = -1;
+
+        static List<Part> Parts = new List<Part>();
+
+
         void Start()
         {
-            Log.Debug("FailureStatusWindow.Start");
-
             instance = this;
-            if (failedHighlightID == -1)
-                failedHighlightID = FailureModule.phl.CreateHighlightList(0.25f, Color.red);
+            if (failureWinHighlightID == -1)
+                failureWinHighlightID = FailureModule.phl.CreateHighlightList(0.25f, Color.red);
 
-            FailureModule.phl.UpdateHighlightColors(failedHighlightID, Color.red);
-
-
+            FailureModule.phl.UpdateHighlightColors(failureWinHighlightID, Color.red);
         }
 
         void OnDestroy()
         {
-            Log.Debug("FailureStatusWindow.OnDestroy");
             FailureModule.phl.PauseHighlighting(FailureModule.vesselHighlightDict[FlightGlobals.ActiveVessel.id], false);
             foreach (var p in Parts)
-                FailureModule.phl.DisablePartHighlighting(failedHighlightID, p);
+                FailureModule.phl.RemovePartFromList(failureWinHighlightID, p);
             Parts.Clear();
-
         }
-        void OnGUI()
+
+        protected void OnGUI()
         {
-            if (!isVisible)
+            if (!isVisible || !AlarmManager.visibleUI)
                 return;
             UnityEngine.GUI.skin = HighLogic.Skin;
 
-            settingsRect = ClickThruBlocker.GUILayoutWindow("Failure Status Window".GetHashCode(),
-                                            settingsRect,
-                                            FailureWindow,
-                                            "Failure Status Window",
-                                            GUILayout.ExpandWidth(true),
-                                            GUILayout.ExpandHeight(true));
+            settingsRect = ClickThruBlocker.GUILayoutWindow(
+                "Failure Status Window".GetHashCode(),
+                settingsRect,
+                FailureWindow,
+                "Failure Status Window",
+                GUILayout.ExpandWidth(true),
+                GUILayout.ExpandHeight(true));
 
         }
 
-        internal void RemoveBCRepaired(Part part)
-        {
-            if (FailureModule.phl.HighlightListContains(failedHighlightID, part))
-                FailureModule.phl.RemovePartFromList(failedHighlightID, part);
-        }
+
 
         Vector2 pos;
         void FailureWindow(int id)
         {
-
             GUILayout.BeginVertical();
             pos = GUILayout.BeginScrollView(pos);
             foreach (var part in FlightGlobals.ActiveVessel.Parts)
@@ -79,10 +74,10 @@ namespace ippo.Runtime.GUI
                         GUILayout.BeginHorizontal();
                         if (GUILayout.Button(part.partInfo.title))
                         {
-                            if (FailureModule.phl.HighlightListContains(failedHighlightID, part))
-                                FailureModule.phl.RemovePartFromList(failedHighlightID, part);
+                            if (FailureModule.phl.HighlightListContains(failureWinHighlightID, part))
+                                FailureModule.phl.RemovePartFromList(failureWinHighlightID, part);
                             else
-                                FailureModule.phl.AddPartToHighlight(failedHighlightID, part);
+                                FailureModule.phl.AddPartToHighlight(failureWinHighlightID, part);
                         }
                         GUILayout.EndHorizontal();
                     }
@@ -95,7 +90,7 @@ namespace ippo.Runtime.GUI
                 isVisible = false;
                 FailureModule.phl.PauseHighlighting(FailureModule.vesselHighlightDict[FlightGlobals.ActiveVessel.id], false);
                 foreach (var p in Parts)
-                        FailureModule.phl.DisablePartHighlighting(failedHighlightID, p);
+                    FailureModule.phl.DisablePartHighlighting(failureWinHighlightID, p);
 
             }
             if (GUILayout.Button("Mute All"))
@@ -116,8 +111,28 @@ namespace ippo.Runtime.GUI
                         Parts.Add(p);
                     }
                 }
-                     FailureModule.phl.EmptyList(failedHighlightID);
-           }
+                FailureModule.phl.EmptyList(failureWinHighlightID);
+            }
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Permenantly disable current highlighted failures"))
+            {
+                foreach (var p in FlightGlobals.ActiveVessel.Parts)
+                {
+                    if (FailureModule.phl.HighlightListContains(FailureModule.vesselHighlightDict[FlightGlobals.ActiveVessel.id], p))
+                    {
+                        Log.Info("Disabling highlighted part: " + p.partInfo.title);
+                        if (!FailureModule.phl.RemovePartFromList(FailureModule.vesselHighlightDict[FlightGlobals.ActiveVessel.id], p))
+                            Log.Error("Error removing part from list: " + FailureModule.vesselHighlightDict[FlightGlobals.ActiveVessel.id] +
+                                ", part: " + p.partInfo.title);
+                        AlarmManager.RemovePartFailure(p);
+                        foreach (FailureModule fm in p.Modules.OfType<FailureModule>())
+                            if (fm.HasFailed) fm.DisableAlarm();                       
+                    }
+                }
+                FailureModule.phl.EmptyList(failureWinHighlightID);
+                Parts.Clear();
+            }
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
             UnityEngine.GUI.DragWindow();
