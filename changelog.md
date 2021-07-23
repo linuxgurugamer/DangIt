@@ -169,6 +169,11 @@
 	Added and improved tooltips on the stock settings page
 	My thanks to forum user @Daniel Prates for his willingness to be a QA tester for me
 
+0.7.20.6
+	Added AssemblyFileVersion
+	Updated version file for 1.12
+	Updated dll for CKAN compatibility
+
 ============== Coffeeman's work below =========================
 ## ALPHA 6
 
