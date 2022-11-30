@@ -36,7 +36,7 @@ namespace nsDangIt
             return (float)Planetarium.GetUniversalTime();
         }
 
-
+#if false
         /// <summary>
         /// Returns the full path to a given file in the configuration folder.
         /// Likely, GameData/DangIt/PluginData/DangIt/ + filename
@@ -45,7 +45,7 @@ namespace nsDangIt
         {
             return "GameData/PluginData/" +  fileName;
         }
-     
+#endif
 
         /// <summary>
         /// Adds a new entry to the flight events log.

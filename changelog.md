@@ -174,6 +174,9 @@
 	Updated version file for 1.12
 	Updated dll for CKAN compatibility
 
+0.7.20.7
+	Fixed path for loading images (broken by new launcher)
+
 ============== Coffeeman's work below =========================
 ## ALPHA 6
 

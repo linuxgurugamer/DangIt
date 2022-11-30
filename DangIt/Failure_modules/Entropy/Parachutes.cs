@@ -26,6 +26,8 @@ namespace nsDangIt
 
 		public override bool PartIsActive()
 		{
+			if (chute == null)
+				return false;
 			// A chute is active if its not stowed
 			return chute.deploymentState != ModuleParachute.deploymentStates.STOWED;
 		}

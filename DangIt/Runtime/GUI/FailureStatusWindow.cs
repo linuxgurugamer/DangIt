@@ -27,10 +27,13 @@ namespace ippo.Runtime.GUI
         void Start()
         {
             instance = this;
-            if (failureWinHighlightID == -1)
-                failureWinHighlightID = FailureModule.phl.CreateHighlightList(0.25f, Color.red);
+            if (FailureModule.phl != null)
+            {
+                if (failureWinHighlightID == -1)
+                    failureWinHighlightID = FailureModule.phl.CreateHighlightList(0.25f, Color.red);
 
-            FailureModule.phl.UpdateHighlightColors(failureWinHighlightID, Color.red);
+                FailureModule.phl.UpdateHighlightColors(failureWinHighlightID, Color.red);
+            }
         }
 
         void OnDestroy()
