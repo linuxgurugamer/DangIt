@@ -6,7 +6,7 @@ using System.Text;
 using UnityEngine;
 using KSP.UI.Screens;
 
-    using static nsDangIt.DangIt;
+using static nsDangIt.DangIt;
 
 namespace nsDangIt
 {
@@ -21,12 +21,24 @@ namespace nsDangIt
 
         ModuleCargoBay cargoModule;
 
-
+        private bool ContainsSpares = false;
+        private double lastTimeRounded = 0f;
 
         public override void OnStart(PartModule.StartState state)
         {
+            ContainsSpares = this.part.Resources.Contains(Spares.Name);
+
             // Sync settings with the runtime
-            this.StartCoroutine("RuntimeFetch");
+            if (HighLogic.LoadedSceneIsFlight)
+            {
+                this.StartCoroutine("RuntimeFetch");
+               cargoModule = base.part.FindModuleImplementing<ModuleCargoBay>();
+            if (cargoModule != null)
+                deployModule = this.findModule(cargoModule.DeployModuleIndex);
+         }
+            else
+                if (ContainsSpares)
+                this.StartCoroutine("SlowUpdate");
 
             this.Events["TakeParts"].active = true;
         }
@@ -41,26 +53,30 @@ namespace nsDangIt
             return null;
         }
 
+        IEnumerator SlowUpdate()
+        {
+            while (true)
+            {
+                this.part.Resources[Spares.Name].amount = Math.Round(this.part.Resources[Spares.Name].amount);
+                yield return new WaitForSeconds(0.25f);
+            }
+        }
+
         public void FixedUpdate()
         {
+#if false
             if (HighLogic.LoadedSceneIsEditor)
             {
-//                if (this.part.Resources.Contains("SpareParts"))
-                if (this.part.Resources.Contains(Spares.Name))
+                if (ContainsSpares)
                 {
-//                    this.part.Resources["SpareParts"].amount = Math.Round(this.part.Resources["SpareParts"].amount);
                     this.part.Resources[Spares.Name].amount = Math.Round(this.part.Resources[Spares.Name].amount);
                 }
             }
             else
+#else
+            if (HighLogic.LoadedSceneIsFlight)
+#endif
             {
-                if (this.cargoModule == null)
-                {
-                    cargoModule = base.part.FindModuleImplementing<ModuleCargoBay>();
-                    if (cargoModule != null)
-                        deployModule = this.findModule(cargoModule.DeployModuleIndex);
-                }
-
                 if (cargoModule != null && deployModule != null)
                 {
                     if (cargoModule.ClosedAndLocked() || this.deployModule.IsMoving())
@@ -77,17 +93,23 @@ namespace nsDangIt
                         }
                     }
                 }
+                else
+                {
+                    cargoModule = base.part.FindModuleImplementing<ModuleCargoBay>();
+                    if (cargoModule != null)
+                        deployModule = this.findModule(cargoModule.DeployModuleIndex);
+                }
+
 
             }
         }
-
 
         // Coroutine that waits for the runtime to be ready and the syncs with the settings
         IEnumerator RuntimeFetch()
         {
             // Wait for the server to be available
             while (DangIt.Instance == null || !DangIt.Instance.IsReady)
-                yield return null;
+                yield return new WaitForSeconds(0.25f);
 
             this.Events["TakeParts"].unfocusedRange = DangIt.Instance.CurrentSettings.MaxDistance;
             this.Events["DepositParts"].unfocusedRange = DangIt.Instance.CurrentSettings.MaxDistance;

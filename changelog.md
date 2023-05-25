@@ -177,6 +177,9 @@
 0.7.20.7
 	Fixed path for loading images (broken by new launcher)
 
+0.7.20.8
+	Fixed editor lag caused by too many parts with spare parts
+
 ============== Coffeeman's work below =========================
 ## ALPHA 6
 
