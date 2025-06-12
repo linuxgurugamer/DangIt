@@ -100,6 +100,8 @@ namespace nsDangIt
                 return (DangIt.Settings)this.MemberwiseClone();
             }
 
+            #region NO_LOCALIZATION
+
             // Get the Spares resource from DANGIT_SETTINGS
             public string GetSparesResource()
             {
@@ -124,6 +126,7 @@ namespace nsDangIt
 				}
 				return 400;
 			}
+            #endregion
         }
     }
 }

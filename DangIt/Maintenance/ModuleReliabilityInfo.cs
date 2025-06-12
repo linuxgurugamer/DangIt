@@ -1,4 +1,5 @@
-﻿using System;
+using KSP.Localization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,7 +30,7 @@ namespace nsDangIt
             
             Log.Info("ModuleReliabilityInfo.GetInfo");
 			if (fails.Count == 0)   // no failure module, return a placeholder message
-                return "This part has been built to last";
+                return Localizer.Format("#LOC_DangIt_174");
             else
             {
                 StringBuilder sb = new StringBuilder();
@@ -54,11 +55,11 @@ namespace nsDangIt
 
                     Log.Info("EOL: " + EOL.ToString());
 					sb.AppendLine (fm.ScreenName);
-					sb.AppendLine (" - MTBF: " + fm.MTBF * mtbfMultipler  + " hours");
-					sb.AppendLine (" - Lifetime: " + fm.LifeTime * lifetimeMultiplier + " hours");
-					sb.AppendLine (" - EOL : " + EOL + " hours");
-					sb.AppendLine (" - Repair cost: " + fm.RepairCost);
-					sb.AppendLine (" - Priority: " + fm.Priority);
+					sb.AppendLine (Localizer.Format("#LOC_DangIt_175") + fm.MTBF * mtbfMultipler  + Localizer.Format("#LOC_DangIt_176"));
+					sb.AppendLine (Localizer.Format("#LOC_DangIt_177") + fm.LifeTime * lifetimeMultiplier + Localizer.Format("#LOC_DangIt_176"));
+					sb.AppendLine (Localizer.Format("#LOC_DangIt_178") + EOL + Localizer.Format("#LOC_DangIt_176"));
+					sb.AppendLine (Localizer.Format("#LOC_DangIt_179") + fm.RepairCost);
+					sb.AppendLine (Localizer.Format("#LOC_DangIt_180") + fm.Priority);
 
 					if (fm.ExtraEditorInfo != "") {
 						sb.AppendLine (" - " + fm.ExtraEditorInfo); //Append any extra info the module wants to add
@@ -66,11 +67,11 @@ namespace nsDangIt
 
 					if (!string.IsNullOrEmpty (fm.PerksRequirementName)) {
 						sb.AppendLine (string.Format (
-							" - Servicing requires a level {0} {1}",
+							 Localizer.Format("#LOC_DangIt_181") + " {0} " +"{1}",
 							fm.PerksRequirementValue,
 							fm.PerksRequirementName));
 					} else {
-						sb.AppendLine (" - No special requirements for servicing");
+						sb.AppendLine (Localizer.Format("#LOC_DangIt_182"));
 					}
 
 					sb.AppendLine ();

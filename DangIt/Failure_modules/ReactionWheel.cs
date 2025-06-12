@@ -1,4 +1,5 @@
-﻿using System;
+using KSP.Localization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,14 +13,16 @@ namespace nsDangIt
     {
         ModuleReactionWheel torqueModule;
 
+        #region NO_LOCALIZATION
         public override string DebugName { get { return "DangItReactionWheel"; } }
-        public override string ScreenName { get { return "Reaction wheel"; } }
-        public override string FailureMessage { get { return "Reaction wheel failure!"; } }
-        public override string RepairMessage { get { return "Reaction wheel repaired."; } }
-        public override string FailGuiName { get { return "Fail reaction wheel"; } }
-        public override string EvaRepairGuiName { get { return "Fix reaction wheel"; } }
-        public override string MaintenanceString { get { return "Lubricate reaction wheel"; } }
-		public override string ExtraEditorInfo{ get { return "This part can stop providing torque if it fails"; } }
+        #endregion
+        public override string ScreenName { get { return Localizer.Format("#LOC_DangIt_129"); } }
+        public override string FailureMessage { get { return Localizer.Format("#LOC_DangIt_130"); } }
+        public override string RepairMessage { get { return Localizer.Format("#LOC_DangIt_131"); } }
+        public override string FailGuiName { get { return Localizer.Format("#LOC_DangIt_132"); } }
+        public override string EvaRepairGuiName { get { return Localizer.Format("#LOC_DangIt_133"); } }
+        public override string MaintenanceString { get { return Localizer.Format("#LOC_DangIt_134"); } }
+		public override string ExtraEditorInfo{ get { return Localizer.Format("#LOC_DangIt_135"); } }
 
 
         public override bool PartIsActive()

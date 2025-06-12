@@ -1,4 +1,5 @@
-﻿using System;
+using KSP.Localization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,7 +23,7 @@ namespace nsDangIt
         /// </summary>
         public static  string Name
         {
-            get { if (DangIt.Instance != null) return DangIt.Instance.CurrentSettings.GetSparesResource();  return "SpareParts"; }
+            get { if (DangIt.Instance != null) return DangIt.Instance.CurrentSettings.GetSparesResource();  return Localizer.Format("#LOC_DangIt_193"); }
         }
 
         public static readonly float MinIncrement = 1f;

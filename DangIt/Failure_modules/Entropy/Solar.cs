@@ -1,4 +1,5 @@
-﻿using System;
+using KSP.Localization;
+using System;
 using System.Collections;
 using System.Linq;
 using System.Text;
@@ -14,14 +15,16 @@ namespace nsDangIt
 	{
 		ModuleDeployableSolarPanel panel;
 
-		public override string DebugName { get { return "Tracking Servo"; } }
-		public override string ScreenName { get { return "Tracking Servo"; } }
-		public override string FailureMessage { get { return "The sun-tracking servo in a solar panel has burnt out"; } }
-		public override string RepairMessage { get { return "The servo has been repaired"; } }
-		public override string FailGuiName { get { return "Fail Servo"; } }
-		public override string EvaRepairGuiName { get { return "Replace Servo"; } }
-		public override string MaintenanceString { get { return "Clean Servo"; } }
-		public override string ExtraEditorInfo { get { return "This part's tracking motor can stop tracking if it fails"; } }
+        #region NO_LOCALIZATION
+        public override string DebugName { get { return "Tracking Servo"; } }
+        #endregion
+        public override string ScreenName { get { return Localizer.Format("#LOC_DangIt_222"); } }
+		public override string FailureMessage { get { return Localizer.Format("#LOC_DangIt_223"); } }
+		public override string RepairMessage { get { return Localizer.Format("#LOC_DangIt_224"); } }
+		public override string FailGuiName { get { return Localizer.Format("#LOC_DangIt_225"); } }
+		public override string EvaRepairGuiName { get { return Localizer.Format("#LOC_DangIt_226"); } }
+		public override string MaintenanceString { get { return Localizer.Format("#LOC_DangIt_227"); } }
+		public override string ExtraEditorInfo { get { return Localizer.Format("#LOC_DangIt_228"); } }
 
 		public override bool PartIsActive()
 		{

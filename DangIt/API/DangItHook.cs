@@ -1,4 +1,5 @@
-﻿using System;
+using KSP.Localization;
+using System;
 using System.Linq;
 using System.Reflection;
 
@@ -40,7 +41,7 @@ namespace nsDangIt
                 if (Installed)
                 {
                     object instance = scenarioType
-                                      .GetProperty("Instance", BindingFlags.Public | BindingFlags.Static)
+                                      .GetProperty(Localizer.Format("#LOC_DangIt_12"), BindingFlags.Public | BindingFlags.Static)
                                       .GetValue(null, null);
 
                     return (ScenarioModule)instance;
@@ -72,7 +73,7 @@ namespace nsDangIt
 
         public static int CountFailures(this Vessel v)
         {
-            return (int)scenarioType.GetMethod("CountFailures").Invoke(null, new object[] { v });
+            return (int)scenarioType.GetMethod(Localizer.Format("#LOC_DangIt_13")).Invoke(null, new object[] { v });
         }
 
         #endregion
@@ -86,7 +87,7 @@ namespace nsDangIt
         {
             return AssemblyLoader.loadedAssemblies
                                  .SelectMany(a => a.assembly.GetTypes())
-                                 .SingleOrDefault(t => t.FullName == "ippo.DangIt");
+                                 .SingleOrDefault(t => t.FullName == Localizer.Format("#LOC_DangIt_14"));
         }
 
         #endregion

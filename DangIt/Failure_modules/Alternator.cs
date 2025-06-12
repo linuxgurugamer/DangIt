@@ -1,4 +1,5 @@
-﻿using System;
+using KSP.Localization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,14 +14,16 @@ namespace nsDangIt
         EngineManager engineManager;
         ModuleAlternator alternatorModule;
 
+        #region NO_LOCALIZATION
         public override string DebugName { get { return "DangItAlternator"; } }
-        public override string ScreenName { get { return "Alternator"; } }
-        public override string FailureMessage { get { return "Alternator failure!"; } }
-        public override string RepairMessage { get { return "Alternator repaired."; } }
-        public override string FailGuiName { get { return "Fail alternator"; } }
-        public override string EvaRepairGuiName { get { return "Replace alternator"; } }
-        public override string MaintenanceString { get { return "Replace alternator"; } }
-		public override string ExtraEditorInfo{ get { return "This part's alternator can stop providing electricity if it fails"; } }
+        #endregion
+        public override string ScreenName { get { return Localizer.Format("#LOC_DangIt_15"); } }
+        public override string FailureMessage { get { return Localizer.Format("#LOC_DangIt_16"); } }
+        public override string RepairMessage { get { return Localizer.Format("#LOC_DangIt_17"); } }
+        public override string FailGuiName { get { return Localizer.Format("#LOC_DangIt_18"); } }
+        public override string EvaRepairGuiName { get { return Localizer.Format("#LOC_DangIt_19"); } }
+        public override string MaintenanceString { get { return Localizer.Format("#LOC_DangIt_19"); } }
+		public override string ExtraEditorInfo{ get { return Localizer.Format("#LOC_DangIt_20"); } }
 
 
         public override bool PartIsActive()

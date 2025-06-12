@@ -1,4 +1,5 @@
-﻿using System;
+using KSP.Localization;
+using System;
 using System.Collections;
 using System.Linq;
 using System.Text;
@@ -11,13 +12,15 @@ namespace nsDangIt
 
 	class ModuleSmallTankExploder : FailureModule
 	{
-		public override string DebugName { get { return "EntropyExploder"; } }
-		public override string ScreenName { get { return "Pressure Vessel"; } }
-		public override string FailureMessage { get { return "MAIN BUS UNDERVOLT: 20s to repair"; } }
-		public override string RepairMessage { get { return "Tank reparied"; } }
-		public override string FailGuiName { get { return "Fail Sheilding"; } }
-		public override string EvaRepairGuiName { get { return "Repair tank plating"; } }
-		public override string MaintenanceString { get { return "Reinforce tank plating"; } }
+        #region NO_LOCALIZATION
+        public override string DebugName { get { return "EntropyExploder"; } }
+        #endregion
+        public override string ScreenName { get { return Localizer.Format("#LOC_DangIt_216"); } }
+		public override string FailureMessage { get { return Localizer.Format("#LOC_DangIt_217"); } }
+		public override string RepairMessage { get { return Localizer.Format("#LOC_DangIt_218"); } }
+		public override string FailGuiName { get { return Localizer.Format("#LOC_DangIt_219"); } }
+		public override string EvaRepairGuiName { get { return Localizer.Format("#LOC_DangIt_220"); } }
+		public override string MaintenanceString { get { return Localizer.Format("#LOC_DangIt_221"); } }
 
 		public override bool PartIsActive()
 		{

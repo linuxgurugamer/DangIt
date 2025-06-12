@@ -1,4 +1,5 @@
-﻿using System;
+using KSP.Localization;
+using System;
 using System.Collections;
 using System.Linq;
 using System.Text;
@@ -14,14 +15,14 @@ namespace nsDangIt
 	{
 		ModuleEnginesFX srb;
 
-		public override string DebugName { get { return "O-Ring"; } }
-		public override string ScreenName { get { return "O-Ring"; } }
-		public override string FailureMessage { get { return "An O-Ring has cracked, Abort!"; } }
+		public override string DebugName { get { return Localizer.Format("#LOC_DangIt_229"); } }
+		public override string ScreenName { get { return Localizer.Format("#LOC_DangIt_229"); } }
+		public override string FailureMessage { get { return Localizer.Format("#LOC_DangIt_230"); } }
 		public override string RepairMessage { get { return ""; } }
-		public override string FailGuiName { get { return "Fail O-Ring"; } }
+		public override string FailGuiName { get { return Localizer.Format("#LOC_DangIt_231"); } }
 		public override string EvaRepairGuiName { get { return ""; } }
-		public override string MaintenanceString { get { return "Replace O-Ring"; } }
-		public override string ExtraEditorInfo{ get { return "This part can overheat, overthrust and explode if it fails"; } }
+		public override string MaintenanceString { get { return Localizer.Format("#LOC_DangIt_232"); } }
+		public override string ExtraEditorInfo{ get { return Localizer.Format("#LOC_DangIt_233"); } }
 
 		public bool overloading = false;
 		public float overloadbonus = 0F;

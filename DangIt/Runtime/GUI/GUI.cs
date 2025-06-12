@@ -21,6 +21,7 @@ namespace nsDangIt
         internal const string MODID = "DangIt_NS";
         internal const string MODNAME = "Dang It!";
 
+        #region NO_LOCALIZATION
         void AddAppButton()
         {
             toolbarControl = gameObject.AddComponent<ToolbarControl>();
@@ -34,7 +35,7 @@ namespace nsDangIt
                 MODNAME
             );
         }
-
+        #endregion
         protected void OnGUIAppLauncherDestroyed()
         {
             if (toolbarControl != null)

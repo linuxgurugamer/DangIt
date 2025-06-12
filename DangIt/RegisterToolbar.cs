@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+using KSP.Localization;
+using UnityEngine;
 using ToolbarControl_NS;
 using static nsDangIt.DangIt;
 
@@ -18,7 +19,7 @@ namespace nsDangIt
     {
         protected void Awake()
         {
-            Log = new KSP_Log.Log("DangIt"
+            Log = new KSP_Log.Log("#LOC_DangIt_1"
 #if DEBUG
                 , KSP_Log.Log.LEVEL.INFO
 #endif

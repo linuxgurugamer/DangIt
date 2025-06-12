@@ -1,4 +1,5 @@
-﻿using System;
+using KSP.Localization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,14 +16,16 @@ namespace nsDangIt
 		ModuleParachute chute;
 		bool canFail;
 
-		public override string DebugName { get { return "Canopy_stock_chutes"; } }
-		public override string ScreenName { get { return "Canopy"; } }
-		public override string FailureMessage { get { return "The lines of a Parachute have become tangled"; } }
-		public override string RepairMessage { get { return "You have repaired Canopy"; } }
-		public override string FailGuiName { get { return "Fail Canopy"; } }
-		public override string EvaRepairGuiName { get { return "Patch hole"; } }
-		public override string MaintenanceString { get { return "Patch Canopy"; } }
-		public override string ExtraEditorInfo{ get { return "This part's canopy can tear if it fails"; } }
+        #region NO_LOCALIZATION
+        public override string DebugName { get { return "Canopy_stock_chutes"; } }
+        #endregion
+        public override string ScreenName { get { return Localizer.Format("#LOC_DangIt_209"); } }
+		public override string FailureMessage { get { return Localizer.Format("#LOC_DangIt_210"); } }
+		public override string RepairMessage { get { return Localizer.Format("#LOC_DangIt_211"); } }
+		public override string FailGuiName { get { return Localizer.Format("#LOC_DangIt_212"); } }
+		public override string EvaRepairGuiName { get { return Localizer.Format("#LOC_DangIt_213"); } }
+		public override string MaintenanceString { get { return Localizer.Format("#LOC_DangIt_214"); } }
+		public override string ExtraEditorInfo{ get { return Localizer.Format("#LOC_DangIt_215"); } }
 
 		public override bool PartIsActive()
 		{

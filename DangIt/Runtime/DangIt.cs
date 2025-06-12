@@ -1,4 +1,5 @@
-﻿using KSP.IO;
+using KSP.Localization;
+using KSP.IO;
 using System;
 using System.Collections.Generic;
 using System.Collections;
@@ -21,6 +22,7 @@ namespace nsDangIt
         /// <summary>
         /// List of resources that must be ignored by tank leaks.
         /// </summary>
+        #region NO_LOCALIZATION
         public static List<string> LeakBlackList
         {
             get
@@ -57,6 +59,8 @@ namespace nsDangIt
                 _leakBlackList = value;
             }
         }
+        #endregion
+
         internal static List<string> _leakBlackList = null;
 
 
@@ -129,7 +133,7 @@ namespace nsDangIt
         {
             if (CurrentSettings == null || PartLoader.LoadedPartsList == null)
                 yield break;
-            ScreenMessages.PostScreenMessage("Database Part Info reloading started", 1, ScreenMessageStyle.UPPER_CENTER);
+            ScreenMessages.PostScreenMessage(Localizer.Format("#LOC_DangIt_189"), 1, ScreenMessageStyle.UPPER_CENTER);
             this.IsReady = false;
             yield return null;
             float lastTime = Time.realtimeSinceStartup;
@@ -154,13 +158,13 @@ namespace nsDangIt
                     {
                         lastTime = Time.realtimeSinceStartup;
                         int intPercent = Mathf.CeilToInt(((float)cnt / (float)totcnt * 100f));
-                        ScreenMessages.PostScreenMessage("Database reloading " + intPercent + "%", 1, ScreenMessageStyle.UPPER_CENTER);
+                        ScreenMessages.PostScreenMessage(Localizer.Format("#LOC_DangIt_190") + intPercent + "%", 1, ScreenMessageStyle.UPPER_CENTER);
                     }
 
                     AvailablePart.ModuleInfo target = null;
                     foreach (var mi in ap.moduleInfos)
                     {
-                        if (mi.moduleName == "Reliability Info")
+                        if (mi.moduleName == Localizer.Format("#LOC_DangIt_191"))
                         {
                             target = mi;
                         }
@@ -180,7 +184,7 @@ namespace nsDangIt
                         if (reliabilityModules.Count() != 0)
                         {
                             AvailablePart.ModuleInfo newModuleInfo = new AvailablePart.ModuleInfo();
-                            newModuleInfo.moduleName = "Reliability Info";
+                            newModuleInfo.moduleName = Localizer.Format("#LOC_DangIt_191");
                             newModuleInfo.info = reliabilityModules.First().GetInfo();
                             ap.moduleInfos.Add(newModuleInfo);
                         }
@@ -193,7 +197,7 @@ namespace nsDangIt
             {
                 Log.Info("ERROR [" + e.GetType().ToString() + "]: " + e.Message + "\n" + e.StackTrace);
             }
-            ScreenMessages.PostScreenMessage("Database Part Info reloading finished", 2, ScreenMessageStyle.UPPER_CENTER);
+            ScreenMessages.PostScreenMessage(Localizer.Format("#LOC_DangIt_192"), 2, ScreenMessageStyle.UPPER_CENTER);
         }
     }
 }

@@ -1,3 +1,4 @@
+using KSP.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,14 +15,16 @@ namespace nsDangIt
 	{
 		ModuleWheels.ModuleWheelMotor wheelMotor;
 
-		public override string DebugName { get { return "DangItWheel_Motor"; } }
-		public override string ScreenName { get { return "Motor"; } }
-		public override string FailureMessage { get { return "A motor burnt out!"; } }
-		public override string RepairMessage { get { return "Motor replaced."; } }
-		public override string FailGuiName { get { return "Burn out motor"; } }
-		public override string EvaRepairGuiName { get { return "Replace motor"; } }
-		public override string MaintenanceString { get { return "Clean Motor"; } }
-		public override string ExtraEditorInfo{ get { return "This part's motor can burn out if it fails"; } }
+        #region NO_LOCALIZATION
+        public override string DebugName { get { return "DangItWheel_Motor"; } }
+        #endregion
+        public override string ScreenName { get { return Localizer.Format("#LOC_DangIt_159"); } }
+		public override string FailureMessage { get { return Localizer.Format("#LOC_DangIt_160"); } }
+		public override string RepairMessage { get { return Localizer.Format("#LOC_DangIt_161"); } }
+		public override string FailGuiName { get { return Localizer.Format("#LOC_DangIt_162"); } }
+		public override string EvaRepairGuiName { get { return Localizer.Format("#LOC_DangIt_163"); } }
+		public override string MaintenanceString { get { return Localizer.Format("#LOC_DangIt_164"); } }
+		public override string ExtraEditorInfo{ get { return Localizer.Format("#LOC_DangIt_165"); } }
 
 
 		public override bool PartIsActive()
@@ -49,6 +52,7 @@ namespace nsDangIt
 		{
 			return DI_AllowedToFail();
 		}
+                #region NO_LOCALIZATION
 
 		protected override void DI_Disable(){
 			if (this.wheelMotor == null)
@@ -70,12 +74,12 @@ namespace nsDangIt
 			this.wheelMotor.motorEnabled = true;
             this.wheelMotor.state = ModuleWheels.ModuleWheelMotor.MotorState.Idle;
             foreach (BaseEvent e in this.wheelMotor.Events) {
-
-				if (e.guiName == "Disable Motor") {
+                if (e.guiName == "Disable Motor") {
 					e.active = true;
 				}
-			}
-		}
+            }
+        }
+                #endregion
 
 	}
 }

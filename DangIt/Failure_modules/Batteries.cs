@@ -1,4 +1,5 @@
-﻿using System;
+using KSP.Localization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,14 +17,16 @@ namespace nsDangIt
         protected PartResource battery;
         int batteryResIdx;
 
+        #region NO_LOCALIZATION
         public override string DebugName { get { return "DangItBattery"; } }
-        public override string ScreenName { get { return "Battery"; } }
-        public override string FailureMessage { get { return "A battery has short-circuited!"; } }
-        public override string RepairMessage { get { return "Battery repaired."; } }
-        public override string FailGuiName { get { return "Fail battery"; } }
-        public override string EvaRepairGuiName { get { return "Repair battery"; } }
-        public override string MaintenanceString { get { return "Replace battery"; } }
-		public override string ExtraEditorInfo{ get { return "This part can lose all electric charge if it fails"; } }
+        #endregion
+        public override string ScreenName { get { return Localizer.Format("#LOC_DangIt_21"); } }
+        public override string FailureMessage { get { return Localizer.Format("#LOC_DangIt_22"); } }
+        public override string RepairMessage { get { return Localizer.Format("#LOC_DangIt_23"); } }
+        public override string FailGuiName { get { return Localizer.Format("#LOC_DangIt_24"); } }
+        public override string EvaRepairGuiName { get { return Localizer.Format("#LOC_DangIt_25"); } }
+        public override string MaintenanceString { get { return Localizer.Format("#LOC_DangIt_26"); } }
+		public override string ExtraEditorInfo{ get { return Localizer.Format("#LOC_DangIt_27"); } }
 
         
         protected override void DI_Start(StartState state)
@@ -33,14 +36,14 @@ namespace nsDangIt
                 for (int idx = 0; idx < part.Resources.Count; idx++)
                 {
                     PartResource pr = part.Resources[idx];
-                    if (pr.resourceName == "ElectricCharge")
+                    if (pr.resourceName == Localizer.Format("#LOC_DangIt_28"))
                     {
                         //battery = part.Resources[idx];
                         batteryResIdx = idx;
                         return;
                     }
                 }
-                throw new Exception("No ElectricCharge was found in the part!");
+                throw new Exception(Localizer.Format("#LOC_DangIt_29"));
             }
         }
 

@@ -9,6 +9,8 @@ rem    but not always
 
 set H=%KSPDIR%
 
+rem set H=R:\KSP_1.12.5-Dangit
+
 echo %KSPDIR%
 
 set GAMEDIR=DangIt

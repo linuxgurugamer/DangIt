@@ -1,3 +1,4 @@
+using KSP.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,18 +14,18 @@ namespace ippo
 		[KSPField(isPersistant = true, guiActive = false)]
 		float origPercentage = -1f;
 
-		public override string DebugName { get { return "DangItDecoupler"; } }
-		public override string ScreenName { get { return "Decoupler"; } }
-		public override string FailureMessage { get { return "EXPLOSIVE BOLT FAILURE!"; } }
-		public override string RepairMessage { get { return "Bolts rewired."; } }
-		public override string FailGuiName { get { return "Fail decoupler"; } }
-		public override string EvaRepairGuiName { get { return "Repair decoupler"; } }
-		public override string MaintenanceString { get { return "Replace decoupler"; } }
-		public override string ExtraEditorInfo{ get { return "This part's decoupler can silently fail, causing it to have no force upon decouple."; } }
+		public override string DebugName { get { return Localizer.Format("#LOC_DangIt_37"); } }
+		public override string ScreenName { get { return Localizer.Format("#LOC_DangIt_38"); } }
+		public override string FailureMessage { get { return Localizer.Format("#LOC_DangIt_39"); } }
+		public override string RepairMessage { get { return Localizer.Format("#LOC_DangIt_40"); } }
+		public override string FailGuiName { get { return Localizer.Format("#LOC_DangIt_41"); } }
+		public override string EvaRepairGuiName { get { return Localizer.Format("#LOC_DangIt_42"); } }
+		public override string MaintenanceString { get { return Localizer.Format("#LOC_DangIt_43"); } }
+		public override string ExtraEditorInfo{ get { return Localizer.Format("#LOC_DangIt_44"); } }
 
 		public override bool PartIsActive()
 		{
-			return !InputLockManager.lockStack.Keys.Contains("manualStageLock");
+			return !InputLockManager.lockStack.Keys.Contains(Localizer.Format("#LOC_DangIt_45"));
 		}
 
 

@@ -1,3 +1,4 @@
+using KSP.Localization;
 using System;
 using System.Collections;
 using System.Linq;
@@ -14,14 +15,16 @@ namespace nsDangIt
 	{
 		EngineManager engines;
 
-		public override string DebugName { get { return "Coolant Line"; } }
-		public override string ScreenName { get { return "Coolant Line"; } }
-		public override string FailureMessage { get { return "Coolant has begun to leak from an engine!"; } }
-		public override string RepairMessage { get { return "Patch Coolant Line"; } }
-		public override string FailGuiName { get { return "Fail Coolant Line"; } }
-		public override string EvaRepairGuiName { get { return "Replace Coolant Line"; } }
-		public override string MaintenanceString { get { return "Replace Coolant Line"; } }
-		public override string ExtraEditorInfo{ get { return "This part can begin to overheat if it fails"; } }
+        #region NO_LOCALIZATION
+        public override string DebugName { get { return "Coolant Line"; } }
+        #endregion
+        public override string ScreenName { get { return Localizer.Format("#LOC_DangIt_31"); } }
+		public override string FailureMessage { get { return Localizer.Format("#LOC_DangIt_32"); } }
+		public override string RepairMessage { get { return Localizer.Format("#LOC_DangIt_33"); } }
+		public override string FailGuiName { get { return Localizer.Format("#LOC_DangIt_34"); } }
+		public override string EvaRepairGuiName { get { return Localizer.Format("#LOC_DangIt_35"); } }
+		public override string MaintenanceString { get { return Localizer.Format("#LOC_DangIt_35"); } }
+		public override string ExtraEditorInfo{ get { return Localizer.Format("#LOC_DangIt_36"); } }
 
 		public override bool PartIsActive()
 		{

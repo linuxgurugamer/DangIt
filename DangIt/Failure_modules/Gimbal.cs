@@ -1,4 +1,5 @@
-﻿using System;
+using KSP.Localization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,14 +14,16 @@ namespace nsDangIt
         ModuleGimbal gimbalModule;
         EngineManager engineManager;
 
+        #region NO_LOCALIZATION
         public override string DebugName { get { return "DangItGimbal"; } }
-        public override string ScreenName { get { return "Gimbal"; } }
-        public override string FailureMessage { get { return "Gimbal failure!"; } }
-        public override string RepairMessage { get { return "Gimbal repaired."; } }
-        public override string FailGuiName { get { return "Fail gimbal"; } }
-        public override string EvaRepairGuiName { get { return "Repair gimbal"; } }
-        public override string MaintenanceString { get { return "Lubricate gimbal"; } }
-		public override string ExtraEditorInfo{ get { return "This part's gimbal can become stuck if it fails"; } }
+        #endregion
+        public override string ScreenName { get { return Localizer.Format("#LOC_DangIt_101"); } }
+        public override string FailureMessage { get { return Localizer.Format("#LOC_DangIt_102"); } }
+        public override string RepairMessage { get { return Localizer.Format("#LOC_DangIt_103"); } }
+        public override string FailGuiName { get { return Localizer.Format("#LOC_DangIt_104"); } }
+        public override string EvaRepairGuiName { get { return Localizer.Format("#LOC_DangIt_105"); } }
+        public override string MaintenanceString { get { return Localizer.Format("#LOC_DangIt_106"); } }
+		public override string ExtraEditorInfo{ get { return Localizer.Format("#LOC_DangIt_107"); } }
 
 
         public override bool PartIsActive()
@@ -57,7 +60,7 @@ namespace nsDangIt
         {
             // Disable the gimbal module
 			this.gimbalModule.gimbalLock = true;
-			this.gimbalModule.Fields ["gimbalLock"].guiActive = false;
+			this.gimbalModule.Fields [Localizer.Format("#LOC_DangIt_108")].guiActive = false;
         }
 
 
@@ -65,7 +68,7 @@ namespace nsDangIt
         {
             // Restore the gimbaling module
 			this.gimbalModule.gimbalLock = false;
-			this.gimbalModule.Fields ["gimbalLock"].guiActive = true;
+			this.gimbalModule.Fields [Localizer.Format("#LOC_DangIt_108")].guiActive = true;
         }
 
     }

@@ -1,3 +1,4 @@
+using KSP.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,14 +14,16 @@ namespace nsDangIt
 		//ModuleWheelBase wheelBase;
         ModuleWheels.ModuleWheelDamage wheelDamage;
 
-		public override string DebugName { get { return "DangItWheel_Tire"; } }
-		public override string ScreenName { get { return "Tire"; } }
-		public override string FailureMessage { get { return "A tire popped!"; } }
-		public override string RepairMessage { get { return "Tire replaced."; } }
-		public override string FailGuiName { get { return "Pop tire"; } }
-		public override string EvaRepairGuiName { get { return "Replace tire"; } }
-		public override string MaintenanceString { get { return "Clean and Fill Tire"; } }
-		public override string ExtraEditorInfo{ get { return "This part's tire can pop if it fails"; } }
+        #region NO_LOCALIZATION
+        public override string DebugName { get { return "DangItWheel_Tire"; } }
+        #endregion
+        public override string ScreenName { get { return Localizer.Format("#LOC_DangIt_166"); } }
+		public override string FailureMessage { get { return Localizer.Format("#LOC_DangIt_167"); } }
+		public override string RepairMessage { get { return Localizer.Format("#LOC_DangIt_168"); } }
+		public override string FailGuiName { get { return Localizer.Format("#LOC_DangIt_169"); } }
+		public override string EvaRepairGuiName { get { return Localizer.Format("#LOC_DangIt_170"); } }
+		public override string MaintenanceString { get { return Localizer.Format("#LOC_DangIt_171"); } }
+		public override string ExtraEditorInfo{ get { return Localizer.Format("#LOC_DangIt_172"); } }
 
 
 		public override bool PartIsActive()

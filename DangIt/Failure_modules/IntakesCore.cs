@@ -1,3 +1,4 @@
+using KSP.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,14 +13,14 @@ namespace ippo
 	{
 		ModuleResourceIntake intake;
 
-		public override string DebugName { get { return "Intake"; } }
-		public override string ScreenName { get { return "Intake"; } }
-		public override string FailureMessage { get { return "An intake has become clogged"; } }
-		public override string RepairMessage { get { return "You have cleared the intake"; } }
-		public override string FailGuiName { get { return "Fail intake"; } }
-		public override string EvaRepairGuiName { get { return "Repair intake"; } }
-		public override string MaintenanceString { get { return "Clean intake"; } }
-		public override string ExtraEditorInfo{ get { return "This part's intakes can clog if it fails"; } }
+		public override string DebugName { get { return Localizer.Format("#LOC_DangIt_109"); } }
+		public override string ScreenName { get { return Localizer.Format("#LOC_DangIt_109"); } }
+		public override string FailureMessage { get { return Localizer.Format("#LOC_DangIt_110"); } }
+		public override string RepairMessage { get { return Localizer.Format("#LOC_DangIt_111"); } }
+		public override string FailGuiName { get { return Localizer.Format("#LOC_DangIt_112"); } }
+		public override string EvaRepairGuiName { get { return Localizer.Format("#LOC_DangIt_113"); } }
+		public override string MaintenanceString { get { return Localizer.Format("#LOC_DangIt_114"); } }
+		public override string ExtraEditorInfo{ get { return Localizer.Format("#LOC_DangIt_115"); } }
 
 		public override bool PartIsActive()
 		{

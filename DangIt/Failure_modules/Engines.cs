@@ -1,4 +1,5 @@
-﻿using System;
+using KSP.Localization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,14 +17,16 @@ namespace nsDangIt
 		[KSPField(isPersistant = true, guiActive = false)]
 		float oldSurfaceFXMaxDistance = -1f;
 
+        #region NO_LOCALIZATION
         public override string DebugName { get { return "DangItEngines"; } }
-        public override string ScreenName { get { return "Engine"; } }
-        public override string FailureMessage { get { return "ENGINE FAILURE!"; } }
-        public override string RepairMessage { get { return "Engine repaired."; } }
-        public override string FailGuiName { get { return "Fail engine"; } }
-        public override string EvaRepairGuiName { get { return "Repair engine"; } }
-        public override string MaintenanceString { get { return "Clean engine"; } }
-		public override string ExtraEditorInfo{ get { return "This part's engine can stop providing thrust if it fails"; } }
+        #endregion
+        public override string ScreenName { get { return Localizer.Format("#LOC_DangIt_52"); } }
+        public override string FailureMessage { get { return Localizer.Format("#LOC_DangIt_53"); } }
+        public override string RepairMessage { get { return Localizer.Format("#LOC_DangIt_54"); } }
+        public override string FailGuiName { get { return Localizer.Format("#LOC_DangIt_55"); } }
+        public override string EvaRepairGuiName { get { return Localizer.Format("#LOC_DangIt_56"); } }
+        public override string MaintenanceString { get { return Localizer.Format("#LOC_DangIt_57"); } }
+		public override string ExtraEditorInfo{ get { return Localizer.Format("#LOC_DangIt_58"); } }
 
 
         protected override float LambdaMultiplier()

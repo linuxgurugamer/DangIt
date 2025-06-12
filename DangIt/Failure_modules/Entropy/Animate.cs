@@ -1,4 +1,5 @@
-﻿using System;
+using KSP.Localization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,14 +15,16 @@ namespace nsDangIt
 	{
 		ModuleAnimateGeneric bay;
 
-		public override string DebugName { get { return "ModuleAnimateGeneric"; } }
-		public override string ScreenName { get { return "Motor"; } }
-		public override string FailureMessage { get { return "A motor has failed"; } }
-		public override string RepairMessage { get { return "You have repaired the motor"; } }
-		public override string FailGuiName { get { return "Fail motor"; } }
-		public override string EvaRepairGuiName { get { return "Repair motor"; } }
-		public override string MaintenanceString { get { return "Lubricate motor"; } }
-		public override string ExtraEditorInfo{ get { return "This part can become stuck if it fails"; } }
+        #region NO_LOCALIZATION
+        public override string DebugName { get { return "ModuleAnimateGeneric"; } }
+		#endregion
+		public override string ScreenName { get { return Localizer.Format("#LOC_DangIt_159"); } }
+		public override string FailureMessage { get { return Localizer.Format("#LOC_DangIt_196"); } }
+		public override string RepairMessage { get { return Localizer.Format("#LOC_DangIt_197"); } }
+		public override string FailGuiName { get { return Localizer.Format("#LOC_DangIt_198"); } }
+		public override string EvaRepairGuiName { get { return Localizer.Format("#LOC_DangIt_199"); } }
+		public override string MaintenanceString { get { return Localizer.Format("#LOC_DangIt_200"); } }
+		public override string ExtraEditorInfo{ get { return Localizer.Format("#LOC_DangIt_201"); } }
 
 		public override bool PartIsActive()
 		{

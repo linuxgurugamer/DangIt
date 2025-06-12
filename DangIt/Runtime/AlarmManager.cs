@@ -28,6 +28,7 @@ namespace nsDangIt
 
         static FXGroup audioSource = null;
 
+        #region NO_LOCALIZATION
 
         public void Start()
         {
@@ -57,6 +58,7 @@ namespace nsDangIt
             audioSource.audio.clip = GameDatabase.Instance.GetAudioClip("DangIt/Sounds/alarm"); //Load alarm sound
 
         }
+        #endregion
         public static bool visibleUI = true;
         internal void showUI() // triggered on F2
         {

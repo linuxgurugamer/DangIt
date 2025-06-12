@@ -1,4 +1,5 @@
-﻿using System;
+using KSP.Localization;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,14 +32,14 @@ namespace nsDangIt
             // Sync settings with the runtime
             if (HighLogic.LoadedSceneIsFlight)
             {
-                this.StartCoroutine("RuntimeFetch");
+                this.StartCoroutine(Localizer.Format("#LOC_DangIt_74"));
                cargoModule = base.part.FindModuleImplementing<ModuleCargoBay>();
             if (cargoModule != null)
                 deployModule = this.findModule(cargoModule.DeployModuleIndex);
          }
             else
                 if (ContainsSpares)
-                this.StartCoroutine("SlowUpdate");
+                this.StartCoroutine(Localizer.Format("#LOC_DangIt_183"));
 
             this.Events["TakeParts"].active = true;
         }
@@ -122,7 +123,7 @@ namespace nsDangIt
 
 
             if (evaPart == null)
-                throw new Exception("ERROR: couldn't find an active EVA!");
+                throw new Exception(Localizer.Format("#LOC_DangIt_76"));
             else
                 FillEvaSuit(evaPart, this.part);
 
@@ -172,11 +173,11 @@ namespace nsDangIt
             // GUI acknowledge
             try
             {
-                DangIt.Broadcast(evaPart.protoModuleCrew[0].name + " has left " + deposit + " spares", false, 1f);
+                DangIt.Broadcast(evaPart.protoModuleCrew[0].name + Localizer.Format("#LOC_DangIt_184") + deposit + Localizer.Format("#LOC_DangIt_185"), false, 1f);
             }
             catch (Exception) // The kerbal reenters before this method is called: in that case, trying to get his name will throw an exception
             {
-                DangIt.Broadcast("You left " + deposit + " spares", false, 1f);
+                DangIt.Broadcast(Localizer.Format("#LOC_DangIt_186") + deposit + Localizer.Format("#LOC_DangIt_185"), false, 1f);
             }
 
             ResourceDisplay.Instance.Refresh();
@@ -191,7 +192,7 @@ namespace nsDangIt
             {
                 Log.Info("The eva part doesn't contain spares, adding the config node");
 
-                ConfigNode node = new ConfigNode("RESOURCE");
+                ConfigNode node = new ConfigNode(Localizer.Format("#LOC_DangIt_187"));
                 node.AddValue("name", Spares.Name);
                 node.AddValue("maxAmount", Spares.MaxEvaAmount);
                 node.AddValue("amount", 0);
@@ -217,7 +218,7 @@ namespace nsDangIt
             evaPart.Resources[Spares.Name].amount += amountTaken;
 
             // GUI stuff
-            DangIt.Broadcast(evaPart.vessel.GetVesselCrew().First().name + " has taken " + amountTaken + " spares", false, 1f);
+            DangIt.Broadcast(evaPart.vessel.GetVesselCrew().First().name + Localizer.Format("#LOC_DangIt_188") + amountTaken + Localizer.Format("#LOC_DangIt_185"), false, 1f);
             ResourceDisplay.Instance.Refresh();
         }
 

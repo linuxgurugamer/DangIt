@@ -1,4 +1,5 @@
-﻿using System;
+using KSP.Localization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,14 +15,16 @@ namespace nsDangIt
     {
         ModuleDeployableAntenna antennaModule;
 
+        #region NO_LOCALIZATION
         public override string DebugName { get { return "DangItDeployableAntenna"; } }
-        public override string ScreenName { get { return "Deployable Antenna"; } }
-        public override string FailureMessage { get { return "Antenna failure!"; } }
-        public override string RepairMessage { get { return "Antenna repaired."; } }
-        public override string FailGuiName { get { return "Fail antenna"; } }
-        public override string EvaRepairGuiName { get { return "Replace antenna"; } }
-        public override string MaintenanceString { get { return "Replace antenna"; } }
-        public override string ExtraEditorInfo { get { return "This part's antenna can stop providing communications if it fails"; } }
+        #endregion
+        public override string ScreenName { get { return Localizer.Format("#LOC_DangIt_46"); } }
+        public override string FailureMessage { get { return Localizer.Format("#LOC_DangIt_47"); } }
+        public override string RepairMessage { get { return Localizer.Format("#LOC_DangIt_48"); } }
+        public override string FailGuiName { get { return Localizer.Format("#LOC_DangIt_49"); } }
+        public override string EvaRepairGuiName { get { return Localizer.Format("#LOC_DangIt_50"); } }
+        public override string MaintenanceString { get { return Localizer.Format("#LOC_DangIt_50"); } }
+        public override string ExtraEditorInfo { get { return Localizer.Format("#LOC_DangIt_51"); } }
 
 
         protected override void DI_Start(StartState state)

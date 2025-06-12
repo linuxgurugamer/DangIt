@@ -1,4 +1,5 @@
-﻿using System;
+using KSP.Localization;
+using System;
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
@@ -22,9 +23,9 @@ namespace nsDangIt
 		{
 			Log.Info("[DangIt] [Static] Translating '" + modeString + "' to int...");
 			var keys = new List<string> ();
-			keys.Add ("LOW");
-			keys.Add ("MEDIUM");
-			keys.Add ("HIGH");
+			keys.Add (Localizer.Format("#LOC_DangIt_194"));
+			keys.Add (Localizer.Format("#LOC_DangIt_68"));
+			keys.Add (Localizer.Format("#LOC_DangIt_195"));
 			return keys.IndexOf (modeString.ToUpper ())+1; //+1 so that LOW = 1
 		}
 

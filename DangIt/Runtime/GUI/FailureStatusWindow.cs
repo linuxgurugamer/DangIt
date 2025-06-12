@@ -1,4 +1,5 @@
-﻿using System;
+using KSP.Localization;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,10 +52,10 @@ namespace ippo.Runtime.GUI
             UnityEngine.GUI.skin = HighLogic.Skin;
 
             settingsRect = ClickThruBlocker.GUILayoutWindow(
-                "Failure Status Window".GetHashCode(),
+                Localizer.Format("#LOC_DangIt_235").GetHashCode(),
                 settingsRect,
                 FailureWindow,
-                "Failure Status Window",
+                Localizer.Format("#LOC_DangIt_235"),
                 GUILayout.ExpandWidth(true),
                 GUILayout.ExpandHeight(true));
 
@@ -88,7 +89,7 @@ namespace ippo.Runtime.GUI
             }
             GUILayout.EndScrollView();
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Close"))
+            if (GUILayout.Button(Localizer.Format("#LOC_DangIt_236")))
             {
                 isVisible = false;
                 FailureModule.phl.PauseHighlighting(FailureModule.vesselHighlightDict[FlightGlobals.ActiveVessel.id], false);
@@ -96,7 +97,7 @@ namespace ippo.Runtime.GUI
                     FailureModule.phl.DisablePartHighlighting(failureWinHighlightID, p);
 
             }
-            if (GUILayout.Button("Mute All"))
+            if (GUILayout.Button(Localizer.Format("#LOC_DangIt_237")))
             {
                 AlarmManager alarmManager = FindObjectOfType<AlarmManager>();
                 if (alarmManager != null)
@@ -104,7 +105,7 @@ namespace ippo.Runtime.GUI
                     alarmManager.RemoveAllAlarms();
                 }
             }
-            if (GUILayout.Button("Disable All Highlighting"))
+            if (GUILayout.Button(Localizer.Format("#LOC_DangIt_238")))
             {
                 foreach (var p in FlightGlobals.ActiveVessel.Parts)
                 {
@@ -118,7 +119,7 @@ namespace ippo.Runtime.GUI
             }
             GUILayout.EndHorizontal();
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Permenantly disable current highlighted failures"))
+            if (GUILayout.Button(Localizer.Format("#LOC_DangIt_239")))
             {
                 foreach (var p in FlightGlobals.ActiveVessel.Parts)
                 {
@@ -127,7 +128,7 @@ namespace ippo.Runtime.GUI
                         Log.Info("Disabling highlighted part: " + p.partInfo.title);
                         if (!FailureModule.phl.RemovePartFromList(FailureModule.vesselHighlightDict[FlightGlobals.ActiveVessel.id], p))
                             Log.Error("Error removing part from list: " + FailureModule.vesselHighlightDict[FlightGlobals.ActiveVessel.id] +
-                                ", part: " + p.partInfo.title);
+                                Localizer.Format("#LOC_DangIt_240") + p.partInfo.title);
                         AlarmManager.RemovePartFailure(p);
                         foreach (FailureModule fm in p.Modules.OfType<FailureModule>())
                             if (fm.HasFailed) fm.DisableAlarm();                       

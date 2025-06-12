@@ -1,4 +1,5 @@
-﻿using System;
+using KSP.Localization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,14 +13,16 @@ namespace nsDangIt
     {
         ModuleLight lightModule;
 
+        #region NO_LOCALIZATION
         public override string DebugName { get { return "DangItLights"; } }
-        public override string ScreenName { get { return "Light bulb"; } }
-        public override string FailureMessage { get { return "A light bulb has burned out."; } }
-        public override string RepairMessage { get { return "Bulb replaced."; } }
-        public override string FailGuiName { get { return "Fail light bulb"; } }
-        public override string EvaRepairGuiName { get { return "Replace light bulb"; } }
-        public override string MaintenanceString { get { return "Replace light bulb"; } }
-		public override string ExtraEditorInfo{ get { return "This part's bulb can burn out if it fails"; } }
+        #endregion
+        public override string ScreenName { get { return Localizer.Format("#LOC_DangIt_116"); } }
+        public override string FailureMessage { get { return Localizer.Format("#LOC_DangIt_117"); } }
+        public override string RepairMessage { get { return Localizer.Format("#LOC_DangIt_118"); } }
+        public override string FailGuiName { get { return Localizer.Format("#LOC_DangIt_119"); } }
+        public override string EvaRepairGuiName { get { return Localizer.Format("#LOC_DangIt_120"); } }
+        public override string MaintenanceString { get { return Localizer.Format("#LOC_DangIt_120"); } }
+		public override string ExtraEditorInfo{ get { return Localizer.Format("#LOC_DangIt_121"); } }
 
 
         public override bool PartIsActive()

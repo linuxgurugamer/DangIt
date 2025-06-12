@@ -1,4 +1,5 @@
-﻿using System;
+using KSP.Localization;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,33 +46,33 @@ namespace nsDangIt
             Log.Info("InspectionMessage");
 
             if (this.HasFailed)
-                return "the part has failed!";
+                return Localizer.Format("#LOC_DangIt_59");
 
             // The same experience that is needed for repair is also needed to inspect the element
             Part evaPart = DangIt.FindEVAPart();
             if (evaPart != null)
             {
                 if (!CheckOutExperience(evaPart.protoModuleCrew[0]))
-                    return evaPart.protoModuleCrew[0].name + " isn't quite sure about this...";
+                    return evaPart.protoModuleCrew[0].name + Localizer.Format("#LOC_DangIt_60");
             }
 
             // Perks check out, return a message based on the age
             float ratio = this.Age / this.LifeTimeSecs;
 
             if (ratio < 0.10)
-                return "This part seems to be as good as new";
+                return Localizer.Format("#LOC_DangIt_61");
             else if (ratio < 0.50)
-                return "This part is still in good condition";
+                return Localizer.Format("#LOC_DangIt_62");
             else if (ratio < 0.75)
-                return "This part is starting to show its age";
+                return Localizer.Format("#LOC_DangIt_63");
             else if (ratio < 1.25)
-                return "It looks like it's time to get a new one";
+                return Localizer.Format("#LOC_DangIt_64");
             else if (ratio < 2.00)
-                return "It really isn't a good idea to keep using this part";
+                return Localizer.Format("#LOC_DangIt_65");
             else if (ratio < 3)
-                return "This part needs replacing soon";
+                return Localizer.Format("#LOC_DangIt_66");
             else
-                return "This part is in terrible condition";
+                return Localizer.Format("#LOC_DangIt_67");
         }
 
         #endregion
@@ -151,7 +152,7 @@ namespace nsDangIt
         public bool Silent = false;                                 // If this flag is true, no message is displayed when failing
 
         [KSPField(isPersistant = true, guiActive = false)]
-        public string Priority = "MEDIUM";                          // Priority of the failure as string. Used for beeping
+        public string Priority = "#LOC_DangIt_68";                          // Priority of the failure as string. Used for beeping
 
         [KSPField(isPersistant = true, guiActive = false)]
         public string PerksRequirementName = "";                    // Trait name required to fix this part. "" = Any
@@ -292,8 +293,8 @@ namespace nsDangIt
             this.Events["EvaRepair"].unfocusedRange = DangIt.Instance.CurrentSettings.MaxDistance;
             this.Events["Maintenance"].unfocusedRange = DangIt.Instance.CurrentSettings.MaxDistance;
 
-            this.Fields["Age"].guiName = DebugName + " Age";
-            this.Fields["Age"].guiActive = DangIt.Instance.CurrentSettings.DebugStats;
+            this.Fields[Localizer.Format("#LOC_DangIt_69")].guiName = DebugName + Localizer.Format("#LOC_DangIt_70");
+            this.Fields[Localizer.Format("#LOC_DangIt_69")].guiActive = DangIt.Instance.CurrentSettings.DebugStats;
 
             DI_RuntimeFetch();
         }
@@ -309,7 +310,7 @@ namespace nsDangIt
             Log.Info("Reset(), HasInitted: " + HasInitted.ToString());
             try
             {
-                this.FailureLog("Resetting");
+                this.FailureLog(Localizer.Format("#LOC_DangIt_71"));
 
                 float now = DangIt.Now();
 
@@ -412,9 +413,35 @@ namespace nsDangIt
         public static Dictionary<Guid, int> vesselHighlightDict = null;
         public static PartHighlighter phl = null;
 
-        public override void OnAwake()
+#if false
+        //public override void OnAwake()
+        void Awake()
         {
+            if (!HighLogic.LoadedSceneIsFlight)
+                return;
             Log.Info("FailureModule.OnAwake");
+            if (phl == null)
+                phl = PartHighlighter.CreatePartHighlighter();
+
+            if (vesselHighlightDict == null)
+                vesselHighlightDict = new Dictionary<Guid, int>();
+
+            //foreach (var v in vesselHighlightDict)
+            //    Log.Info("vessel GUID:" + v.Key + ", highlightID: " + v.Value);
+
+        }
+#endif
+
+        /// <summary>
+        /// Module re-start logic. OnStart will be called usually once for each scene, editor included.
+        /// Put your custom start logic in DI_Start(): if you need to act on other part's
+        /// variable, this is the place to do it, not DI_Reset()
+        /// </summary>
+        //public override void OnStart(PartModule.StartState state)
+        void Start()
+        {
+            if (!HighLogic.LoadedSceneIsFlight)
+                return;
 
             if (phl == null)
                 phl = PartHighlighter.CreatePartHighlighter();
@@ -422,22 +449,16 @@ namespace nsDangIt
             if (vesselHighlightDict == null)
                 vesselHighlightDict = new Dictionary<Guid, int>();
 
-        }
+            foreach (var v in vesselHighlightDict)
+                Log.Info("vessel GUID:" + v.Key + ", highlightID: " + v.Value);
 
 
-        /// <summary>
-        /// Module re-start logic. OnStart will be called usually once for each scene, editor included.
-        /// Put your custom start logic in DI_Start(): if you need to act on other part's
-        /// variable, this is the place to do it, not DI_Reset()
-        /// </summary>
-        public override void OnStart(PartModule.StartState state)
-        {
-            Log.Info("FailureModule.OnStart, part: " + this.part.partInfo.title);
+            Log.Info("FailureModule.Start, part: " + this.part.partInfo.title);
             try
             {
                 if (HighLogic.LoadedSceneIsFlight) // nothing to do in editor
                 {
-                    this.FailureLog("Starting in flight: last reset " + TimeOfLastReset + ", now " + DangIt.Now());
+                    this.FailureLog(Localizer.Format("#LOC_DangIt_72") + TimeOfLastReset + Localizer.Format("#LOC_DangIt_73") + DangIt.Now());
 
                     if (!DangIt.Instance.CurrentSettings.EnabledForSave)
                     { //Disable if we've disabled DangIt
@@ -484,8 +505,9 @@ namespace nsDangIt
 
                     if (DangIt.Instance.CurrentSettings.EnabledForSave)
                     {
-                        this.DI_Start(state);
-                        this.StartCoroutine("RuntimeFetch");
+                        //this.DI_Start(state);
+                        this.DI_Start(StartState.Flying);
+                        this.StartCoroutine(Localizer.Format("#LOC_DangIt_74"));
                     }
                 }
             }
@@ -537,12 +559,14 @@ namespace nsDangIt
                         // if it is not in a 'failed' state, or it is in 'silent' state, or if 'glow' is globally disabled
                         //      if (!this.HasFailed || this.Silent || !DangIt.Instance.CurrentSettings.Glow || (!visibleUI && DangIt.Instance.CurrentSettings.DisableGlowOnF2))
                         {
-
-                            if (!AlarmManager.failedParts.ContainsKey(new FailedPart(this.part)))
+                            if (!this.HasFailed)
                             {
-                                //Log.Info("Calling DisablePartHighlighting  part: " + part.persistentId + ", " + part.partInfo.title);
-                                if (AlarmManager.failedParts.ContainsKey(new FailedPart(this.part)))
-                                    phl.DisablePartHighlighting(vesselHighlightDict[this.vessel.id], this.part);
+                                if (!AlarmManager.failedParts.ContainsKey(new FailedPart(this.part)))
+                                {
+                                    //Log.Info("Calling DisablePartHighlighting  part: " + part.persistentId + ", " + part.partInfo.title);
+                                    if (AlarmManager.failedParts.ContainsKey(new FailedPart(this.part)))
+                                        phl.DisablePartHighlighting(vesselHighlightDict[this.vessel.id], this.part);
+                                }
                             }
                         }
 
@@ -624,23 +648,23 @@ namespace nsDangIt
         [KSPEvent(active = true, guiActive = false, guiActiveUnfocused = true, unfocusedRange = 2f, externalToEVAOnly = true)]
         public void Maintenance()
         {
-            this.FailureLog("Initiating EVA maitenance");
+            this.FailureLog("#LOC_DangIt_75");
 
             Part evaPart = DangIt.FindEVAPart();
             if (evaPart == null)
             {
-                throw new Exception("ERROR: couldn't find an active EVA!");
+                throw new Exception(Localizer.Format("#LOC_DangIt_76"));
             }
 
             if (!CheckOutExperience(evaPart.protoModuleCrew[0]))
             {
-                DangIt.Broadcast(evaPart.protoModuleCrew[0].name + " isn't really qualified for this...", true);
+                DangIt.Broadcast(evaPart.protoModuleCrew[0].name + Localizer.Format("#LOC_DangIt_77"), true);
                 return;
             }
 
             if (this.part.temperature > DangIt.Instance.CurrentSettings.GetMaxServicingTemp())
             {
-                DangIt.Broadcast("This is too hot to service right now", true);
+                DangIt.Broadcast(Localizer.Format("#LOC_DangIt_78"), true);
                 return;
             }
 
@@ -648,7 +672,7 @@ namespace nsDangIt
             // Check if he is carrying enough spares
             if (evaPart.Resources.Contains(Spares.Name) && evaPart.Resources[Spares.Name].amount >= this.MaintenanceCost)
             {
-                this.FailureLog("Spare parts check: OK! Maintenance allowed allowed");
+                this.FailureLog(Localizer.Format("#LOC_DangIt_79"));
 
                 // Consume the spare parts
                 // MC2 Breaks RequestResource, since amount is checked, simply decrement! Just like in SparesContainer! Whee! -TrypChangeling
@@ -662,12 +686,12 @@ namespace nsDangIt
                 //// The + 1 is there to makes it so that a maintenance bonus is always gained even when the perks match exactly
                 this.DiscountAge(this.MaintenanceBonus * ((expDistance + 1) / 3));
 
-                DangIt.Broadcast("This should last a little longer now");
+                DangIt.Broadcast(Localizer.Format("#LOC_DangIt_80"));
             }
             else
             {
-                this.FailureLog("Spare parts check: failed! Maintenance NOT allowed");
-                DangIt.Broadcast("You need " + this.MaintenanceCost + " spares to maintain this.");
+                this.FailureLog(Localizer.Format("#LOC_DangIt_81"));
+                DangIt.Broadcast(Localizer.Format("#LOC_DangIt_82") + this.MaintenanceCost + Localizer.Format("#LOC_DangIt_83"));
             }
 
         }
@@ -682,18 +706,18 @@ namespace nsDangIt
         {
             try
             {
-                this.FailureLog("Initiating Fail()");
+                this.FailureLog("#LOC_DangIt_84");
 
                 // First, run the custom failure logic
                 // The child class can refuse to fail in FailBegin()
                 if (!this.DI_FailBegin())
                 {
-                    this.FailureLog(this.DebugName + " has not agreed to fail, failure aborted!");
+                    this.FailureLog(this.DebugName + Localizer.Format("#LOC_DangIt_85"));
                     return;
                 }
                 else
                 {
-                    this.FailureLog(this.DebugName + " has agreed to fail, failure allowed.");
+                    this.FailureLog(this.DebugName + Localizer.Format("#LOC_DangIt_86"));
                 }
 
                 // If control reaches this point, the child class has agreed to fail
@@ -707,7 +731,7 @@ namespace nsDangIt
                 if (!this.Silent)
                 {
                     DangIt.Broadcast(this.FailureMessage);
-                    DangIt.PostMessage("Failure!",
+                    DangIt.PostMessage(Localizer.Format("#LOC_DangIt_87"),
                                        this.FailureMessage,
                                        MessageSystemButton.MessageButtonColor.RED,
                                        MessageSystemButton.ButtonIcons.ALERT);
@@ -766,14 +790,14 @@ namespace nsDangIt
         {
             try
             {
-                this.FailureLog("Initiating EVA repair");
+                this.FailureLog("#LOC_DangIt_88");
 
                 // Get the EVA part (parts can hold resources)
                 Part evaPart = DangIt.FindEVAPart();
 
                 if (evaPart == null)
                 {
-                    throw new Exception("ERROR: couldn't find an active EVA!");
+                    throw new Exception(Localizer.Format("#LOC_DangIt_76"));
                 }
 
                 // Check if the kerbal is able to perform the repair
@@ -789,7 +813,7 @@ namespace nsDangIt
                     float discountedCost = (float)Math.Round(RepairCost * (1 - UnityEngine.Random.Range(0f, intelligence)));
                     float discount = RepairCost - discountedCost;
 
-                    this.FailureLog("Kerbal's intelligence: " + intelligence + ", discount: " + discount);
+                    this.FailureLog(Localizer.Format("#LOC_DangIt_89") + intelligence + Localizer.Format("#LOC_DangIt_90") + discount);
 
                     // One more MC2 hack - TrypChangeling
                     // evaPart.RequestResource(Spares.Name, discountedCost);
@@ -801,7 +825,7 @@ namespace nsDangIt
 
                     if (discount > 0)
                     {
-                        DangIt.Broadcast(evaPart.protoModuleCrew[0].name + " was able to save " + discount + " spare parts");
+                        DangIt.Broadcast(evaPart.protoModuleCrew[0].name + Localizer.Format("#LOC_DangIt_91") + discount + Localizer.Format("#LOC_DangIt_92"));
                     }
                     AlarmManager alarmManager = FindObjectOfType<AlarmManager>();
                     alarmManager.RemoveAllAlarmsForModule(this); //Remove alarms from this module
@@ -844,8 +868,8 @@ namespace nsDangIt
             if (!evaPart.Resources.Contains(Spares.Name) || evaPart.Resources[Spares.Name].amount < this.RepairCost)
             {
                 allow = false;
-                reason = "not carrying enough spares";
-                DangIt.Broadcast("You need " + this.RepairCost + " spares to repair this.", true);
+                reason = Localizer.Format("#LOC_DangIt_93");
+                DangIt.Broadcast(Localizer.Format("#LOC_DangIt_82") + this.RepairCost + Localizer.Format("#LOC_DangIt_94"), true);
             }
 #endregion
 
@@ -853,8 +877,8 @@ namespace nsDangIt
             if (this.part.temperature > DangIt.Instance.CurrentSettings.GetMaxServicingTemp())
             {
                 allow = false;
-                reason = "part is too hot (" + part.temperature.ToString() + " degrees)";
-                DangIt.Broadcast("This is too hot to service right now", true);
+                reason = Localizer.Format("#LOC_DangIt_95") + part.temperature.ToString() + Localizer.Format("#LOC_DangIt_96");
+                DangIt.Broadcast(Localizer.Format("#LOC_DangIt_78"), true);
             }
 #endregion
 
@@ -862,20 +886,20 @@ namespace nsDangIt
             if (!CheckOutExperience(evaPart.protoModuleCrew[0]))
             {
                 allow = false;
-                reason = "perks don't match requirements";
-                DangIt.Broadcast(evaPart.protoModuleCrew[0].name + " has no idea how to fix this...", true);
+                reason = Localizer.Format("#LOC_DangIt_97");
+                DangIt.Broadcast(evaPart.protoModuleCrew[0].name + Localizer.Format("#LOC_DangIt_98"), true);
             }
 
 
             if (allow)
-                this.FailureLog("Repair allowed!");
+                this.FailureLog(Localizer.Format("#LOC_DangIt_99"));
             else
-                this.FailureLog("Repair NOT allowed. Reason: " + reason);
+                this.FailureLog(Localizer.Format("#LOC_DangIt_100") + reason);
 
             return allow;
         }
 
-
+        #region NO_LOCALIZATION
         /// <summary>
         /// Checks if a kerbal has the required experience to interact with this module
         /// </summary>
@@ -890,7 +914,7 @@ namespace nsDangIt
             return !DangIt.Instance.CurrentSettings.RequireExperience || string.IsNullOrEmpty(this.PerksRequirementName)                  // empty string means no restrictions
                 || ((kerbal.experienceTrait.Config.Name == this.PerksRequirementName) && (kerbal.experienceLevel >= this.PerksRequirementValue));
         }
-
+        #endregion
 
         /// <summary>
         /// Decreases the part's age by the given percentage.
@@ -902,8 +926,9 @@ namespace nsDangIt
         }
 
 
-#region Logging utilities
+        #region Logging utilities
 
+        #region NO_LOCALIZATION
         public void FailureLog(string msg)
         {
             try
@@ -974,3 +999,4 @@ namespace nsDangIt
     }
 
 }
+#endregion

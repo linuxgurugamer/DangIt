@@ -1,4 +1,5 @@
-﻿using System;
+using KSP.Localization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -27,16 +28,18 @@ namespace nsDangIt
         protected bool ignoreYaw = false;
 
         #endregion
-        
 
+
+        #region NO_LOCALIZATION
         public override string DebugName { get { return "DangItControlSurface"; } }
-        public override string ScreenName { get { return "Control surface"; } }
-        public override string FailureMessage { get { return "A control surface is stuck!"; } }
-        public override string RepairMessage { get { return "Control surface repaired."; } }
-        public override string FailGuiName { get { return "Fail control surface"; } }
-        public override string EvaRepairGuiName { get { return "Drown in WD40"; } }
-        public override string MaintenanceString { get { return "Lubricate hinges"; } }
-		public override string ExtraEditorInfo{ get { return "This part's control surfaces can become stuck if it fails"; } }
+        #endregion
+        public override string ScreenName { get { return Localizer.Format("#LOC_DangIt_3"); } }
+        public override string FailureMessage { get { return Localizer.Format("#LOC_DangIt_4"); } }
+        public override string RepairMessage { get { return Localizer.Format("#LOC_DangIt_5"); } }
+        public override string FailGuiName { get { return Localizer.Format("#LOC_DangIt_6"); } }
+        public override string EvaRepairGuiName { get { return Localizer.Format("#LOC_DangIt_7"); } }
+        public override string MaintenanceString { get { return Localizer.Format("#LOC_DangIt_8"); } }
+		public override string ExtraEditorInfo{ get { return Localizer.Format("#LOC_DangIt_30"); } }
 
 
         public override bool PartIsActive()

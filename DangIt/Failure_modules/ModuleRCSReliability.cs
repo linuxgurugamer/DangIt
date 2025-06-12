@@ -1,4 +1,5 @@
-﻿using System;
+using KSP.Localization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,14 +12,16 @@ namespace nsDangIt
     {
         ModuleRCS rcsModule;
 
+        #region NO_LOCALIZATION
         public override string DebugName { get { return "DangItRCS"; } }
-        public override string ScreenName { get { return "RCS Thruster"; } }
-        public override string FailureMessage { get { return "A thruster has stopped thrusting!"; } }
-        public override string RepairMessage { get { return "Thruster back online."; } }
-        public override string FailGuiName { get { return "Fail thruster"; } }
-        public override string EvaRepairGuiName { get { return "Repair thruster"; } }
-        public override string MaintenanceString { get { return "Clean thruster"; } }
-		public override string ExtraEditorInfo{ get { return "This part's thrusters can stop firing if it fails"; } }
+        #endregion
+        public override string ScreenName { get { return Localizer.Format("#LOC_DangIt_122"); } }
+        public override string FailureMessage { get { return Localizer.Format("#LOC_DangIt_123"); } }
+        public override string RepairMessage { get { return Localizer.Format("#LOC_DangIt_124"); } }
+        public override string FailGuiName { get { return Localizer.Format("#LOC_DangIt_125"); } }
+        public override string EvaRepairGuiName { get { return Localizer.Format("#LOC_DangIt_126"); } }
+        public override string MaintenanceString { get { return Localizer.Format("#LOC_DangIt_127"); } }
+		public override string ExtraEditorInfo{ get { return Localizer.Format("#LOC_DangIt_128"); } }
 
 
         public override bool PartIsActive()

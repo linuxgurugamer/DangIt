@@ -1,4 +1,5 @@
-﻿using System;
+using KSP.Localization;
+using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
@@ -44,10 +45,10 @@ namespace nsDangIt
 
             // The settings are only available in the space center
             GUI.skin = HighLogic.Skin;
-            settingsRect = ClickThruBlocker.GUILayoutWindow("DangItSettings".GetHashCode(),
+            settingsRect = ClickThruBlocker.GUILayoutWindow(Localizer.Format("#LOC_DangIt_241").GetHashCode(),
                                             settingsRect,
                                             SettingsWindowFcn,
-                                            "Dang It! Settings",
+                                            Localizer.Format("#LOC_DangIt_242"),
                                             GUILayout.ExpandWidth(true),
                                             GUILayout.ExpandHeight(true));
         }
@@ -56,17 +57,17 @@ namespace nsDangIt
         {
 
             GUILayout.BeginVertical();
-            GUILayout.Label("WARNING! Changing the state of DangIt! while ships are in flight is not supported.");
-            GUILayout.Label("There is no gaurentee that ships will remain in a stable state after toggle, ESPECIALLY if they currently have failed parts.");
-            GUILayout.Label("It is reccomended that this option is only changed immediatley after the start of a game AND while no ships are in flight");
-            GUILayout.Label("You currently have " + (FlightGlobals.Vessels.Count - 1).ToString() + " vessels in flight. Are you sure you want to proceed?");
+            GUILayout.Label(Localizer.Format("#LOC_DangIt_243"));
+            GUILayout.Label(Localizer.Format("#LOC_DangIt_244"));
+            GUILayout.Label(Localizer.Format("#LOC_DangIt_245"));
+            GUILayout.Label(Localizer.Format("#LOC_DangIt_246") + (FlightGlobals.Vessels.Count - 1).ToString() + Localizer.Format("#LOC_DangIt_247"));
             GUILayout.Space(50);
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Yes"))
+            if (GUILayout.Button(Localizer.Format("#LOC_DangIt_248")))
             {
                 answer = Answer.Yes;
             }
-            if (GUILayout.Button("No"))
+            if (GUILayout.Button(Localizer.Format("#LOC_DangIt_249")))
             {
                 answer = Answer.No;
             }
@@ -82,10 +83,10 @@ namespace nsDangIt
 
     public class DangItCustomParams1 : GameParameters.CustomParameterNode
     {
-        public override string Title { get { return "General Settings"; } }
+        public override string Title { get { return Localizer.Format("#LOC_DangIt_250"); } }
         public override GameParameters.GameMode GameMode { get { return GameParameters.GameMode.ANY; } }
-        public override string Section { get { return "Dang It!"; } }
-        public override string DisplaySection { get { return "Dang It!"; } }
+        public override string Section { get { return Localizer.Format("#LOC_DangIt_251"); } }
+        public override string DisplaySection { get { return Localizer.Format("#LOC_DangIt_251"); } }
         public override int SectionOrder { get { return 1; } }
         public override bool HasPresets { get { return true; } }
 
@@ -93,7 +94,7 @@ namespace nsDangIt
         public bool EnabledForSave = true;      // is enabled for this save file
 
         [GameParameters.CustomParameterUI("Manual failures",
-            toolTip = "Allow interacting directly with the part's menu and manually set a failure")]
+            toolTip = "#LOC_DangIt_252")]
         public bool ManualFailures = false;     // initiate failures manually
 
 #if false
@@ -102,32 +103,32 @@ namespace nsDangIt
         public bool DebugStats = false;         // show debug stats of the part in the right-click menu
 
         [GameParameters.CustomParameterUI("Glow", 
-            toolTip = "Enable the part's glow upon failure")]
+            toolTip = "#LOC_DangIt_253")]
         public bool Glow = true;                // enable the part's glow upon failure
 
         [GameParameters.CustomParameterUI("Flashing Glow",
-            toolTip = "Sets a pulsating flash to highlight failed parts")]
+            toolTip = "#LOC_DangIt_254")]
         public bool flashingGlow = true;
 
         [GameParameters.CustomFloatParameterUI("Flash interval", minValue = 0.25f, maxValue = 5.0f, asPercentage = false,
-            toolTip ="Any changes to this will only take effect after restarting the game")]
+            toolTip ="#LOC_DangIt_255")]
         public float flashingInterval = 1f;      
 
 
         [GameParameters.CustomParameterUI("Disable Glow on F2",
-            toolTip = "Disables the flashing glow when F2 is pressed")]
+            toolTip = "#LOC_DangIt_256")]
         public bool DisableGlowOnF2 = true;                
 
         [GameParameters.CustomParameterUI("Check Experience",
-            toolTip = "Toggles if experience is required for repairing certain parts")]
+            toolTip = "#LOC_DangIt_257")]
         public bool RequireExperience = true;   // enable requiring experience levels
 
         [GameParameters.CustomParameterUI("Messages",
-            toolTip = "Allows on-screen notification whenever a failure occurs")]
+            toolTip = "#LOC_DangIt_258")]
         public bool Messages = true;            // enable messages and screen posts
 
         [GameParameters.CustomFloatParameterUI("Max EVA distance", minValue = 1.0f, maxValue = 15.0f, asPercentage = false,
-            toolTip = "Repairs can be when when this close to the part")]
+            toolTip = "#LOC_DangIt_259")]
         public float MaxDistance = 2f;          // maximum distance for EVA activities
 
         [GameParameters.CustomIntParameterUI("Alarm Volume", minValue = 0, maxValue = 100)]
@@ -143,11 +144,11 @@ namespace nsDangIt
         public int Pri_High_SoundLoops = -1;   // number of times to beep
 
         [GameParameters.CustomFloatParameterUI("MTBF Multiplier", minValue = 0.25f, maxValue = 4.0f, logBase = 2, stepCount = 100, displayFormat = "0.00", asPercentage = false,
-            toolTip ="Adjusts the MTBF.  Decrease this to make it harder, increase to lessen the difficulty")]
+            toolTip ="#LOC_DangIt_260")]
         public float MTBF_Multiplier = 1f;          // maximum distance for EVA activities
 
         [GameParameters.CustomFloatParameterUI("Lifetime Multiplier", minValue = 0.25f, maxValue = 4.0f, logBase = 2, stepCount = 100, displayFormat = "0.00", asPercentage = false,
-            toolTip ="Adjusts the Lifetime.  Decrease this to make it harder, increase to lessen the difficulty")]
+            toolTip ="#LOC_DangIt_261")]
         public float Lifetime_Multiplier = 1f;          // maximum distance for EVA activities
             
 
@@ -234,6 +235,8 @@ namespace nsDangIt
             }
         }
 
+        #region NO_LOCALIZATION
+
         public override bool Enabled(MemberInfo member, GameParameters parameters)
         {
             if (member.Name == "EnabledForSave") //This Field must always be enabled.
@@ -241,7 +244,6 @@ namespace nsDangIt
 
             return oldEnabled; //otherwise return true
         }
-
         public override bool Interactible(MemberInfo member, GameParameters parameters)
         {
             //if (HighLogic.LoadedScene != GameScenes.SPACECENTER)
@@ -274,7 +276,8 @@ namespace nsDangIt
             //            return true; //otherwise return true
         }
 
-        public override IList ValidValues(MemberInfo member)
+         #endregion
+       public override IList ValidValues(MemberInfo member)
         {
             return null;
         }
@@ -286,10 +289,10 @@ namespace nsDangIt
     public class DangItCustomParams2 : GameParameters.CustomParameterNode
     {
 
-        public override string Title { get { return "Allow Failures on:"; } }
+        public override string Title { get { return Localizer.Format("#LOC_DangIt_262"); } }
         public override GameParameters.GameMode GameMode { get { return GameParameters.GameMode.ANY; } }
-        public override string Section { get { return "Dang It!"; } }
-       public override string DisplaySection { get { return "Dang It!"; } }
+        public override string Section { get { return Localizer.Format("#LOC_DangIt_251"); } }
+       public override string DisplaySection { get { return Localizer.Format("#LOC_DangIt_251"); } }
         public override int SectionOrder { get { return 2; } }
         public override bool HasPresets { get { return true; } }
 
@@ -413,10 +416,10 @@ namespace nsDangIt
 
     public class DangItCustomParams3 : GameParameters.CustomParameterNode
     {
-        public override string Title { get { return "Additional Allow Failures on:"; } }
+        public override string Title { get { return Localizer.Format("#LOC_DangIt_263"); } }
         public override GameParameters.GameMode GameMode { get { return GameParameters.GameMode.ANY; } }
-        public override string Section { get { return "Dang It!"; } }
-        public override string DisplaySection { get { return "Dang It!"; } }
+        public override string Section { get { return Localizer.Format("#LOC_DangIt_251"); } }
+        public override string DisplaySection { get { return Localizer.Format("#LOC_DangIt_251"); } }
         public override int SectionOrder { get { return 3; } }
         public override bool HasPresets { get { return true; } }
 
@@ -525,7 +528,7 @@ namespace nsDangIt
 
         public override bool Interactible(MemberInfo member, GameParameters parameters)
         {
-            if (member.Name == "AllowParachuteFailures")
+            if (member.Name == Localizer.Format("#LOC_DangIt_264"))
             {
                 if (!AllowParachuteFailures)
                     Allow1ParachuteFailures = false;

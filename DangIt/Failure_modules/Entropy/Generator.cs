@@ -1,4 +1,5 @@
-﻿using System;
+using KSP.Localization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,14 +16,16 @@ namespace nsDangIt
 		ModuleGenerator generator;
         float initialEfficiency = 0f;
 
-		public override string DebugName { get { return "ModuleGenerator"; } }
-		public override string ScreenName { get { return "Generator"; } }
-		public override string FailureMessage { get { return "A generator has aged, decreasing efficiency"; } }
-		public override string RepairMessage { get { return "You have repaired the generator"; } }
-		public override string FailGuiName { get { return "Fail generator"; } }
-		public override string EvaRepairGuiName { get { return "Repair generator"; } }
-		public override string MaintenanceString { get { return "Clean generator"; } }
-		public override string ExtraEditorInfo{ get { return "This part can lost efficiency if it fails"; } }
+        #region NO_LOCALIZATION
+        public override string DebugName { get { return "ModuleGenerator"; } }
+        #endregion
+        public override string ScreenName { get { return Localizer.Format("#LOC_DangIt_202"); } }
+		public override string FailureMessage { get { return Localizer.Format("#LOC_DangIt_203"); } }
+		public override string RepairMessage { get { return Localizer.Format("#LOC_DangIt_204"); } }
+		public override string FailGuiName { get { return Localizer.Format("#LOC_DangIt_205"); } }
+		public override string EvaRepairGuiName { get { return Localizer.Format("#LOC_DangIt_206"); } }
+		public override string MaintenanceString { get { return Localizer.Format("#LOC_DangIt_207"); } }
+		public override string ExtraEditorInfo{ get { return Localizer.Format("#LOC_DangIt_208"); } }
 
 		public override bool PartIsActive()
 		{

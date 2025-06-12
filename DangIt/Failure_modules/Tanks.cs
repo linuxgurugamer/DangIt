@@ -1,4 +1,5 @@
-﻿using System;
+using KSP.Localization;
+using System;
 using System.Linq;
 using System.Collections.Generic;
 using KSP;
@@ -11,18 +12,20 @@ namespace nsDangIt
 
     public class ModuleTankReliability : FailureModule
     {
+        #region NO_LOCALIZATION
         public override string DebugName { get { return "DangItTank"; } }
-        public override string ScreenName { get { return "Tank"; } }
-        public override string FailureMessage { get { return "A tank of " + leakName + " is leaking!"; } }
-        public override string RepairMessage { get { return "Duct tape applied."; } }
-        public override string FailGuiName { get { return "Puncture tank"; } }
-        public override string EvaRepairGuiName { get { return "Apply duct tape"; } }
-        public override string MaintenanceString { get { return "Repair the insulation"; } }
+        #endregion
+        public override string ScreenName { get { return Localizer.Format("#LOC_DangIt_136"); } }
+        public override string FailureMessage { get { return Localizer.Format("#LOC_DangIt_137") + leakName + Localizer.Format("#LOC_DangIt_138"); } }
+        public override string RepairMessage { get { return Localizer.Format("#LOC_DangIt_139"); } }
+        public override string FailGuiName { get { return Localizer.Format("#LOC_DangIt_140"); } }
+        public override string EvaRepairGuiName { get { return Localizer.Format("#LOC_DangIt_141"); } }
+        public override string MaintenanceString { get { return Localizer.Format("#LOC_DangIt_142"); } }
         public override string ExtraEditorInfo
         {
             get
             {
-                var temp = "This part: " + part.partInfo.title + " can leak one of the following resources if it fails: ";
+                var temp = Localizer.Format("#LOC_DangIt_143") + part.partInfo.title + Localizer.Format("#LOC_DangIt_144");
 
                 foreach (PartResource pr in part.Resources)
                 {
@@ -54,7 +57,7 @@ namespace nsDangIt
 
         // Name of the leaking resource
         [KSPField(isPersistant = true, guiActive = false)]
-        public string leakName = "none";
+        public string leakName = "#LOC_DangIt_145";
 
 
         // List of resources that the module will choose from when starting a new leak.
@@ -83,7 +86,7 @@ namespace nsDangIt
             {
                 Log.Info("The part " + this.part.name + " does not contain any leakable resource.");
                 this.Events["Fail"].active = false;
-                this.leakName = "none"; // null;
+                this.leakName = Localizer.Format("#LOC_DangIt_145"); // null;
                 this.enabled = false; // disable the monobehaviour: this won't be updated
             }
         }
@@ -96,9 +99,9 @@ namespace nsDangIt
                 // check if the resource is still in the tank
                 if (this.HasFailed)
                 {
-                    if (string.IsNullOrEmpty(leakName) || leakName == "none" || !part.Resources.Contains(leakName))
+                    if (string.IsNullOrEmpty(leakName) || leakName == Localizer.Format("#LOC_DangIt_145") || !part.Resources.Contains(leakName))
                     {
-                        this.FailureLog("ERROR: the part was started as failed but the leakName isn't valid!"); ;
+                        this.FailureLog(Localizer.Format("#LOC_DangIt_146")); ;
                         this.SetFailureState(false);
                     }
                 }
@@ -114,14 +117,14 @@ namespace nsDangIt
                 Log.Info("ModuleTankReliability.DI_OnLoad, part: " + part.partInfo.title);
             else
                 Log.Info("ModuleTankReliability.DI_OnLoad, no part");
-            this.pole = DangIt.Parse<float>("pole", 0.01f);
+            this.pole = DangIt.Parse<float>(Localizer.Format("#LOC_DangIt_147"), 0.01f);
 
             this.leakName = node.GetValue("leakName");
 
             if (string.IsNullOrEmpty(leakName))
-                leakName = "none"; // null;;
+                leakName = Localizer.Format("#LOC_DangIt_145"); // null;;
 
-            this.FailureLog("OnLoad: loaded leakName " + ((leakName == null) ? "none" : leakName));
+            this.FailureLog(Localizer.Format("#LOC_DangIt_148") + ((leakName == null) ? Localizer.Format("#LOC_DangIt_145") : leakName));
         }
 
 
@@ -144,7 +147,7 @@ namespace nsDangIt
             try
             {
                 if (this.HasFailed &&
-                   (!(string.IsNullOrEmpty(leakName)  || leakName == "none") &&
+                   (!(string.IsNullOrEmpty(leakName)  || leakName == Localizer.Format("#LOC_DangIt_145")) &&
                    (part.Resources[leakName].amount > 0)))  // ignore empty tanks
                 {
                     double amount = pole * part.Resources[leakName].amount * TimeWarp.fixedDeltaTime;
@@ -183,7 +186,7 @@ namespace nsDangIt
 
             // Something has gone very wrong somewhere
             if (leakables == null)
-                throw new Exception("The list of leakables is null!");
+                throw new Exception(Localizer.Format("#LOC_DangIt_149"));
 
             // Discard every resource that has already been emptied
             leakables.RemoveAll(r => r.amount == 0);
@@ -195,7 +198,7 @@ namespace nsDangIt
                 float TC = UnityEngine.Random.Range(MinTC, MaxTC);
                 this.pole = 1 / TC;
 
-                this.FailureLog(string.Format("Chosen TC = {0} (min = {1}, max = {2})", TC, MinTC, MaxTC));
+                this.FailureLog(string.Format( Localizer.Format("#LOC_DangIt_150") + " {0} " + Localizer.Format("#LOC_DangIt_151") + " {1}" + Localizer.Format("#LOC_DangIt_152") + " {2}" +")", TC, MinTC, MaxTC));
 
                 // Pick a random index to leak.
                 // Random.Range excludes the upper bound,
@@ -214,8 +217,8 @@ namespace nsDangIt
             }
             else
             {
-                leakName = "none"; // null;
-                this.FailureLog("Zero leakable resources found on part " + this.part.partName + ", aborting FailBegin()");
+                leakName = Localizer.Format("#LOC_DangIt_145"); // null;
+                this.FailureLog(Localizer.Format("#LOC_DangIt_153") + this.part.partName + Localizer.Format("#LOC_DangIt_154"));
 
                 // Disallow failing
                 return false;
@@ -234,7 +237,7 @@ namespace nsDangIt
 
         protected override void DI_EvaRepair()
         {
-            this.leakName = "none";
+            this.leakName = Localizer.Format("#LOC_DangIt_145");
         }
 
 
@@ -242,7 +245,7 @@ namespace nsDangIt
         [KSPEvent(active = true, guiActive = true)]
         public void PrintStatus()
         {
-            this.FailureLog("Printing flow modes");
+            this.FailureLog("#LOC_DangIt_155");
             foreach (PartResource res in this.part.Resources)
             {
                 this.FailureLog(res.resourceName + ": " + res.flowMode + ", " + res.flowState);
@@ -253,12 +256,12 @@ namespace nsDangIt
         [KSPEvent(active = true, guiActive = true)]
         public void PrintBlackList()
         {
-            this.FailureLog("Printing blacklist");
+            this.FailureLog("#LOC_DangIt_156");
             foreach (string item in DangIt.LeakBlackList)
             {
-                this.FailureLog("Blacklisted: " + item);
+                this.FailureLog(Localizer.Format("#LOC_DangIt_157") + item);
             }
-            this.FailureLog("Done");
+            this.FailureLog(Localizer.Format("#LOC_DangIt_158"));
         }
 #endif
         public override bool DI_ShowInfoInEditor()

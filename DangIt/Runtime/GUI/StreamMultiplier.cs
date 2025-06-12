@@ -1,4 +1,5 @@
-﻿using System;
+using KSP.Localization;
+using System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
@@ -30,16 +31,26 @@ namespace ippo.Runtime.GUI
         {
             if (!visible)
                 return;
-            UnityEngine.GUI.skin = HighLogic.Skin;
-            settingsRect = ClickThruBlocker.GUILayoutWindow("Multiplier Entry".GetHashCode(),                                            settingsRect,                                            SettingsWindowFcn,                                            "Multiplier Entry",                                            GUILayout.ExpandWidth(true),
-                                            GUILayout.ExpandHeight(true));
+            UnityEngine.GUI.skin = HighLogic.Skin;
+
+            settingsRect = ClickThruBlocker.GUILayoutWindow(Localizer.Format("#LOC_DangIt_265").GetHashCode(),
+                                            settingsRect,
+                                            SettingsWindowFcn,
+                                            Localizer.Format("#LOC_DangIt_265"),
+                                            GUILayout.ExpandWidth(true),
+                                            GUILayout.ExpandHeight(true));
+
         }
 
 
 
         void SettingsWindowFcn(int windowID)
-        {            GUILayout.BeginHorizontal();            GUILayout.Label("Current modifier: " + nsDangIt.FailureModule.streamMultiplier.ToString());            GUILayout.EndHorizontal();
-            GUILayout.BeginHorizontal();            GUILayout.Label("Enter additional modifier: ");
+        {
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(Localizer.Format("#LOC_DangIt_266") + nsDangIt.FailureModule.streamMultiplier.ToString());
+            GUILayout.EndHorizontal();
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(Localizer.Format("#LOC_DangIt_267"));
 
             double m;
             var   newMultiplier = GUILayout.TextField(multiplier, GUILayout.Width(90));
@@ -53,7 +64,8 @@ namespace ippo.Runtime.GUI
 
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal();            GUILayout.Label("Enter decrease per minute: ");
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(Localizer.Format("#LOC_DangIt_268"));
 
             double d;
             var newDecay = GUILayout.TextField(decay, GUILayout.Width(90));
@@ -69,9 +81,12 @@ namespace ippo.Runtime.GUI
             GUILayout.EndHorizontal();
 
 
-            GUILayout.FlexibleSpace();            GUILayout.BeginHorizontal();
-            GUILayout.FlexibleSpace(); 
-            if (GUILayout.Button("OK", GUILayout.Width(60)))            {
+            GUILayout.FlexibleSpace();
+            GUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+ 
+            if (GUILayout.Button(Localizer.Format("#LOC_DangIt_269"), GUILayout.Width(60)))
+            {
                 if (multiplier != "")
                     nsDangIt.FailureModule.streamMultiplier += float.Parse(multiplier);
                 if (decay != "")
@@ -79,10 +94,13 @@ namespace ippo.Runtime.GUI
                 nsDangIt.FailureModule.lastDecayTime = Planetarium.GetUniversalTime();
                 visible = false;
             }
-            if (GUILayout.Button("Cancel", GUILayout.Width(60)))            {
+            if (GUILayout.Button(Localizer.Format("#LOC_DangIt_270"), GUILayout.Width(60)))
+            {
                 visible = false;
             }
-            GUILayout.FlexibleSpace();            GUILayout.EndHorizontal();            UnityEngine.GUI.DragWindow();
+            GUILayout.FlexibleSpace();
+            GUILayout.EndHorizontal();
+            UnityEngine.GUI.DragWindow();
         }
     }
 }

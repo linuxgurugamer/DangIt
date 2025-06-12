@@ -1,4 +1,5 @@
-﻿using System;
+using KSP.Localization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,13 +24,13 @@ namespace DangIt_FAR
         FieldInfo AoAFromFlap;
         
 
-        public override string DebugName { get { return "DangItFARControlSurface"; } }
-        public override string InspectionName { get { return "Control surface"; } }
-        public override string FailureMessage { get { return "A control surface is stuck!"; } }
-        public override string RepairMessage { get { return "Control surface repaired."; } }
-        public override string FailGuiName { get { return "Fail control surface"; } }
-        public override string EvaRepairGuiName { get { return "Drown in WD40"; } }
-        public override string MaintenanceString { get { return "Lubricate hinges"; } }
+        public override string DebugName { get { return Localizer.Format("#LOC_DangIt_2"); } }
+        public override string InspectionName { get { return Localizer.Format("#LOC_DangIt_3"); } }
+        public override string FailureMessage { get { return Localizer.Format("#LOC_DangIt_4"); } }
+        public override string RepairMessage { get { return Localizer.Format("#LOC_DangIt_5"); } }
+        public override string FailGuiName { get { return Localizer.Format("#LOC_DangIt_6"); } }
+        public override string EvaRepairGuiName { get { return Localizer.Format("#LOC_DangIt_7"); } }
+        public override string MaintenanceString { get { return Localizer.Format("#LOC_DangIt_8"); } }
 
 
         public override bool PartIsActive()
@@ -63,12 +64,12 @@ namespace DangIt_FAR
                 this.controlSurfaceModule = this.part.Modules.OfType<FARControllableSurface>().Single();
                 this.wasFlap = controlSurfaceModule.isFlap;
 
-                this.AoAFromFlap = typeof(FARControllableSurface).GetField("AoAFromFlap", BindingFlags.NonPublic);
-                this.AoAOffset = typeof(FARControllableSurface).GetField("AoAOffset", BindingFlags.NonPublic);
+                this.AoAFromFlap = typeof(FARControllableSurface).GetField(Localizer.Format("#LOC_DangIt_9"), BindingFlags.NonPublic);
+                this.AoAOffset = typeof(FARControllableSurface).GetField(Localizer.Format("#LOC_DangIt_10"), BindingFlags.NonPublic);
 
                 if (AoAOffset == null || AoAFromFlap == null)
                 {
-                    throw new Exception("Could not get the field info from FAR!");
+                    throw new Exception(Localizer.Format("#LOC_DangIt_11"));
                 }
 
             }
