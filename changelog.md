@@ -180,8 +180,15 @@
 0.7.20.8
 	Fixed editor lag caused by too many parts with spare parts
 
-0.7.20.9 (beta)
+0.7.20.9
 	Fix for part highlighting getting disabled when changing vessels
+
+0.7.21
+	Update version file to get new version info from github
+	Localization of the mod
+
+0.7.21.1
+	Fix typo in version file
 
 ============== Coffeeman's work below =========================
 ## ALPHA 6
